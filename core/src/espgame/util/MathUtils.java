@@ -1,4 +1,4 @@
-package espgame;
+package espgame.util;
 
 /**
  * Created by Patrick on 26.08.2015.

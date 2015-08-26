@@ -3,7 +3,8 @@ package espgame.level;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
-import espgame.MathUtils;
+
+import espgame.util.MathUtils;
 
 /**
  * Created by Patrick on 26.08.2015.
@@ -23,6 +24,11 @@ public abstract class Entity {
 
     public abstract void update();
 
+    public Entity(float x, float y) {
+        position = new Vector2(x, y);
+        velocity = new Vector2();
+    }
+    
     public void remove() {
         // Game.getLevel().remove(this);
         onRemove();
@@ -64,11 +70,6 @@ public abstract class Entity {
 
     public void setSprite(Sprite sprite) {
         this.sprite = sprite;
-    }
-
-    public Entity(float x, float y) {
-        position = new Vector2(x, y);
-        velocity = new Vector2();
     }
 
     public void onRemove() {
