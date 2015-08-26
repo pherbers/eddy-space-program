@@ -6,6 +6,7 @@ import java.util.Random;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import espgame.entity.Entity;
 
 public class Planet extends Entity {
 

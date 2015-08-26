@@ -54,4 +54,8 @@ public class ESPGame extends Game {
 		// if (requestedMenu != activeMenu)
 		// setActiveMenu(requestedMenu);
 	}
+
+	public static Level getLevel() {
+		return level;
+	}
 }

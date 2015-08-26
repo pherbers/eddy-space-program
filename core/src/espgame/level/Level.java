@@ -2,16 +2,15 @@ package espgame.level;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.math.Vector3;
 
 import espgame.ESPGame;
+import espgame.entity.Eddy;
+import espgame.entity.Entity;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 /**
  * Created by Patrick on 26.08.2015.
@@ -42,6 +41,7 @@ public class Level implements Screen {
 		entities = new ArrayList<Entity>();
 		Planet planet = new Planet(PLANET_SIZE, PLANET_ORBIT_RADIUS, PLANET_ORBIT_FORCE);
 		entities.add(planet);
+		entities.add(new Eddy(100,0,0,10,Eddy.Color.ROT, planet.getOrbit()));
 	}
 
 	@Override
@@ -52,7 +52,7 @@ public class Level implements Screen {
 			deltaTime -= UPDATE_TIME;
 		}
 
-		Gdx.gl.glClearColor(1, 0, 0, 1);
+		Gdx.gl.glClearColor(0, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
 		camera.position.set(0,0,0);
@@ -65,12 +65,9 @@ public class Level implements Screen {
 			e.render(game.batch);
 		}
 		game.batch.end();
-
-		System.out.println("level renders");
 	}
 
 	public void update() {
-		System.out.println("level update");
 		for(int i = 0;i<entities.size();i++){
 			Entity e = entities.get(i);
 			e.update();

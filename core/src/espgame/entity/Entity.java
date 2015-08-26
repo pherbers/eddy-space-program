@@ -1,4 +1,4 @@
-package espgame.level;
+package espgame.entity;
 
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
