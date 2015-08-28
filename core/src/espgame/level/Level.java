@@ -29,6 +29,10 @@ public class Level implements Screen {
 	private final ESPGame game;
 	public OrthographicCamera camera;
 
+	private Planet planet;
+
+
+
 	public Level(final ESPGame game) {
 		this.game = game;
 		camera = new OrthographicCamera();
@@ -40,6 +44,7 @@ public class Level implements Screen {
 	public void show() {
 		entities = new ArrayList<Entity>();
 		Planet planet = new Planet(PLANET_SIZE, PLANET_ORBIT_RADIUS, PLANET_ORBIT_FORCE);
+		this.planet = planet;
 		entities.add(planet);
 		entities.add(new Eddy(100,0,0,10,Eddy.Color.ROT, planet.getOrbit()));
 	}
@@ -77,7 +82,6 @@ public class Level implements Screen {
 	@Override
 	public void resize(int width, int height) {
 		camera.setToOrtho(false, width, height);
-		
 	}
 
 	@Override
@@ -98,5 +102,13 @@ public class Level implements Screen {
 	@Override
 	public void dispose() {
 
+	}
+
+	public void addEntity(Entity e) {
+		entities.add(e);
+	}
+
+	public Planet getPlanet() {
+		return planet;
 	}
 }

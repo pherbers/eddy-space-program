@@ -41,8 +41,10 @@ public class Planet extends Entity {
 		 */
 
 		// return Sprites.PLANET_MOON;
-		System.out.println(new File("sprites\\planeten\\moon.png").exists());
-		return new Sprite(new Texture("sprites\\planeten\\moon.png"));
+		Texture t = new Texture("sprites\\planeten\\moon.png");
+		t.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
+		Sprite s = new Sprite(t);
+		return s;
 
 	}
 
