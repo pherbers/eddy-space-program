@@ -32,7 +32,7 @@ public class Eddy extends Entity {
     private Orbit orbit;
     private Color farbe;
     private float gravityDrag;
-    private static final float BASEGRAVITYDRAG = 20;
+    private static final float BASEGRAVITYDRAG = 20f;
     // private ConfigurableEmitter emitter;
     private float c = 0.0f;
     private float rotation;
@@ -59,7 +59,7 @@ public class Eddy extends Entity {
         gravityDrag = gravity;
         radius = RADIUS;
 
-        // zufällige drehung setzen
+        // zufaellige drehung setzen
         Random r = new Random();
         rotation = r.nextFloat();
         rotation -= 0.5f;
@@ -70,15 +70,8 @@ public class Eddy extends Entity {
         float gamma = MathUtils.atan2(v.y, v.y);
         float theta = MathUtils.atan2(velocity.y * 0.1f + v.y, velocity.x * 0.1f + v.x);
         // Game.print(gamma + "\t" + theta);
-        if (Math.abs(gamma) < Math.abs(theta))
-            if (gamma < 0)
-                clockwise = false;
-            else
-                clockwise = true;
-        else if (gamma < 0)
-            clockwise = true;
-        else
-            clockwise = false;
+        clockwise = v.y*velocity.x < v.x*velocity.y;
+        System.out.print(clockwise);
         /*try {
             emitter = Game.generateEmitter("res/particles/EddyParticle.xml");
         } catch (IOException e) {
@@ -123,7 +116,6 @@ public class Eddy extends Entity {
             // position.getX(), (float) position.getY());
 //            if (Game.DEBUG)
 //                g.drawLine((float) getX(), (float) getY(), 0, 0);
-            System.out.println("render");
         }
     }
 
@@ -133,7 +125,6 @@ public class Eddy extends Entity {
         sprite.rotate(rotation);
         float x = position.x - orbit.getPosition().x;
         float y = position.y - orbit.getPosition().y;
-
         switch (state) {
             case 0:
                 // Vector r = new Vector(-x, -y);
@@ -145,13 +136,13 @@ public class Eddy extends Entity {
                         position.y - orbit.getPosition().y);
                 w.scl(4.7f / position.dst(orbit.getPosition()));
                 if (clockwise)
-                    w.rotate90(-1);
-                else
                     w.rotate90(1);
+                else
+                    w.rotate90(-1);
                 velocity.set((1 - c) * velocity.x + c * w.x,
                         (1 - c) * velocity.y + c * w.y);
-                c += 0.001;
-                if (c >= 0.1)
+                c += 0.001f;
+                if (c >= 0.1f)
                     state = 1;
                 // if(velocity.getBetrag() > 4.7)
                 // state = 1;
@@ -172,12 +163,12 @@ public class Eddy extends Entity {
 			 * velocity.setY(Math.cos(alpha - gravityDrag) * vBetrag);
 			 */
 
-                Vector2 v = new Vector2(x / (entfernung * entfernung) * -BASEGRAVITYDRAG,
-                        y / (entfernung * entfernung) * -BASEGRAVITYDRAG);
+                Vector2 v = new Vector2(x / (entfernung*entfernung) * -BASEGRAVITYDRAG,
+                        y / (entfernung*entfernung) * -BASEGRAVITYDRAG);
                 velocity = velocity.add(v);
                 position = position.add(velocity);
                 velocity.scl(gravityDrag);
-
+                System.out.println(velocity.len());
                 break;
             case 2:
                 position = position.add(velocity);
@@ -198,9 +189,8 @@ public class Eddy extends Entity {
             case 4: // Eingesammelt
 
         }
-        sprite.setPosition(position.x, position.y);
+        sprite.setCenter(position.x, position.y);
 
-        System.out.println(position);
     }
 
     public static Eddy joinEddys(Eddy e1, Eddy e2) {
@@ -297,8 +287,9 @@ public class Eddy extends Entity {
         }
         setEmitterColor(farbe);*/
         sprite = new Sprite(new Texture("sprites/eddys/EddyRot.png"));
-        sprite.setOriginCenter();
         sprite.setCenter(0,0);
+        sprite.setSize(radius*2, radius*2);
+        sprite.setOriginCenter();
     }
 
     /*public Explosion createCollideExplosion() {
@@ -338,16 +329,7 @@ public class Eddy extends Entity {
 
     public void setState(int state) {
         this.state = state;
-        if (state == 1) {
-            Vector2 v = new Vector2(position.x - orbit.getPosition().x,
-                    position.y - orbit.getPosition().y);
-            v.scl(4.7f / position.dst(orbit.getPosition()));
-            if ((v.y > 0 ^ velocity.x > 0))
-                v.rotate90(-1);
-            else
-                v.rotate90(1);
-            velocity = v;
-        } else if (state == 3) {
+        if (state == 3) {
             explodeable = false;
             collidable = false;
         } else if (state == 4)

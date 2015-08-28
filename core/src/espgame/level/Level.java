@@ -1,13 +1,14 @@
 package espgame.level;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 
 import espgame.ESPGame;
-import espgame.entity.Eddy;
-import espgame.entity.Entity;
+import espgame.entity.*;
+import espgame.input.KanoneController;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,7 +32,9 @@ public class Level implements Screen {
 
 	private Planet planet;
 
-
+	private Kanone kanone;
+	private KanoneController kanonec;
+	private InputMultiplexer input;
 
 	public Level(final ESPGame game) {
 		this.game = game;
@@ -46,7 +49,19 @@ public class Level implements Screen {
 		Planet planet = new Planet(PLANET_SIZE, PLANET_ORBIT_RADIUS, PLANET_ORBIT_FORCE);
 		this.planet = planet;
 		entities.add(planet);
-		entities.add(new Eddy(100,0,0,10,Eddy.Color.ROT, planet.getOrbit()));
+		Eddy e = new Eddy(300,0,0,4.7f,Eddy.Color.ROT, planet.getOrbit());
+		e.setState(1);
+		entities.add(e);
+
+		this.kanone = new Kanone(0);
+		entities.add(kanone);
+		this.kanonec = new KanoneController(kanone);
+
+		this.input = new InputMultiplexer();
+		input.addProcessor(kanonec);
+
+		Gdx.input.setInputProcessor(input);
+
 	}
 
 	@Override
@@ -60,7 +75,7 @@ public class Level implements Screen {
 		Gdx.gl.glClearColor(0, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-		camera.position.set(0,0,0);
+		camera.position.set(0, 0, 0);
 		camera.update();
 		game.batch.setProjectionMatrix(camera.combined);
 		
@@ -82,25 +97,27 @@ public class Level implements Screen {
 	@Override
 	public void resize(int width, int height) {
 		camera.setToOrtho(false, width, height);
+		camera.update();
 	}
 
 	@Override
 	public void pause() {
-
+		input.removeProcessor(kanonec);
 	}
 
 	@Override
 	public void resume() {
-
+		input.addProcessor(kanonec);
 	}
 
 	@Override
 	public void hide() {
-
+		input.removeProcessor(kanonec);
 	}
 
 	@Override
 	public void dispose() {
+		Gdx.input.setInputProcessor(null);
 
 	}
 
@@ -110,5 +127,9 @@ public class Level implements Screen {
 
 	public Planet getPlanet() {
 		return planet;
+	}
+
+	public OrthographicCamera getCamera(){
+		return camera;
 	}
 }

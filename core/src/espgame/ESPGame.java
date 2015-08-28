@@ -25,8 +25,8 @@ public class ESPGame extends Game {
 	public void create () {
 		batch = new SpriteBatch();
 		img = new Texture("badlogic.jpg");
-
-		setScreen(new Level(this));
+		level = new Level(this);
+		setScreen(level);
 	}
 
 	@Override
