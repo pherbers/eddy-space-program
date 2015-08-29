@@ -1,17 +1,15 @@
 package espgame.level;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Vector2;
 
 import espgame.ESPGame;
-import espgame.entity.Eddy;
-import espgame.entity.Entity;
-import espgame.entity.Explosion;
-import espgame.entity.HeMan;
-import espgame.entity.Schiff;
+import espgame.entity.*;
+import espgame.input.KanoneController;
 import espgame.mechanics.TextDisplayer;
 import espgame.entity.Eddy.Color;
 
@@ -61,6 +59,10 @@ public class Level implements Screen {
 	private int points, level;
 
 	private Planet planet;
+	
+	private Kanone kanone;
+	private KanoneController kanonec;
+	private InputMultiplexer input;
 
 	public Level(int schwierigkeit, final ESPGame game) {
 		this.schwierigkeit = schwierigkeit;
@@ -83,6 +85,7 @@ public class Level implements Screen {
 		points = 0;
 		Planet planet = new Planet(PLANET_SIZE, PLANET_ORBIT_RADIUS, PLANET_ORBIT_FORCE);
 		schiff = new Schiff(ESPGame.getRandomOmega(), planet.getOrbit().getRadius() + 50, planet.getOrbit());
+		
 		this.planet = planet;
 
 		if (schwierigkeit == 2)
@@ -110,15 +113,23 @@ public class Level implements Screen {
 		else
 			hemandelay = HEMANLEVEL;
 
+		this.kanone = new Kanone(0);
 		entities.add(planet);
 		entities.add(schiff);
+		entities.add(kanone);
+		
+		this.kanonec = new KanoneController(kanone);
+
+		this.input = new InputMultiplexer();
+			input.addProcessor(kanonec);
+
+		Gdx.input.setInputProcessor(input);
+
 
 		// BEGIN RUNDE 1
 		setReserved(3, 3, 3);
 		newObjective(level);
 
-		// Debug
-		eddys.add(new Eddy(150, 0, 0, 10, Eddy.Color.ROT, planet.getOrbit()));
 	}
 
 	@Override
@@ -132,10 +143,10 @@ public class Level implements Screen {
 		Gdx.gl.glClearColor(0, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-		hintergrund.render();
-
 		camera.position.set(0, 0, 0);
 		camera.update();
+
+		hintergrund.render();
 		game.batch.setProjectionMatrix(camera.combined);
 
 		game.batch.begin();
@@ -284,6 +295,7 @@ public class Level implements Screen {
 	public void resize(int width, int height) {
 		camera.setToOrtho(false, width, height);
 		// TODO match hintergrund to new screensize?
+		camera.update();
 	}
 
 	private void newObjective(int level) {
@@ -294,21 +306,22 @@ public class Level implements Screen {
 
 	@Override
 	public void pause() {
-
+		input.removeProcessor(kanonec);
 	}
 
 	@Override
 	public void resume() {
-
+		input.addProcessor(kanonec);
 	}
 
 	@Override
 	public void hide() {
-
+		input.removeProcessor(kanonec);
 	}
 
 	@Override
 	public void dispose() {
+		Gdx.input.setInputProcessor(null);
 
 	}
 
@@ -318,6 +331,10 @@ public class Level implements Screen {
 
 	public Planet getPlanet() {
 		return planet;
+	}
+
+	public OrthographicCamera getCamera(){
+		return camera;
 	}
 
 	public int getEddyCount() {
