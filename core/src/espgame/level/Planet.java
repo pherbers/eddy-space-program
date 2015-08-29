@@ -7,11 +7,13 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import espgame.entity.Entity;
+import espgame.resources.AssetContainer;
+import espgame.resources.AssetLoader;
 
 public class Planet extends Entity {
 
 	private Orbit myOrbit;
-	private float rotationspeed = 0.25f;
+	private float rotationspeed = 0.025f;
 
 	public Planet(float radius, float orbitRadius, float orbitForce) {
 		super(0, 0);
@@ -41,8 +43,7 @@ public class Planet extends Entity {
 		 */
 
 		// return Sprites.PLANET_MOON;
-		Texture t = new Texture("sprites\\planeten\\moon.png");
-		t.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
+		Texture t = AssetLoader.get().getTexture(AssetContainer.PLANET_MAIN);
 		Sprite s = new Sprite(t);
 		s.setSize(radius*2, radius*2);
 		return s;
@@ -52,7 +53,7 @@ public class Planet extends Entity {
 	@Override
 	public void render(SpriteBatch batch) {
 		sprite.draw(batch);
-		myOrbit.render();
+		myOrbit.render(batch);
 	}
 
 	@Override

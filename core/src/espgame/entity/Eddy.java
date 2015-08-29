@@ -247,7 +247,7 @@ public class Eddy extends Entity {
 		 * } setEmitterColor(farbe);
 		 */
         sprite = new Sprite(new Texture("sprites/eddys/EddyRot.png"));
-        sprite.setCenter(0,0);
+        sprite.setCenter(position.x, position.y);
         sprite.setSize(radius*2, radius*2);
         sprite.setOriginCenter();
 	}

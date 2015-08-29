@@ -53,6 +53,7 @@ public class AssetLoader {
 		assetList.add(new TempAsset("sprites/misc/schiff_idle.png", textureContainer, SHIP_IDLE, Texture.class));
 		assetList.add(new TempAsset("sprites/misc/Kanone_base.png", textureContainer, KANONE_BASE, Texture.class));
 		assetList.add(new TempAsset("sprites/misc/Kanone_top.png", textureContainer, KANONE_TOP, Texture.class));
+		assetList.add(new TempAsset("sprites/misc/Orbit.png", textureContainer, ORBIT, Texture.class));
 
 		assetList.add(new TempAsset("sprites/eddys/EddyBlau.png", textureContainer, EDDY_BLAU, Texture.class));
 		assetList.add(new TempAsset("sprites/eddys/EddyCyan.png", textureContainer, EDDY_CYAN, Texture.class));
@@ -100,6 +101,12 @@ public class AssetLoader {
 	public AssetContainer<Music> getMusicContainer() {
 		return musicContainer;
 	}
+
+	public Texture getTexture(String key) {
+		return getTextureContainer().get(key);
+	}
+	public Sound getSound(String key) { return getSoundContainer().get(key); }
+	public Music getMusic(String key) {	return getMusicContainer().get(key); }
 
 	public class TempAsset {
 		private String path;

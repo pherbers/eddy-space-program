@@ -1,7 +1,10 @@
 package espgame.level;
 
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
+import espgame.resources.AssetContainer;
+import espgame.resources.AssetLoader;
 
 public class Orbit {
 
@@ -22,7 +25,10 @@ public class Orbit {
         init();
     }
     private void init(){
-        // sprite = Sprites.ORBIT.getScaledCopy((float) ((radius*2)/1024));
+        sprite = new Sprite(AssetLoader.get().getTexture(AssetContainer.ORBIT));
+        sprite.setSize(radius*2, radius*2);
+        sprite.setOriginCenter();
+        sprite.setCenter(0, 0);
 
     }
     public void setForce(float force){
@@ -33,8 +39,8 @@ public class Orbit {
         return force;
     }
 
-    public void render(){
-        // Game.drawImage(sprite, -radius, -radius);
+    public void render(SpriteBatch batch){
+        sprite.draw(batch);
     }
     public Vector2 getPosition() {
         return position;

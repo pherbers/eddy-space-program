@@ -8,6 +8,7 @@ public abstract class AssetContainer<T> {
 	public static final String SHIP_SAMMELN_2 = "ship_collect_2";
 	public static final String KANONE_BASE = "cacon_base";
 	public static final String KANONE_TOP = "canon_top";
+	public static final String ORBIT = "orbit";
 
 	public static final String EDDY_BLAU = "eddy_blue";
 	public static final String EDDY_CYAN = "eddy_cyan";
