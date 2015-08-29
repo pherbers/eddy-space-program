@@ -36,14 +36,15 @@ public class Planet extends Entity {
 	private Sprite randomSprite() {
 		Random r = new Random();
 		double p = r.nextDouble();
-		/*
-		 * if (p < 0.65) return Sprites.PLANET_ERDE; if (p < 0.7) return
-		 * Sprites.PLANET_DEATHSTAR; if (p < 0.75) return Sprites.PLANET_MAJORA;
-		 * if (p < 0.8) return Sprites.PLANET_CHEESE;
-		 */
+		String spriteKey;
+		if (p < 0.65) spriteKey = AssetContainer.PLANET_VARIANT;
+		else if (p < 0.7) spriteKey = AssetContainer.PLANET_SECRET_1;
+		else if (p < 0.75) spriteKey = AssetContainer.PLANET_SECRET_2;
+		else if (p < 0.8) spriteKey = AssetContainer.PLANET_SECRET_3;
+		else spriteKey = AssetContainer.PLANET_MAIN;
 
 		// return Sprites.PLANET_MOON;
-		Texture t = AssetLoader.get().getTexture(AssetContainer.PLANET_MAIN);
+		Texture t = AssetLoader.get().getTexture(spriteKey);
 		Sprite s = new Sprite(t);
 		s.setSize(radius*2, radius*2);
 		return s;
