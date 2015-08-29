@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 
+import espgame.ESPGame;
 import espgame.util.MathUtils;
 
 /**
@@ -54,7 +55,15 @@ public abstract class Entity {
         setOrbitable(false);
         setExplodable(false);
     }
+    
+    public boolean isInScreen() {
+		int y = (int) (Math.abs(ESPGame.getRenderHeight()) / ESPGame.getGamescale());
+		int x = (int) (Math.abs(ESPGame.getRenderWidth()) / ESPGame.getGamescale());
 
+		if (x > Math.abs(getX()) + getRadius() && y > Math.abs(getY()) + getRadius())
+			return true;
+		return false;
+	}
 
     public int getlifespan() {
         return lifespan;

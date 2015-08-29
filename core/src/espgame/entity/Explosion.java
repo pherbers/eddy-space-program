@@ -13,21 +13,17 @@ public class Explosion extends Entity {
 
 	private int removedEddyCount = 0;
 	private float explosionRadius;
-	private float pushRadius;
-	private float pushForce;
 	private boolean active = true;
 	private ArrayList<Eddy> destroyList;
 
-	public Explosion(Vector2 position, float explosionRadius, int lifespan, float pushRadiusFactor, float pushForce) {
+	public Explosion(Vector2 position, float explosionRadius, int lifespan) {
 		super(position.x, position.y);
 		disableInterruptions();
 
 		this.explosionRadius = explosionRadius;
 		this.lifespan = lifespan;
-		this.pushForce = pushForce;
 		radius = 0;
 
-		pushRadius = explosionRadius * pushRadiusFactor;
 		destroyList = new ArrayList<Eddy>();
 
 		// TODO Particle here
@@ -59,16 +55,10 @@ public class Explosion extends Entity {
 		Level l = ESPGame.getLevel();
 
 		for (int i = 0; i < l.getEddyCount(); i++) {
-			e = l.getEddy(i);
-			destroyList.add(e);
+			Eddy eddy = l.getEddy(i);
+			destroyList.add(eddy);
 		}
 
-		radius = pushRadius;
-		for (int i = 0; i < pushList.size(); i++) {
-			e = pushList.get(i);
-			if (e.checkCollision(this))
-				e.pushAway(position, pushForce);
-		}
 		radius = explosionRadius;
 		collidable = true;
 		for (int i = 0; i < destroyList.size(); i++) {
@@ -98,8 +88,8 @@ public class Explosion extends Entity {
 		}
 		ticklifespan();
 	}
-	
-	public boolean isActive(){
+
+	public boolean isActive() {
 		return active;
 	}
 

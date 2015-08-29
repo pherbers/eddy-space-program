@@ -25,9 +25,11 @@ public class Einstellungen implements Serializable {
 	}
 
 	public static Einstellungen getCurrentEinstellungen() {
-		SoundStore s = SoundStore.get();
-		return new Einstellungen(s.getMusicVolume(), s.getSoundVolume(), s.musicOn(), s.soundsOn(),
-				Game.game.getSchwierigkeit(), Game.getPlayerName());
+		// SoundStore s = SoundStore.get();
+		// return new Einstellungen(s.getMusicVolume(), s.getSoundVolume(),
+		// s.musicOn(), s.soundsOn(),
+		// Game.game.getSchwierigkeit(), Game.getPlayerName());
+		return null;
 	}
 
 	public static Einstellungen getDefaultEinstellungen() {

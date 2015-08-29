@@ -3,11 +3,13 @@ package espgame.entity;
 import java.io.IOException;
 import java.util.Random;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 
 import espgame.ESPGame;
-import hardreset.resources.Sounds;
+import espgame.mechanics.TextDisplayer;
+import espgame.util.VectorUtils;
 
 public class HeMan extends Entity {
 	public static final float RADIUS = Eddy.RADIUS * 1.337f;
@@ -15,7 +17,7 @@ public class HeMan extends Entity {
 	public static final float THRESHOLDBOT = RADIUS * THRESHOLDMULT;
 	public static final float THRESHOLDTOP = ESPGame.getLevel().getPlanet().getOrbit().getRadius()
 			- RADIUS * THRESHOLDMULT;
-	public static final double THRESHOLDINTRO = Game.getRenderWidth() * 2.56;
+	public static final double THRESHOLDINTRO = ESPGame.getRenderWidth() * 2.56;
 	public static final float VELOCITIYMULTYPLY = 0.013f;
 	public static final float SPAWNVELOCITYMULTIPLY = 4f;
 	public static final int ADDITIONALREWARDEDDYS = 2;
@@ -38,7 +40,6 @@ public class HeMan extends Entity {
 		setVelocity(new Vector2(-.5f, -.5f));
 	}
 
-	@Deprecated
 	public HeMan() {
 		super(0, 0);
 		init();
@@ -139,21 +140,20 @@ public class HeMan extends Entity {
 		}
 		// TODO implement isInScreen
 
-		if (getPosition().getDistance(ESPGame.getLevel().getPlanet().getPosition()) > 5000) {
+		// TODO is this distance ok? Magic number?
+		if (getPosition().dst2(ESPGame.getLevel().getPlanet().getPosition()) > 5000 * 5000) {
 			System.out.println("HeMan deleted becaouse distance! Last seen at: " + position);
 			remove();
 		}
 
 		// Summon intro
-		float f = position.getDistance(ESPGame.getLevel().getPlanet().getPosition());
+		float f = position.dst(ESPGame.getLevel().getPlanet().getPosition());
 		if (f < INTRODISTANZ) {
-			// TODO wenn der patikelspawner nicht existiert...
-			if (introSpawner == null) {
-				initIntro();
-			}
+			// TODO der heman hat die introdistanz zum ersten mal unterschritten
+			// initIntro();
 		}
 	}
-	
+
 	private void onEnter() {
 		// Sounds.TWINKLE.stop();
 		// Sounds.HEMANENTER.play();
@@ -182,5 +182,51 @@ public class HeMan extends Entity {
 
 	public boolean isShowedUp() {
 		return showedUp;
+	}
+
+	public void collect() {
+		// Sounds.HEMANENTER.stop();
+		// Sounds.HEMANGET.play();
+		// TODO sound
+
+		// try {
+		// getSpawner = new ParticleSpawner(position, new Vector(), 5,
+		// Game.generateEmitter("res/particles/hemanGet.xml"));
+		// getSpawner.setEmitterImage(Sprites.STERN.getResourceReference());
+		// Game.getLevel().addEntity(getSpawner);
+		// } catch (IOException e1) {
+		// e1.printStackTrace();
+		// }
+		// TODO farticle
+
+		remove();
+
+		int r = 1, g = 1, b = 1;
+		for (int i = 0; i < ADDITIONALREWARDEDDYS; i++) {
+			switch (new Random().nextInt(3)) {
+			case 0:
+				r++;
+				break;
+			case 1:
+				g++;
+				break;
+			case 2:
+				b++;
+				break;
+			default:
+				i--;
+			}
+		}
+		ESPGame.getLevel().modReserve(0, r);
+		ESPGame.getLevel().modReserve(1, g);
+		ESPGame.getLevel().modReserve(2, b);
+
+		TextDisplayer d = ESPGame.getLevel().createTextDisplayer(getPosition(), VectorUtils.random().scl(.5f),
+				TEXTDURATION, "+" + r);
+		d.setColor(Color.RED);
+		d = ESPGame.getLevel().createTextDisplayer(getPosition(), VectorUtils.random().scl(.5f), TEXTDURATION, "+" + g);
+		d.setColor(Color.GREEN);
+		d = ESPGame.getLevel().createTextDisplayer(getPosition(), VectorUtils.random().scl(.5f), TEXTDURATION, "+" + b);
+		d.setColor(Color.BLUE);
 	}
 }

@@ -5,11 +5,11 @@ import com.badlogic.gdx.math.Vector2;
 
 public class Orbit {
 
-    double radius,force;
+    float radius,force;
     Sprite sprite;
     private Vector2 position;
 
-    public Orbit(Vector2 position, double radius, double force){
+    public Orbit(Vector2 position, float radius, float force){
         this.setPosition(position);
         this.radius = radius;
         this.force = force;
@@ -25,7 +25,7 @@ public class Orbit {
         // sprite = Sprites.ORBIT.getScaledCopy((float) ((radius*2)/1024));
 
     }
-    public void setForce(double force){
+    public void setForce(float force){
         this.force = force;
     }
 
@@ -42,10 +42,10 @@ public class Orbit {
     public void setPosition(Vector2 position) {
         this.position = position;
     }
-    public double getRadius() {
+    public float getRadius() {
         return radius;
     }
-    public void setRadius(double radius) {
+    public void setRadius(float radius) {
         this.radius = radius;
     }
 
