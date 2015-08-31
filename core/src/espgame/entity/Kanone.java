@@ -16,7 +16,7 @@ import espgame.level.Planet;
 public class Kanone extends Entity {
 
     private static final float MAX_WINKEL = 90f, MIN_WINKEL = -90f;
-    private static final int MAXCOOLDOWN = 60, MAXFORCE = 10;
+    private static final int MAXCOOLDOWN = 60, MAXFORCE = 10, MINFORCE = 1;
     private static final float SURFACE_DISTANCE = 24;
 
     private Sprite base, top;
@@ -60,7 +60,7 @@ public class Kanone extends Entity {
 //        farbe = farbe.transform(Transform.createRotateTransform((float) alpha));
         // setzeFarbe();
 
-        mausposition = new Vector2();
+        mausposition = new Vector2(position.x*2,position.y*2);
 
     }
 
@@ -176,12 +176,11 @@ public class Kanone extends Entity {
             shoot = true;
         if (shoot) {
             shoot = false;
-            if (cooldown == 0) {
+            if (cooldown == 0 && kraft > MINFORCE) {
                 float x = MathUtils.cosDeg(alpha + beta + 180) * kraft;
                 float y = MathUtils.sinDeg(alpha + beta + 180) * kraft;
                 Eddy.Color farbe;
                 int selectedEddy = ESPGame.getLevel().getSelectedEddy();
-                System.out.println(selectedEddy);
                 switch (selectedEddy) {
                     case 0:
                         farbe = Eddy.Color.ROT;
