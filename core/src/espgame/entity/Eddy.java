@@ -22,33 +22,31 @@ public class Eddy extends Entity {
 
     private int points, invested, state, tier;
 
-    public enum Color {
-        ROT, BLAU, GRUEN, GELB, CYAN, MAGENTA, WEISS, SCHWARZ
-    }
+	public enum Color {
+		ROT, BLAU, GRUEN, GELB, CYAN, MAGENTA, WEISS, SCHWARZ
+	};
 
-    ;
-
-    private static final int POITSTIER0[] = {15, 25, 50};
-    private static final int POITSTIER1[] = {50, 100, 125};
-    private static final int POITSTIER2[] = {200, 250, 300};
+	private static final int POITSTIER0[] = { 15, 25, 50 };
+	private static final int POITSTIER1[] = { 50, 100, 125 };
+	private static final int POITSTIER2[] = { 200, 250, 300 };
 
     public static final int RADIUS = 24;
 
-    private Orbit orbit;
-    private Color farbe;
-    private float gravityDrag;
-    private static final float BASEGRAVITYDRAG = 20;
-    // private ConfigurableEmitter emitter;
-    private float c = 0.0f;
-    private float rotation;
-    private boolean clockwise;
-    private boolean highlighted = false;
-    public static boolean highlight = false;
-    private Color highlightColor;
+	private Orbit orbit;
+	private Color farbe;
+	private float gravityDrag;
+	private static final float BASEGRAVITYDRAG = 20;
+	// private ConfigurableEmitter emitter;
+	private float c = 0.0f;
+	private float rotation;
+	private boolean clockwise;
+	private boolean highlighted = false;
+	public static boolean highlight = false;
+	private Color highlightColor;
 
-    public static final float GRAVITYEASY = 1.0f, GRAVITYNORMAL = 0.9999f, GRAVITYHARD = 0.9998f;
+	public static final float GRAVITYEASY = 1.0f, GRAVITYNORMAL = 0.9999f, GRAVITYHARD = 0.9998f;
 
-    private static float gravity = GRAVITYNORMAL;
+	private static float gravity = GRAVITYNORMAL;
 
     public Eddy(float x, float y, float vx, float vy, Color farbe, Orbit orbit) {
         super(x, y);
@@ -106,60 +104,59 @@ public class Eddy extends Entity {
             setHighlighted(false);
     }
 
-    public void render(SpriteBatch batch) {
-        if (visible) {
-            if (highlight && highlighted) {
-//                Sprites.EDDY_HIGHLIGHT.draw((float) (getX() - radius - 8),
-//                        (float) (getY() - radius - 8),
-//                        (float) (radius * 2 + 16), (float) (radius * 2 + 16), toSlickColor(highlightColor));
-            }
-            sprite.draw(batch);
-            // g.drawString(state + " " + velocity.getBetrag(), (float)
-            // position.getX(), (float) position.getY());
-//            if (Game.DEBUG)
-//                g.drawLine((float) getX(), (float) getY(), 0, 0);
-        }
-    }
+	public void render(SpriteBatch batch) {
+		if (visible) {
+			if (highlight && highlighted) {
+				// Sprites.EDDY_HIGHLIGHT.draw((float) (getX() - radius - 8),
+				// (float) (getY() - radius - 8),
+				// (float) (radius * 2 + 16), (float) (radius * 2 + 16),
+				// toSlickColor(highlightColor));
+			}
+			sprite.draw(batch);
+			// g.drawString(state + " " + velocity.getBetrag(), (float)
+			// position.getX(), (float) position.getY());
+			// if (Game.DEBUG)
+			// g.drawLine((float) getX(), (float) getY(), 0, 0);
+		}
+	}
 
-    public void update() {
-        updateScore();
-        // emitter.setPosition((float) getX(), (float) getY(), false);
-        sprite.rotate(rotation);
-        float x = position.x - orbit.getPosition().x;
-        float y = position.y - orbit.getPosition().y;
-        switch (state) {
-            case 0:
-                // Vector r = new Vector(-x, -y);
-                // Game.print(Vector.Skalar(r, velocity));
-                // if(Vector.Skalar(r, velocity) < 0)
-                // setState(1);
-                // velocity.multiply(1.02);
-                Vector2 w = new Vector2(position.x - orbit.getPosition().x,
-                        position.y - orbit.getPosition().y);
-                w.scl(4.7f / position.dst(orbit.getPosition()));
-                if (clockwise)
-                    w.rotate90(1);
-                else
-                    w.rotate90(-1);
-                velocity.set((1 - c) * velocity.x + c * w.x,
-                        (1 - c) * velocity.y + c * w.y);
-                c += 0.001f;
-                if (c >= 0.1f)
-                    state = 1;
-                // if(velocity.getBetrag() > 4.7)
-                // state = 1;
+	public void update() {
+		updateScore();
+		// emitter.setPosition((float) getX(), (float) getY(), false);
+		sprite.rotate(rotation);
+		float x = position.x - orbit.getPosition().x;
+		float y = position.y - orbit.getPosition().y;
+		switch (state) {
+		case 0:
+			// Vector r = new Vector(-x, -y);
+			// Game.print(Vector.Skalar(r, velocity));
+			// if(Vector.Skalar(r, velocity) < 0)
+			// setState(1);
+			// velocity.multiply(1.02);
+			Vector2 w = new Vector2(position.x - orbit.getPosition().x, position.y - orbit.getPosition().y);
+			w.scl(4.7f / position.dst(orbit.getPosition()));
+			if (clockwise)
+				w.rotate90(1);
+			else
+				w.rotate90(-1);
+			velocity.set((1 - c) * velocity.x + c * w.x, (1 - c) * velocity.y + c * w.y);
+			c += 0.001f;
+			if (c >= 0.1f)
+				state = 1;
+			// if(velocity.getBetrag() > 4.7)
+			// state = 1;
 
-            case 1:
-                float entfernung = position.dst(orbit.getPosition());
-                // position = position.add(velocity);
-                if (entfernung > orbit.getRadius()) {
-                    setState(2);
-                    break;
-                }
+		case 1:
+			float entfernung = position.dst(orbit.getPosition());
+			// position = position.add(velocity);
+			if (entfernung > orbit.getRadius()) {
+				setState(2);
+				break;
+			}
 
-                // Drehen des v-Vektors, sodass er orthogonal zum radius ist
-            /*
-             * double vBetrag = velocity.getBetrag(); double alpha = Math.atan(y
+			// Drehen des v-Vektors, sodass er orthogonal zum radius ist
+			/*
+			 * double vBetrag = velocity.getBetrag(); double alpha = Math.atan(y
 			 * / x); // winkel im orbit Game.print(x + "\t" + y + "\t" + alpha);
 			 * velocity.setX(Math.sin(alpha - gravityDrag) * vBetrag);
 			 * velocity.setY(Math.cos(alpha - gravityDrag) * vBetrag);
@@ -189,10 +186,10 @@ public class Eddy extends Entity {
                 break;*/
             case 4: // Eingesammelt
 
-        }
-        sprite.setCenter(position.x, position.y);
+		}
+		sprite.setCenter(position.x, position.y);
 
-    }
+	}
 
     public static Eddy joinEddys(Eddy e1, Eddy e2) {
         float x = (e1.getX() + e2.getX()) * 0.5f;
@@ -266,10 +263,10 @@ public class Eddy extends Entity {
         sprite.setCenter(position.x, position.y);
     }
 
-    public Explosion createCollideExplosion() {
-        //TODO magic number
-        return ESPGame.getLevel().createExplosion(getPosition(), getRadius() * 1.5f, 15);
-    }
+	public Explosion createCollideExplosion() {
+		// TODO magic number
+		return ESPGame.getLevel().createExplosion(getPosition(), getRadius() * 1.5f, 15);
+	}
 
         
 
@@ -343,7 +340,7 @@ public class Eddy extends Entity {
     }
 
     public void remove() {
-        // ESPGame.getLevel().removeEddy(this);
+        ESPGame.getLevel().removeEddy(this);
     }
 
     public float getGravityDrag() {
@@ -533,7 +530,7 @@ public class Eddy extends Entity {
         this.highlighted = highlighted;
     }
 
-    public void setHighlightedColor(Color c) {
+    public void setHighlightedColor(Color c){
         this.highlightColor = c;
     }
 

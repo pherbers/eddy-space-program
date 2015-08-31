@@ -2,6 +2,7 @@ package espgame.entity;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -165,14 +166,12 @@ public class Kanone extends Entity {
         base.setCenter(position.x, position.y);
         base.setRotation(alpha + 90f);
         top.setRotation(alpha + beta + 90f);
-        farbBackground.setCenter(position.x - MathUtils.cosDeg(beta + alpha) * 16, position.y - MathUtils.sinDeg(beta + alpha) * 16);
-        farbBackground.setRotation(alpha + beta + 90f);
 
     }
 
     @Override
     public void update() {
-        setzeFarbe();
+//        setzeFarbe();
 //        forcebar.setValue(kraft);
 //        cooldownbar.setValue(cooldown);
 		/*
@@ -214,6 +213,10 @@ public class Kanone extends Entity {
                             x, y, farbe, ESPGame.getLevel().getPlanet().getOrbit()); // Farbe
                     // bestimmen
                     ESPGame.getLevel().addEntity(eddy);
+                    
+                    Sound pop = AssetLoader.get().getSound(AssetContainer.SOUND_POP);
+                    pop.stop();
+                    pop.play();
                     //ESPGame.print("Neuer Eddie erstellt!");
                     //if (!Sounds.POP.playing()) {
                     //Sounds.POP.play((float) Math.sqrt(kraft), 1.0f);
@@ -251,38 +254,39 @@ public class Kanone extends Entity {
         return c > 0;
     }
 
-    public void mousePressed(int button, int x, int y) {
-        if (button == 0)
-            mouseDown = true;
-        else if (button == 1) {
-//            int i = ESPGame.getLevel().getSelectedEddy();
-//            i++;
-//            i = i % 3;
-//            ESPGame.getLevel().setSelectedEddy(i);
-        }
-    }
+	public void mousePressed(int button, int x, int y) {
+		if (button == 0)
+			mouseDown = true;
+		else if (button == 1) {
+			// int i = ESPGame.getLevel().getSelectedEddy();
+			// i++;
+			// i = i % 3;
+			// ESPGame.getLevel().setSelectedEddy(i);
+		}
+	}
 
-    public void startChargeup() {
-        mouseDown = true;
-    }
+	public void startChargeup() {
+		mouseDown = true;
+	}
 
-    public void shoot() {
-        mouseDown = false;
-        shoot = true;
-    }
+	public void shoot() {
+		mouseDown = false;
+		shoot = true;
+	}
 
-    public void updateMousePosition(int newx, int newy) {
-        Vector3 worldCoords = ESPGame.getLevel().getCamera().unproject(new Vector3(newx, newy, 0));
-        mausposition.set(worldCoords.x, worldCoords.y);
-        updateDrehung();
-    }
+	public void updateMousePosition(int newx, int newy) {
+		Vector3 worldCoords = ESPGame.getLevel().getCamera().unproject(new Vector3(newx, newy, 0));
+		mausposition.set(worldCoords.x, worldCoords.y);
+		updateDrehung();
+	}
 
-    public void updateDrehung() {
-        float winkel = MathUtils.atan2(mausposition.y - getY(), mausposition.x - getX()) * MathUtils.radiansToDegrees - alpha + 180;
-        if (winkel > 180)
-            winkel -= 360;
-        else if (winkel < -180)
-            winkel += 360;
-        setDrehung(winkel);
-    }
+	public void updateDrehung() {
+		float winkel = MathUtils.atan2(mausposition.y - getY(), mausposition.x - getX()) * MathUtils.radiansToDegrees
+				- alpha + 180;
+		if (winkel > 180)
+			winkel -= 360;
+		else if (winkel < -180)
+			winkel += 360;
+		setDrehung(winkel);
+	}
 }

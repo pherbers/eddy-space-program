@@ -2,14 +2,19 @@ package espgame.entity;
 
 import java.util.ArrayList;
 
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 
 import espgame.ESPGame;
 import espgame.level.Level;
+import espgame.resources.AssetContainer;
+import espgame.resources.AssetLoader;
 import espgame.util.VectorUtils;
 
 public class Explosion extends Entity {
+
+	public static final int TEXT_DURATION = 220;
 
 	private int removedEddyCount = 0;
 	private float explosionRadius;
@@ -28,16 +33,17 @@ public class Explosion extends Entity {
 
 		// TODO Particle here
 
-		// TODO play explosion sound
+		Sound explosion = AssetLoader.get().getSound(AssetContainer.SOUND_EXPLOSION);
+		explosion.play();
 	}
 
 	@Override
 	public void onRemove() {
+		System.out.println("Explosion entfernt. Removed Count: " + getRemovedEddyCount());
 		if (getRemovedEddyCount() != 0) {
 			Vector2 v = VectorUtils.up();
 			v.scl(0.3f);
-
-			// TODO display text
+			ESPGame.getLevel().createTextDisplayer(position, v, TEXT_DURATION, "-" + getRemovedEddyCount());
 		}
 	}
 
@@ -45,29 +51,31 @@ public class Explosion extends Entity {
 	public void remove() {
 		if (lifespan == 0)
 			active = false;
-		// if (!active && particlelife < 0)
-		// super.remove();
+		if (!active) // TODO if active && keine fartikel mehr
+			super.remove();
 		// TODO patikel entfernen??
 	}
 
 	public void removeObjects() {
-		Entity e;
+		Eddy e;
 		Level l = ESPGame.getLevel();
 
 		for (int i = 0; i < l.getEddyCount(); i++) {
 			Eddy eddy = l.getEddy(i);
 			destroyList.add(eddy);
+			// eddy.remove();
 		}
 
 		radius = explosionRadius;
 		collidable = true;
+		// System.out.println("destroylist größe: " + destroyList.size());
 		for (int i = 0; i < destroyList.size(); i++) {
 			e = destroyList.get(i);
 			if (e.checkCollision(this)) {
-				if (e instanceof Eddy) {
-					l.removeEddy((Eddy) e);
-					removedEddyCount++;
-				}
+				l.removeEddy(e);
+				removedEddyCount++;
+				System.out.println("Explosion hat eddy gefunden und entfernt.");
+
 			}
 		}
 		radius = 0;

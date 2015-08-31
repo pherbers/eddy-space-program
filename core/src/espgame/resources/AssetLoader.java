@@ -6,6 +6,7 @@ import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 
 import static espgame.resources.AssetContainer.*;
 
@@ -17,6 +18,7 @@ public class AssetLoader {
 	private AssetContainer<Texture> textureContainer;
 	private AssetContainer<Sound> soundContainer;
 	private AssetContainer<Music> musicContainer;
+	private BitmapFont font;
 
 	public static AssetLoader get() {
 		if (loader == null)
@@ -62,7 +64,8 @@ public class AssetLoader {
 		assetList.add(new TempAsset("sprites/eddys/EddyMagenta.png", textureContainer, EDDY_MAGENTA, Texture.class));
 		assetList.add(new TempAsset("sprites/eddys/EddyRot.png", textureContainer, EDDY_ROT, Texture.class));
 		assetList.add(new TempAsset("sprites/eddys/Eddyweiss.png", textureContainer, EDDY_WEISS, Texture.class));
-		assetList.add(new TempAsset("sprites/eddys/EddyHighlight.png", textureContainer, EDDY_HIGHLIGHT, Texture.class));
+		assetList
+				.add(new TempAsset("sprites/eddys/EddyHighlight.png", textureContainer, EDDY_HIGHLIGHT, Texture.class));
 		assetList.add(new TempAsset("sprites/eddys/HeMan.png", textureContainer, HEMAN, Texture.class));
 		assetList.add(new TempAsset("sprites/eddys/pointyeddy.png", textureContainer, MENU_EDDY, Texture.class));
 		assetList.add(new TempAsset("sprites/eddys/pointynils.png", textureContainer, MENU_NILS, Texture.class));
@@ -70,8 +73,19 @@ public class AssetLoader {
 		assetList.add(new TempAsset("sprites/planeten/earth.png", textureContainer, PLANET_MAIN, Texture.class));
 		assetList.add(new TempAsset("sprites/planeten/moon.png", textureContainer, PLANET_VARIANT, Texture.class));
 		assetList.add(new TempAsset("sprites/planeten/majora.png", textureContainer, PLANET_SECRET_1, Texture.class));
-		assetList.add(new TempAsset("sprites/planeten/death_star.png", textureContainer, PLANET_SECRET_2, Texture.class));
+		assetList.add(
+				new TempAsset("sprites/planeten/death_star.png", textureContainer, PLANET_SECRET_2, Texture.class));
 		assetList.add(new TempAsset("sprites/planeten/cheese.png", textureContainer, PLANET_SECRET_3, Texture.class));
+
+		assetList.add(new TempAsset("sound/pop.wav", soundContainer, SOUND_POP, Sound.class));
+		assetList.add(new TempAsset("sound/empty.wav", soundContainer, SOUND_KANON_EMPTY, Sound.class));
+		assetList.add(new TempAsset("sound/HeManEnter.ogg", soundContainer, SOUND_HEMAN_ENTER, Sound.class));
+		assetList.add(new TempAsset("sound/ratschlag.ogg", soundContainer, SOUND_HEMAN_GET, Sound.class));
+		assetList.add(new TempAsset("sound/button.wav", soundContainer, SOUND_BUTTON_PRESS, Sound.class));
+		assetList.add(new TempAsset("sound/twinkle.wav", soundContainer, SOUND_TWINKLE, Sound.class));
+		assetList.add(new TempAsset("sound/explosionB.wav", soundContainer, SOUND_EXPLOSION, Sound.class));
+
+		assetList.add(new TempAsset("music/music.ogg", musicContainer, MUSIC, Music.class));
 	}
 
 	public synchronized void load() {
@@ -80,14 +94,20 @@ public class AssetLoader {
 		for (int i = 0; i < assetList.size(); i++) {
 			assetList.get(i).load(manager);
 		}
-
+		manager.load("font/airstrike.fnt", BitmapFont.class);
 		manager.finishLoading();
 
 		for (int i = 0; i < assetList.size(); i++) {
 			assetList.get(i).store(manager);
 		}
+		font = manager.get("font/airstrike.fnt",BitmapFont.class);
 		System.out.println("Loaded all assets. Clears now.");
 		assetList.clear();
+	}
+
+	public BitmapFont getFont() {
+		return font;
+
 	}
 
 	public AssetContainer<Texture> getTextureContainer() {
@@ -105,8 +125,14 @@ public class AssetLoader {
 	public Texture getTexture(String key) {
 		return getTextureContainer().get(key);
 	}
-	public Sound getSound(String key) { return getSoundContainer().get(key); }
-	public Music getMusic(String key) {	return getMusicContainer().get(key); }
+
+	public Sound getSound(String key) {
+		return getSoundContainer().get(key);
+	}
+
+	public Music getMusic(String key) {
+		return getMusicContainer().get(key);
+	}
 
 	public class TempAsset {
 		private String path;

@@ -5,7 +5,9 @@ import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.math.Vector2;
+import com.sun.media.sound.SoftSynthesizer;
 
 import espgame.ESPGame;
 import espgame.entity.*;
@@ -60,7 +62,7 @@ public class Level implements Screen {
 	private int selectedEddy = 0;
 
 	private Planet planet;
-	
+
 	private Kanone kanone;
 	private KanoneController kanonec;
 	private InputMultiplexer input;
@@ -85,7 +87,7 @@ public class Level implements Screen {
 		points = 0;
 		Planet planet = new Planet(PLANET_SIZE, PLANET_ORBIT_RADIUS, PLANET_ORBIT_FORCE);
 		schiff = new Schiff(ESPGame.getRandomOmega(), planet.getOrbit().getRadius() + 50, planet.getOrbit());
-		
+
 		this.planet = planet;
 
 		if (schwierigkeit == 2)
@@ -108,28 +110,24 @@ public class Level implements Screen {
 		running = true;
 		gameover = false;
 		paused = false;
-		if (schwierigkeit == 2)
-			hemandelay = HEMANLEVEL + 1;
-		else
-			hemandelay = HEMANLEVEL;
 
 		this.kanone = new Kanone(0);
 		entities.add(planet);
 		entities.add(schiff);
 		entities.add(kanone);
-		
+
 		this.kanonec = new KanoneController(kanone);
 
 		this.input = new InputMultiplexer();
-			input.addProcessor(kanonec);
+		input.addProcessor(kanonec);
 
 		Gdx.input.setInputProcessor(input);
-
 
 		// BEGIN RUNDE 1
 		setReserved(3, 3, 3);
 		newObjective(level);
 
+		spawnHeman = true;
 	}
 
 	@Override
@@ -174,12 +172,13 @@ public class Level implements Screen {
 			// Disable Gameover Overlay
 		}
 
-		for (int i = 0; i < eddys.size(); i++) {
-			Entity e = eddys.get(i);
-			e.update();
-		}
 		for (int i = 0; i < entities.size(); i++) {
 			Entity e = entities.get(i);
+			e.update();
+		}
+
+		for (int i = 0; i < eddys.size(); i++) {
+			Entity e = eddys.get(i);
 			e.update();
 		}
 
@@ -273,12 +272,14 @@ public class Level implements Screen {
 
 		// He Man spawn
 		if (spawnHeman) {
+			System.out.println("He-Man steht unmittelbar bevor! " + hemanCoutdown);
 			hemanCoutdown--;
 			if (hemanCoutdown == 0) {
 				hemanCoutdown = HEMANCOUNTDOWNBASE + new Random().nextInt(HEMANJITTER);
 				spawnHeman = false;
 				heman = new HeMan();
 				addEntity(heman);
+				System.out.println("He-Man ist nun in der EntityListe.");
 			}
 		}
 
@@ -287,6 +288,8 @@ public class Level implements Screen {
 	public Explosion createExplosion(Vector2 position, float explosionsRadius, int lifespan) {
 		Explosion e = new Explosion(position, explosionsRadius, lifespan);
 		addEntity(e);
+
+		e.removeObjects();
 
 		return e;
 	}
@@ -334,7 +337,7 @@ public class Level implements Screen {
 		return planet;
 	}
 
-	public OrthographicCamera getCamera(){
+	public OrthographicCamera getCamera() {
 		return camera;
 	}
 
@@ -385,8 +388,8 @@ public class Level implements Screen {
 	}
 
 	public TextDisplayer createTextDisplayer(Vector2 pos, Vector2 vel, int duration, String text) {
-		TextDisplayer td = new TextDisplayer(pos.x, pos.y, vel, text, null, duration, null);
-		// TODO font & color
+		System.out.println("Textdisplayer requested: \"" + text + "\"");
+		TextDisplayer td = new TextDisplayer(pos.x, pos.y, vel, text, duration);
 		addEntity(td);
 		return td;
 	}
