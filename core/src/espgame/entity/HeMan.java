@@ -3,12 +3,16 @@ package espgame.entity;
 import java.io.IOException;
 import java.util.Random;
 
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 
 import espgame.ESPGame;
 import espgame.mechanics.TextDisplayer;
+import espgame.resources.AssetContainer;
+import espgame.resources.AssetLoader;
 import espgame.util.VectorUtils;
 
 public class HeMan extends Entity {
@@ -25,24 +29,31 @@ public class HeMan extends Entity {
 	public static final int PAUSETIMERMAX = 300;
 	public static final int INTRODISTANZ = 950;
 	public static final int BACKUPLIFESPAWN = 250;
+	public static final int ROTATION_INSTANCE = 3;
 
 	private Random r;
 	private Vector2 target;
 	private Vector2 start;
 	private boolean showedUp;
 	private boolean paused = false;
+	private boolean introplayed = false;
 	private int pauseTimer = PAUSETIMERMAX;
 
+	private Sound enterSound, getSound, twinkle;
+
+	@Deprecated
 	public HeMan(float x, float y) {
 		super(x, y);
 		init();
 		setPosition(x, y);
 		setVelocity(new Vector2(-.5f, -.5f));
+
 	}
 
 	public HeMan() {
 		super(0, 0);
 		init();
+		System.out.println("HeMan deployed.");
 	}
 
 	private void init() {
@@ -57,9 +68,11 @@ public class HeMan extends Entity {
 		radius = RADIUS;
 		setlifespan(BACKUPLIFESPAWN);
 
-		// sprite = Sprites.HEMAN.getScaledCopy((int) radius * 2, (int) radius *
-		// 2);
-		// TODO set sprite
+		AssetLoader loader = AssetLoader.get();
+		enterSound = loader.getSound(AssetContainer.SOUND_HEMAN_ENTER);
+		getSound = loader.getSound(AssetContainer.SOUND_HEMAN_GET);
+		twinkle = loader.getSound(AssetContainer.SOUND_TWINKLE);
+		sprite = new Sprite(loader.getTexture(AssetContainer.HEMAN));
 
 		velocity = new Vector2(target);
 		if (r.nextBoolean())
@@ -86,8 +99,9 @@ public class HeMan extends Entity {
 		// TODO particles here
 
 		setPosition(start);
-
-		ESPGame.getLevel().setHeman(this);
+		sprite.setSize(radius * 2, radius * 2);
+		sprite.setOriginCenter();
+		sprite.setCenter(position.x, position.y);
 	}
 
 	private float calculatePosition() {
@@ -104,17 +118,7 @@ public class HeMan extends Entity {
 
 	@Override
 	public void render(SpriteBatch batch) {
-		// Game.drawImage(sprite, getX() - radius, getY() - radius);
-		// if (Game.DEBUG) {
-		// g.drawString(position.toString(), (float) getX(), (float) getY());
-		// g.drawRect((float) target.getX(), (float) target.getY(), 10, 10);
-		// }
-		// if (!showedUp &&
-		// position.getDistance(Game.getLevel().getPlanet().getPosition()) <
-		// THRESHOLDINTRO)
-		// if (Game.DEBUG)
-		// g.drawLine((float) getX(), (float) getY(), (float) target.getX(),
-		// (float) target.getY());
+		sprite.draw(batch);
 	}
 
 	@Override
@@ -126,6 +130,8 @@ public class HeMan extends Entity {
 		} else {
 			position = position.add(velocity);
 		}
+		sprite.setCenter(position.x, position.y);
+		sprite.rotate(ROTATION_INSTANCE + new Random().nextInt(3));
 		// emitterR.setPosition((float) getX(), (float) getY(), false);
 		// emitterG.setPosition((float) getX(), (float) getY(), false);
 		// emitterB.setPosition((float) getX(), (float) getY(), false);
@@ -138,25 +144,26 @@ public class HeMan extends Entity {
 		if (showedUp && !isInScreen()) {
 			ticklifespan();
 		}
-		// TODO implement isInScreen
 
 		// TODO is this distance ok? Magic number?
 		if (getPosition().dst2(ESPGame.getLevel().getPlanet().getPosition()) > 5000 * 5000) {
-			System.out.println("HeMan deleted becaouse distance! Last seen at: " + position);
+//			System.out.println("HeMan deleted becaouse distance! Last seen at: " + position);
 			remove();
 		}
 
 		// Summon intro
 		float f = position.dst(ESPGame.getLevel().getPlanet().getPosition());
-		if (f < INTRODISTANZ) {
-			// TODO der heman hat die introdistanz zum ersten mal unterschritten
-			// initIntro();
+		if (f < INTRODISTANZ && !introplayed) {
+//			System.out.println("He-Man befindet sich in der Nähe zum Planeten. Intro!");
+			initIntro();
 		}
+
+//		System.out.println("HeMan update. Pos: " + position.x + ", " + position.y);
 	}
 
 	private void onEnter() {
-		// Sounds.TWINKLE.stop();
-		// Sounds.HEMANENTER.play();
+		twinkle.stop();
+		enterSound.play();
 	}
 
 	private void initIntro() {
@@ -170,13 +177,14 @@ public class HeMan extends Entity {
 			// TODO partikels
 
 			paused = true;
-			// Sounds.TWINKLE.play();
-			// TODO play twinkle sound
+			twinkle.play();
 			// Game.print("I AM SUCCESS!");
 		} catch (Exception e) {
 			// Game.print("I AM ERROR!");
 			e.printStackTrace();
 		}
+		introplayed = true;
+		// TODO remove try catch?
 		// Game.print("I AM DONE!");
 	}
 
@@ -185,9 +193,8 @@ public class HeMan extends Entity {
 	}
 
 	public void collect() {
-		// Sounds.HEMANENTER.stop();
-		// Sounds.HEMANGET.play();
-		// TODO sound
+		enterSound.stop();
+		getSound.play();
 
 		// try {
 		// getSpawner = new ParticleSpawner(position, new Vector(), 5,
@@ -221,12 +228,13 @@ public class HeMan extends Entity {
 		ESPGame.getLevel().modReserve(1, g);
 		ESPGame.getLevel().modReserve(2, b);
 
-		TextDisplayer d = ESPGame.getLevel().createTextDisplayer(getPosition(), VectorUtils.random().scl(.5f),
+		TextDisplayer d = ESPGame.getLevel().createTextDisplayer(getPosition(), VectorUtils.randomNormalized().scl(.5f),
 				TEXTDURATION, "+" + r);
 		d.setColor(Color.RED);
-		d = ESPGame.getLevel().createTextDisplayer(getPosition(), VectorUtils.random().scl(.5f), TEXTDURATION, "+" + g);
+		System.out.println("my pos: "+getPosition()+" text pos: "+d.getPosition());
+		d = ESPGame.getLevel().createTextDisplayer(getPosition(), VectorUtils.randomNormalized().scl(.5f), TEXTDURATION, "+" + g);
 		d.setColor(Color.GREEN);
-		d = ESPGame.getLevel().createTextDisplayer(getPosition(), VectorUtils.random().scl(.5f), TEXTDURATION, "+" + b);
+		d = ESPGame.getLevel().createTextDisplayer(getPosition(), VectorUtils.randomNormalized().scl(.5f), TEXTDURATION, "+" + b);
 		d.setColor(Color.BLUE);
 	}
 }

@@ -40,6 +40,16 @@ public abstract class AssetContainer<T> {
 	public static final String UI_LOGO_TINY = "ui_logo_tiny";
 	public static final String UI_SELECTION = "ui_selection";
 
+	public static final String SOUND_POP = "sound_pop";
+	public static final String SOUND_HEMAN_ENTER = "sound_hemanenter";
+	public static final String SOUND_EXPLOSION = "sound_explosion";
+	public static final String SOUND_HEMAN_GET = "sound_hemanratschlag";
+	public static final String SOUND_TWINKLE = "sound_twinkle";
+	public static final String SOUND_BUTTON_PRESS = "sound_button";
+	public static final String SOUND_KANON_EMPTY = "sound_canon_empty";
+
+	public static final String MUSIC = "main_music";
+
 	private HashMap<String, T> textureMap;
 
 	public AssetContainer() {
