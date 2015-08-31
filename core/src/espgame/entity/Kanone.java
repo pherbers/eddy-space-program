@@ -1,5 +1,7 @@
 package espgame.entity;
 
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -8,6 +10,8 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import espgame.ESPGame;
 import espgame.level.Planet;
+import espgame.resources.AssetContainer;
+import espgame.resources.AssetLoader;
 
 /**
  * Created by Patrick on 26.08.2015.
@@ -30,6 +34,7 @@ public class Kanone extends Entity {
     private int cooldown;
     private float kraft;
     private Planet planet;
+    private Sprite farbBackground;
 
     // Maussteuerung
     private Vector2 mausposition;
@@ -47,11 +52,18 @@ public class Kanone extends Entity {
         collidable = false;
         beta = 0;
         kraft = 0;
-        base = new Sprite(new Texture("sprites/misc/Kanone_base.png"));
-        top = new Sprite(new Texture("sprites/misc/Kanone_top.png"));
+        base = new Sprite(AssetLoader.get().getTexture(AssetContainer.KANONE_BASE));
+        top = new Sprite(AssetLoader.get().getTexture(AssetContainer.KANONE_TOP));
+        Pixmap p = new Pixmap(32, 32, Pixmap.Format.RGB888);
+        p.setColor(Color.WHITE);
+        p.fill();
+        farbBackground = new Sprite(new Texture(p));
+        p.dispose();
+        farbBackground.setColor(Color.RED);
 
         top.setOriginCenter();
         base.setOriginCenter();
+        farbBackground.setOriginCenter();
 
         updatePosition();
         System.out.println(base.getOriginX() + ", " + base.getOriginY());
@@ -64,22 +76,21 @@ public class Kanone extends Entity {
 
     }
 
-    /*private void setzeFarbe() {
+    private void setzeFarbe() {
         int x = ESPGame.getLevel().getSelectedEddy();
         switch (x) {
             case 0:
-                farbeFill = org.newdawn.slick.Color.red;
+                farbBackground.setColor(Color.RED);
                 break;
             case 1:
-                farbeFill = org.newdawn.slick.Color.blue;
+                farbBackground.setColor(Color.BLUE);
                 break;
             case 2:
-                farbeFill = org.newdawn.slick.Color.green;
+                farbBackground.setColor(Color.GREEN);
             default:
                 break;
         }
-
-    }*/
+    }
 
 	/*
 	 * public void aktivieren() { active = true; }
@@ -127,8 +138,8 @@ public class Kanone extends Entity {
 //        g.setColor(farbeFill);
 //        g.fill(farbe);
 //        g.setColor(org.newdawn.slick.Color.white);
+        farbBackground.draw(batch);
         top.draw(batch);
-        batch.draw(top, 0, 0, 4, 4);
         /*if (Game.DEBUG) {
             g.drawRect((float) position.getX(), (float) position.getY(), 10, 5);
             g.drawLine((float) position.getX(), (float) position.getY(),
@@ -154,12 +165,14 @@ public class Kanone extends Entity {
         base.setCenter(position.x, position.y);
         base.setRotation(alpha + 90f);
         top.setRotation(alpha + beta + 90f);
+        farbBackground.setCenter(position.x - MathUtils.cosDeg(beta + alpha) * 16, position.y - MathUtils.sinDeg(beta + alpha) * 16);
+        farbBackground.setRotation(alpha + beta + 90f);
 
     }
 
     @Override
     public void update() {
-//        setzeFarbe();
+        setzeFarbe();
 //        forcebar.setValue(kraft);
 //        cooldownbar.setValue(cooldown);
 		/*
