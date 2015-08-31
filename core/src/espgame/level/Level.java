@@ -35,8 +35,7 @@ public class Level implements Screen {
 	public static final int HEMANLEVEL = 2;
 	public static final int EDDYCAP = 10;
 
-	public static final int STAR_COUNT = 300;
-	public static final boolean STAR_OFFSET = true;
+	public static final float STAR_PERCENTAGE = 0.0005f;
 
 	private int hemanCoutdown = HEMANCOUNTDOWNBASE;
 
@@ -69,7 +68,6 @@ public class Level implements Screen {
 		this.game = game;
 		camera = new OrthographicCamera();
 		camera.setToOrtho(false, 800, 480);
-		camera.translate(1500, 1500);
 	}
 
 	@Override
@@ -80,7 +78,7 @@ public class Level implements Screen {
 		addQueue = new LinkedList<Entity>();
 		removeQueue = new LinkedList<Entity>();
 		objective = new Objective();
-		hintergrund = new Hintergrund(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), STAR_COUNT, STAR_OFFSET);
+		hintergrund = new Hintergrund(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), STAR_PERCENTAGE);
 		level = 1;
 		points = 0;
 		Planet planet = new Planet(PLANET_SIZE, PLANET_ORBIT_RADIUS, PLANET_ORBIT_FORCE);
@@ -146,10 +144,10 @@ public class Level implements Screen {
 		camera.position.set(0, 0, 0);
 		camera.update();
 
-		hintergrund.render();
 		game.batch.setProjectionMatrix(camera.combined);
 
 		game.batch.begin();
+		hintergrund.render(game.batch);
 		for (int i = 0; i < entities.size(); i++) {
 			Entity e = entities.get(i);
 			e.render(game.batch);
@@ -296,6 +294,7 @@ public class Level implements Screen {
 		camera.setToOrtho(false, width, height);
 		// TODO match hintergrund to new screensize?
 		camera.update();
+		hintergrund.resize(width, height);
 	}
 
 	private void newObjective(int level) {
