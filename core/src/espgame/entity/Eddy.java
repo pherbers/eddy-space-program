@@ -178,12 +178,12 @@ public class Eddy extends Entity {
                 }
                 break;
             case 3: // TODO: Einsammeln
-                /* Vector2 schiffpos = ESPGame.getLevel().getSchiff().position;
-                velocity.set((schiffpos.getX() - position.getX()),
-                        (schiffpos.getY() - position.getY()));
-                velocity.multiply(20.0 / velocity.getBetrag());
+                Vector2 schiffpos = ESPGame.getLevel().getSchiff().position;
+                velocity.set((schiffpos.x - position.x),
+                        (schiffpos.y - position.y));
+                velocity.scl(20.0f / velocity.len());
                 position = position.add(velocity);
-                break;*/
+                break;
             case 4: // Eingesammelt
 
 		}
@@ -364,15 +364,15 @@ public class Eddy extends Entity {
             case ROT:
             case BLAU:
             case GRUEN:
-                //points = POITSTIER0[Game.game.getSchwierigkeit()];
+                points = POITSTIER0[ESPGame.getLevel().getSchwierigkeit()];
                 break;
             case MAGENTA:
             case CYAN:
             case GELB:
-                //points = POITSTIER1[Game.game.getSchwierigkeit()];
+                points = POITSTIER1[ESPGame.getLevel().getSchwierigkeit()];
                 break;
             case WEISS:
-                //points = POITSTIER2[Game.game.getSchwierigkeit()];
+                points = POITSTIER2[ESPGame.getLevel().getSchwierigkeit()];
                 break;
             case SCHWARZ:
                 points = -100;

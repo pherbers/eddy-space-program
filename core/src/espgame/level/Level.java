@@ -111,7 +111,7 @@ public class Level implements Screen {
 		gameover = false;
 		paused = false;
 
-		this.kanone = new Kanone(0);
+		this.kanone = new Kanone(new Random().nextFloat()*360);
 		entities.add(planet);
 		entities.add(schiff);
 		entities.add(kanone);
@@ -623,5 +623,10 @@ public class Level implements Screen {
 	public void setSchwierigkeit(int schwierigkeit) {
 		this.schwierigkeit = schwierigkeit;
 	}
+
+	public Schiff getSchiff() {
+		return schiff;
+	}
+
 
 }

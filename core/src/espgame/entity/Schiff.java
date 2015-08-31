@@ -12,6 +12,7 @@ import espgame.ESPGame;
 import espgame.level.Orbit;
 import espgame.resources.AssetContainer;
 import espgame.resources.AssetLoader;
+import espgame.util.VectorUtils;
 
 public class Schiff extends Entity {
 
@@ -102,7 +103,7 @@ public class Schiff extends Entity {
 					e.setState(4);
 					e.disableParticles();
 					ESPGame.getLevel().modPunkte(e.getPoints());
-					ESPGame.getLevel().createTextDisplayer(position, new Vector2(0, -1), 300, "+" + e.getPoints());
+					ESPGame.getLevel().createTextDisplayer(position, VectorUtils.up().scl(0.5f), 180, "+" + e.getPoints());
 				}
 			}
 			boolean eingesammelt = true;

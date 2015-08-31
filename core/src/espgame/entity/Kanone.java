@@ -31,6 +31,7 @@ public class Kanone extends Entity {
     // private boolean active = false;
     private float alpha; // Drehung der Kanone auf der Oberflaeche
     private float beta; // Drehung der Kanone zum schiessen
+    private float omega; // Offset für Kanonenrotation auf Planeten
     private float sinalpha, cosalpha;
     private int cooldown;
     private float kraft;
@@ -43,7 +44,7 @@ public class Kanone extends Entity {
 
     public Kanone(float omega) {
         super(0, 0);
-        alpha = omega;
+        this.omega = omega;
         planet = ESPGame.getLevel().getPlanet();
         sinalpha = MathUtils.sin(alpha);
         cosalpha = MathUtils.cos(alpha);
@@ -156,7 +157,7 @@ public class Kanone extends Entity {
 
     public void updatePosition() {
         float planetRotation = planet.getRotation() % 360;
-        alpha = planetRotation;
+        alpha = planetRotation + omega;
         cosalpha = MathUtils.cosDeg(alpha);
         sinalpha = MathUtils.sinDeg(alpha);
         position.x = -cosalpha * (planet.getRadius() + SURFACE_DISTANCE);
@@ -166,12 +167,14 @@ public class Kanone extends Entity {
         base.setCenter(position.x, position.y);
         base.setRotation(alpha + 90f);
         top.setRotation(alpha + beta + 90f);
+        farbBackground.setCenter(position.x - MathUtils.cosDeg(beta + alpha) * 16, position.y - MathUtils.sinDeg(beta + alpha) * 16);
+        farbBackground.setRotation(alpha + beta + 90f);
 
     }
 
     @Override
     public void update() {
-//        setzeFarbe();
+        setzeFarbe();
 //        forcebar.setValue(kraft);
 //        cooldownbar.setValue(cooldown);
 		/*
@@ -221,11 +224,11 @@ public class Kanone extends Entity {
                     //if (!Sounds.POP.playing()) {
                     //Sounds.POP.play((float) Math.sqrt(kraft), 1.0f);
                     //}
-                    //Level.level().modReserve(selectedEddy, -1);
-//                } else {
-//                    Level.level().createTextDisplayer(position,
-//                            Vector.randomVector(), 150, "No Ammo!!");
-//                    Sounds.EMPTY.play();
+                    ESPGame.getLevel().modReserve(selectedEddy, -1);
+                } else {
+                    Sound empty = AssetLoader.get().getSound(AssetContainer.SOUND_KANON_EMPTY);
+                    empty.stop();
+                    empty.play();
                 }
                 cooldown = MAXCOOLDOWN;
             }
