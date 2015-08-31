@@ -13,6 +13,7 @@ import espgame.ESPGame;
 import espgame.mechanics.TextDisplayer;
 import espgame.resources.AssetContainer;
 import espgame.resources.AssetLoader;
+import espgame.resources.Fontsize;
 import espgame.util.VectorUtils;
 
 public class HeMan extends Entity {
@@ -229,12 +230,12 @@ public class HeMan extends Entity {
 		ESPGame.getLevel().modReserve(2, b);
 
 		TextDisplayer d = ESPGame.getLevel().createTextDisplayer(getPosition(), VectorUtils.randomNormalized().scl(.5f),
-				TEXTDURATION, "+" + r);
+				TEXTDURATION, "+" + r, Fontsize.Gross);
 		d.setColor(Color.RED);
 		System.out.println("my pos: "+getPosition()+" text pos: "+d.getPosition());
-		d = ESPGame.getLevel().createTextDisplayer(getPosition(), VectorUtils.randomNormalized().scl(.5f), TEXTDURATION, "+" + g);
+		d = ESPGame.getLevel().createTextDisplayer(getPosition(), VectorUtils.randomNormalized().scl(.5f), TEXTDURATION, "+" + g, Fontsize.Gross);
 		d.setColor(Color.GREEN);
-		d = ESPGame.getLevel().createTextDisplayer(getPosition(), VectorUtils.randomNormalized().scl(.5f), TEXTDURATION, "+" + b);
+		d = ESPGame.getLevel().createTextDisplayer(getPosition(), VectorUtils.randomNormalized().scl(.5f), TEXTDURATION, "+" + b, Fontsize.Gross);
 		d.setColor(Color.BLUE);
 	}
 }

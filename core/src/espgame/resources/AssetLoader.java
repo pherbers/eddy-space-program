@@ -18,7 +18,7 @@ public class AssetLoader {
 	private AssetContainer<Texture> textureContainer;
 	private AssetContainer<Sound> soundContainer;
 	private AssetContainer<Music> musicContainer;
-	private BitmapFont font;
+	private AssetContainer<BitmapFont> fontContainer;
 
 	public static AssetLoader get() {
 		if (loader == null)
@@ -45,6 +45,14 @@ public class AssetLoader {
 			@Override
 			protected Music handleMissing() {
 				System.err.println("Wanting to access a music. But it is missing.");
+				return null;
+			}
+		};
+		fontContainer = new AssetContainer<BitmapFont>() {
+			
+			@Override
+			protected BitmapFont handleMissing() {
+				System.err.println("Wanting to access a font. But it is missing.");
 				return null;
 			}
 		};
@@ -86,6 +94,10 @@ public class AssetLoader {
 		assetList.add(new TempAsset("sound/explosionB.wav", soundContainer, SOUND_EXPLOSION, Sound.class));
 
 		assetList.add(new TempAsset("music/music.ogg", musicContainer, MUSIC, Music.class));
+
+		assetList.add(new TempAsset("font/airstrike_small.fnt", fontContainer, FONT_SMALL, BitmapFont.class));
+		assetList.add(new TempAsset("font/airstrike_med.fnt", fontContainer, FONT_MEDIUM, BitmapFont.class));
+		assetList.add(new TempAsset("font/airstrike_big.fnt", fontContainer, FONT_BIG, BitmapFont.class));
 	}
 
 	public synchronized void load() {
@@ -94,20 +106,14 @@ public class AssetLoader {
 		for (int i = 0; i < assetList.size(); i++) {
 			assetList.get(i).load(manager);
 		}
-		manager.load("font/airstrike.fnt", BitmapFont.class);
+
 		manager.finishLoading();
 
 		for (int i = 0; i < assetList.size(); i++) {
 			assetList.get(i).store(manager);
 		}
-		font = manager.get("font/airstrike.fnt",BitmapFont.class);
 		System.out.println("Loaded all assets. Clears now.");
 		assetList.clear();
-	}
-
-	public BitmapFont getFont() {
-		return font;
-
 	}
 
 	public AssetContainer<Texture> getTextureContainer() {
@@ -132,6 +138,10 @@ public class AssetLoader {
 
 	public Music getMusic(String key) {
 		return getMusicContainer().get(key);
+	}
+
+	public BitmapFont getFont(String key) {
+		return fontContainer.get(key);
 	}
 
 	public class TempAsset {

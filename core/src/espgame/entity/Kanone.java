@@ -13,6 +13,8 @@ import espgame.ESPGame;
 import espgame.level.Planet;
 import espgame.resources.AssetContainer;
 import espgame.resources.AssetLoader;
+import espgame.resources.Fontsize;
+import espgame.util.VectorUtils;
 
 /**
  * Created by Patrick on 26.08.2015.
@@ -23,6 +25,9 @@ public class Kanone extends Entity {
     private static final float MAX_WINKEL = 90f, MIN_WINKEL = -90f;
     private static final int MAXCOOLDOWN = 60, MAXFORCE = 10, MINFORCE = 1;
     private static final float SURFACE_DISTANCE = 24;
+    
+    public static final int NO_AMMO_DUR = 90;
+    public static final String NO_AMMO_TEXT = "Keine Eddys!";
 
     private Sprite base, top;
     //private Shape farbe;
@@ -229,6 +234,7 @@ public class Kanone extends Entity {
                     Sound empty = AssetLoader.get().getSound(AssetContainer.SOUND_KANON_EMPTY);
                     empty.stop();
                     empty.play();
+                    ESPGame.getLevel().createTextDisplayer(getPosition(), VectorUtils.randomNormalized().scl(0.5f), NO_AMMO_DUR, NO_AMMO_TEXT, Fontsize.Klein);
                 }
                 cooldown = MAXCOOLDOWN;
             }

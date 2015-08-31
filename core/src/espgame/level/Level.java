@@ -6,15 +6,22 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.sun.media.sound.SoftSynthesizer;
 
 import espgame.ESPGame;
 import espgame.entity.*;
 import espgame.input.KanoneController;
 import espgame.mechanics.TextDisplayer;
+import espgame.resources.AssetContainer;
+import espgame.resources.AssetLoader;
+import espgame.resources.Fontsize;
 import espgame.entity.Eddy.Color;
 
+import java.awt.Font;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -55,14 +62,15 @@ public class Level implements Screen {
 	private int reserveRot, reserveBlau, reserveGruen;
 	private boolean paused, running, gameover;
 	private int schwierigkeit;
-
 	private int hemandelay = HEMANLEVEL;
 	private int points, level;
-
 	private int selectedEddy = 0;
 
-	private Planet planet;
+	private Stage stage;
+	private Table table;
+	private ShapeRenderer shapeRenderer;
 
+	private Planet planet;
 	private Kanone kanone;
 	private KanoneController kanonec;
 	private InputMultiplexer input;
@@ -111,12 +119,18 @@ public class Level implements Screen {
 		gameover = false;
 		paused = false;
 
-		this.kanone = new Kanone(new Random().nextFloat()*360);
+		this.kanone = new Kanone(new Random().nextFloat() * 360);
 		entities.add(planet);
 		entities.add(schiff);
 		entities.add(kanone);
-
 		this.kanonec = new KanoneController(kanone);
+
+		stage = new Stage();
+		Gdx.input.setInputProcessor(stage);
+		table = new Table();
+		table.setFillParent(true);
+		stage.addActor(table);
+		shapeRenderer = new ShapeRenderer();
 
 		this.input = new InputMultiplexer();
 		input.addProcessor(kanonec);
@@ -156,6 +170,14 @@ public class Level implements Screen {
 			Eddy e = eddys.get(i);
 			e.render(game.batch);
 		}
+
+		// Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+		// stage.act(Gdx.graphics.getDeltaTime());
+		// stage.draw();
+		// table.drawDebug(shapeRenderer); // This is optional, but enables
+		// debug
+		// lines for tables.
+
 		game.batch.end();
 	}
 
@@ -300,6 +322,7 @@ public class Level implements Screen {
 		// TODO match hintergrund to new screensize?
 		camera.update();
 		hintergrund.resize(width, height);
+		stage.getViewport().update(width, height, true);
 	}
 
 	private void newObjective(int level) {
@@ -326,7 +349,8 @@ public class Level implements Screen {
 	@Override
 	public void dispose() {
 		Gdx.input.setInputProcessor(null);
-
+		stage.dispose();
+		shapeRenderer.dispose();
 	}
 
 	public void addEntity(Entity e) {
@@ -387,9 +411,26 @@ public class Level implements Screen {
 		return points;
 	}
 
-	public TextDisplayer createTextDisplayer(Vector2 pos, Vector2 vel, int duration, String text) {
+	public TextDisplayer createTextDisplayer(Vector2 pos, Vector2 vel, int duration, String text, Fontsize size) {
 		System.out.println("Textdisplayer requested: \"" + text + "\"");
-		TextDisplayer td = new TextDisplayer(pos.x, pos.y, vel, text, duration);
+
+		BitmapFont font = null;
+		switch (size) {
+		case Klein:
+			font = AssetLoader.get().getFont(AssetContainer.FONT_SMALL);
+			break;
+		case Mittel:
+			font = AssetLoader.get().getFont(AssetContainer.FONT_MEDIUM);
+			break;
+		case Gross:
+			font = AssetLoader.get().getFont(AssetContainer.FONT_BIG);
+			break;
+		default:
+			System.err.println("Invalide Fontsize!!");
+			break;
+		}
+
+		TextDisplayer td = new TextDisplayer(pos.x, pos.y, vel, text, font, duration);
 		addEntity(td);
 		return td;
 	}
@@ -562,8 +603,10 @@ public class Level implements Screen {
 			selectedEddy = 2;
 		else if (selectedEddy < 0)
 			selectedEddy = 0;
-		/*if (temp != selectedEddy && Game.game.getSchwierigkeit() == 0)
-			setHighlighted();*/
+		/*
+		 * if (temp != selectedEddy && Game.game.getSchwierigkeit() == 0)
+		 * setHighlighted();
+		 */
 	}
 
 	public int getSelectedEddy() {
@@ -627,6 +670,5 @@ public class Level implements Screen {
 	public Schiff getSchiff() {
 		return schiff;
 	}
-
 
 }

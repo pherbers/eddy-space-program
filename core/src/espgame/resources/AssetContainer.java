@@ -50,6 +50,10 @@ public abstract class AssetContainer<T> {
 
 	public static final String MUSIC = "main_music";
 
+	public static final String FONT_SMALL = "airstrike_s";
+	public static final String FONT_MEDIUM = "airstrike_m";
+	public static final String FONT_BIG = "airstrike_b";
+
 	private HashMap<String, T> textureMap;
 
 	public AssetContainer() {

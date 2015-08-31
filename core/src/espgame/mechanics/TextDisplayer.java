@@ -1,5 +1,6 @@
 package espgame.mechanics;
 
+import java.awt.Font;
 import java.util.Random;
 
 import com.badlogic.gdx.Gdx;
@@ -11,6 +12,7 @@ import com.badlogic.gdx.math.Vector2;
 
 import espgame.entity.Entity;
 import espgame.resources.AssetLoader;
+import espgame.resources.Fontsize;
 
 public class TextDisplayer extends Entity {
 
@@ -33,9 +35,9 @@ public class TextDisplayer extends Entity {
 		init();
 	}
 
-	public TextDisplayer(float x, float y, Vector2 velocity, String text, int duration) {
+	public TextDisplayer(float x, float y, Vector2 velocity, String text, BitmapFont font, int duration) {
 		super(x, y);
-		this.font = AssetLoader.get().getFont();
+		this.font = font;
 		this.text = text;
 		this.velocity = velocity;
 		setlifespan(duration);

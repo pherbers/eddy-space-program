@@ -10,6 +10,7 @@ import espgame.ESPGame;
 import espgame.level.Level;
 import espgame.resources.AssetContainer;
 import espgame.resources.AssetLoader;
+import espgame.resources.Fontsize;
 import espgame.util.VectorUtils;
 
 public class Explosion extends Entity {
@@ -43,7 +44,7 @@ public class Explosion extends Entity {
 		if (getRemovedEddyCount() != 0) {
 			Vector2 v = VectorUtils.up();
 			v.scl(0.3f);
-			ESPGame.getLevel().createTextDisplayer(position, v, TEXT_DURATION, "-" + getRemovedEddyCount());
+			ESPGame.getLevel().createTextDisplayer(position, v, TEXT_DURATION, "-" + getRemovedEddyCount(), Fontsize.Mittel);
 		}
 	}
 
