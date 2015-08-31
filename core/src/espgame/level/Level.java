@@ -57,6 +57,8 @@ public class Level implements Screen {
 	private int hemandelay = HEMANLEVEL;
 	private int points, level;
 
+	private int selectedEddy = 0;
+
 	private Planet planet;
 	
 	private Kanone kanone;
@@ -550,6 +552,21 @@ public class Level implements Screen {
 		}
 	}
 
+	public void setSelectedEddy(int i) {
+		int temp = selectedEddy;
+		selectedEddy = i;
+		if (selectedEddy > 2)
+			selectedEddy = 2;
+		else if (selectedEddy < 0)
+			selectedEddy = 0;
+		/*if (temp != selectedEddy && Game.game.getSchwierigkeit() == 0)
+			setHighlighted();*/
+	}
+
+	public int getSelectedEddy() {
+		return selectedEddy;
+	}
+
 	public void togglePause() {
 		if (!gameover) {
 			paused = !paused;
@@ -603,4 +620,5 @@ public class Level implements Screen {
 	public void setSchwierigkeit(int schwierigkeit) {
 		this.schwierigkeit = schwierigkeit;
 	}
+
 }

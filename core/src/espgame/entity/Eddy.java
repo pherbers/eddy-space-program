@@ -1,5 +1,6 @@
 package espgame.entity;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -7,6 +8,8 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import espgame.ESPGame;
 import espgame.level.Orbit;
+import espgame.resources.AssetContainer;
+import espgame.resources.AssetLoader;
 
 import java.io.IOException;
 import java.util.Random;
@@ -21,11 +24,13 @@ public class Eddy extends Entity {
 
     public enum Color {
         ROT, BLAU, GRUEN, GELB, CYAN, MAGENTA, WEISS, SCHWARZ
-    };
+    }
 
-    private static final int POITSTIER0[] = { 15, 25, 50 };
-    private static final int POITSTIER1[] = { 50, 100, 125 };
-    private static final int POITSTIER2[] = { 200, 250, 300 };
+    ;
+
+    private static final int POITSTIER0[] = {15, 25, 50};
+    private static final int POITSTIER1[] = {50, 100, 125};
+    private static final int POITSTIER2[] = {200, 250, 300};
 
     public static final int RADIUS = 24;
 
@@ -45,18 +50,18 @@ public class Eddy extends Entity {
 
     private static float gravity = GRAVITYNORMAL;
 
-	public Eddy(float x, float y, float vx, float vy, Color farbe, Orbit orbit) {
-		super(x, y);
-		setVelocity(vx, vy);
-		this.orbit = orbit;
-		state = 0; // 0 = Abschussphase, 1 = Orbitphase, 2 = OutOfOrbit, 3 =
-		// Einsammelphase
-		this.farbe = farbe;
-		// if (farbe == Color.SCHWARZ)
-		// gravityDrag = 0;
-		// else
-		gravityDrag = gravity;
-		radius = RADIUS;
+    public Eddy(float x, float y, float vx, float vy, Color farbe, Orbit orbit) {
+        super(x, y);
+        setVelocity(vx, vy);
+        this.orbit = orbit;
+        state = 0; // 0 = Abschussphase, 1 = Orbitphase, 2 = OutOfOrbit, 3 =
+        // Einsammelphase
+        this.farbe = farbe;
+        // if (farbe == Color.SCHWARZ)
+        // gravityDrag = 0;
+        // else
+        gravityDrag = gravity;
+        radius = RADIUS;
 
         // zufaellige drehung setzen
         Random r = new Random();
@@ -69,8 +74,7 @@ public class Eddy extends Entity {
         float gamma = MathUtils.atan2(v.y, v.y);
         float theta = MathUtils.atan2(velocity.y * 0.1f + v.y, velocity.x * 0.1f + v.x);
         // Game.print(gamma + "\t" + theta);
-        clockwise = v.y*velocity.x < v.x*velocity.y;
-        System.out.print(clockwise);
+        clockwise = v.y * velocity.x < v.x * velocity.y;
         /*try {
             emitter = Game.generateEmitter("res/particles/EddyParticle.xml");
         } catch (IOException e) {
@@ -78,29 +82,29 @@ public class Eddy extends Entity {
         }*/
         setColor();
         // ESPGame.getLevel().addParticleEmitter(emitter);
-        if(getColor() == Color.SCHWARZ)
+        if (getColor() == Color.SCHWARZ)
             gravityDrag = 1.0f;
 
-		// Highlight setzen
-		Color color;
-		// switch (Game.getLevel().getSelectedEddy()) {
-		switch (0) {
-		case 0:
-			color = Color.ROT;
-			break;
-		case 1:
-			color = Color.BLAU;
-			break;
-		default:
-			color = Color.GRUEN;
-		}
-		Color joined = Eddy.joinColor(getColor(), color);
-		if (joined != null && joined != Color.SCHWARZ) {
-			setHighlighted(true);
-			setHighlightedColor(joined);
-		} else
-			setHighlighted(false);
-	}
+        // Highlight setzen
+        Color color;
+        // switch (Game.getLevel().getSelectedEddy()) {
+        switch (0) {
+            case 0:
+                color = Color.ROT;
+                break;
+            case 1:
+                color = Color.BLAU;
+                break;
+            default:
+                color = Color.GRUEN;
+        }
+        Color joined = Eddy.joinColor(getColor(), color);
+        if (joined != null && joined != Color.SCHWARZ) {
+            setHighlighted(true);
+            setHighlightedColor(joined);
+        } else
+            setHighlighted(false);
+    }
 
     public void render(SpriteBatch batch) {
         if (visible) {
@@ -154,19 +158,18 @@ public class Eddy extends Entity {
                 }
 
                 // Drehen des v-Vektors, sodass er orthogonal zum radius ist
-			/*
-			 * double vBetrag = velocity.getBetrag(); double alpha = Math.atan(y
+            /*
+             * double vBetrag = velocity.getBetrag(); double alpha = Math.atan(y
 			 * / x); // winkel im orbit Game.print(x + "\t" + y + "\t" + alpha);
 			 * velocity.setX(Math.sin(alpha - gravityDrag) * vBetrag);
 			 * velocity.setY(Math.cos(alpha - gravityDrag) * vBetrag);
 			 */
 
-                Vector2 v = new Vector2(x / (entfernung*entfernung) * -BASEGRAVITYDRAG,
-                        y / (entfernung*entfernung) * -BASEGRAVITYDRAG);
+                Vector2 v = new Vector2(x / (entfernung * entfernung) * -BASEGRAVITYDRAG,
+                        y / (entfernung * entfernung) * -BASEGRAVITYDRAG);
                 velocity = velocity.add(v);
                 position = position.add(velocity);
                 velocity.scl(gravityDrag);
-                System.out.println(velocity.len());
                 break;
             case 2:
                 position = position.add(velocity);
@@ -191,20 +194,20 @@ public class Eddy extends Entity {
 
     }
 
-	public static Eddy joinEddys(Eddy e1, Eddy e2) {
-		float x = (e1.getX() + e2.getX()) * 0.5f;
-		float y = (e1.getY() + e2.getY()) * 0.5f;
-		float vx = (e1.velocity.x + e2.velocity.x) * 0.5f;
-		float vy = (e1.velocity.y + e2.velocity.y) * 0.5f;
-		Eddy joinedEddy = new Eddy(x, y, vx, vy, joinColor(e1.farbe, e2.farbe), e1.getOrbit());
-		// TODO: Sounds
-		// if (!Sounds.POP.playing())
-		// Sounds.POP.play();
-		return joinedEddy;
-	}
+    public static Eddy joinEddys(Eddy e1, Eddy e2) {
+        float x = (e1.getX() + e2.getX()) * 0.5f;
+        float y = (e1.getY() + e2.getY()) * 0.5f;
+        float vx = (e1.velocity.x + e2.velocity.x) * 0.5f;
+        float vy = (e1.velocity.y + e2.velocity.y) * 0.5f;
+        Eddy joinedEddy = new Eddy(x, y, vx, vy, joinColor(e1.farbe, e2.farbe), e1.getOrbit());
+        // TODO: Sounds
+        // if (!Sounds.POP.playing())
+        // Sounds.POP.play();
+        return joinedEddy;
+    }
 
 	/*
-	 * private void setEmitterColor(Color color) {
+     * private void setEmitterColor(Color color) {
 	 * 
 	 * ConfigurableEmitter.ColorRecord cr = (ConfigurableEmitter.ColorRecord)
 	 * (emitter.colors .get(0)); cr.col = toSlickColor(color); cr =
@@ -226,36 +229,47 @@ public class Eddy extends Entity {
 	 * org.newdawn.slick.Color.white; } return col; }
 	 */
 
-	private void setColor() {
-		/*
-		 * switch (farbe) { case ROT: sprite =
-		 * Sprites.EDDY_ROT.getScaledCopy((int) radius * 2, (int) radius * 2);
-		 * break; case GRUEN: sprite = Sprites.EDDY_GRUEN.getScaledCopy((int)
-		 * radius * 2, (int) radius * 2); break; case BLAU: sprite =
-		 * Sprites.EDDY_BLAU.getScaledCopy((int) radius * 2, (int) radius * 2);
-		 * break; case GELB: sprite = Sprites.EDDY_GELB.getScaledCopy((int)
-		 * radius * 2, (int) radius * 2); break; case CYAN: sprite =
-		 * Sprites.EDDY_CYAN.getScaledCopy((int) radius * 2, (int) radius * 2);
-		 * break; case MAGENTA: sprite =
-		 * Sprites.EDDY_MAGENTA.getScaledCopy((int) radius * 2, (int) radius *
-		 * 2); break; case WEISS: sprite =
-		 * Sprites.EDDY_WEISS.getScaledCopy((int) radius * 2, (int) radius * 2);
-		 * break; case SCHWARZ: sprite = Sprites.EDDY_WEISS.getScaledCopy((int)
-		 * radius * 2, (int) radius * 2); sprite.setImageColor(0.5f, 0.5f,
-		 * 0.5f); break;
-		 * 
-		 * } setEmitterColor(farbe);
-		 */
-        sprite = new Sprite(new Texture("sprites/eddys/EddyRot.png"));
-        sprite.setSize(radius*2, radius*2);
+    private void setColor() {
+        String spriteKey = AssetContainer.EDDY_ROT;
+        switch (farbe) {
+            case ROT:
+                spriteKey = AssetContainer.EDDY_ROT;
+                break;
+            case GRUEN:
+                spriteKey = AssetContainer.EDDY_GRUEN;
+                break;
+            case BLAU:
+                spriteKey = AssetContainer.EDDY_BLAU;
+                break;
+            case GELB:
+                spriteKey = AssetContainer.EDDY_GELB;
+                break;
+            case CYAN:
+                spriteKey = AssetContainer.EDDY_CYAN;
+                break;
+            case MAGENTA:
+                spriteKey = AssetContainer.EDDY_MAGENTA;
+                break;
+            case WEISS:
+                spriteKey = AssetContainer.EDDY_WEISS;
+                break;
+            case SCHWARZ:
+                spriteKey = AssetContainer.EDDY_WEISS;
+                break;
+        }
+        // setEmitterColor(farbe);
+        sprite = new Sprite(AssetLoader.get().getTexture(spriteKey));
+        if(farbe == Color.SCHWARZ)
+            sprite.setColor(com.badlogic.gdx.graphics.Color.GRAY);
+        sprite.setSize(radius * 2, radius * 2);
         sprite.setOriginCenter();
         sprite.setCenter(position.x, position.y);
-	}
+    }
 
-	public Explosion createCollideExplosion() {
-		//TODO magic number
-		return ESPGame.getLevel().createExplosion(getPosition(), getRadius() * 1.5f, 15);
-	}
+    public Explosion createCollideExplosion() {
+        //TODO magic number
+        return ESPGame.getLevel().createExplosion(getPosition(), getRadius() * 1.5f, 15);
+    }
 
         
 
@@ -519,7 +533,7 @@ public class Eddy extends Entity {
         this.highlighted = highlighted;
     }
 
-    public void setHighlightedColor(Color c){
+    public void setHighlightedColor(Color c) {
         this.highlightColor = c;
     }
 

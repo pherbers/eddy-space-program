@@ -50,9 +50,6 @@ public class Kanone extends Entity {
         base = new Sprite(new Texture("sprites/misc/Kanone_base.png"));
         top = new Sprite(new Texture("sprites/misc/Kanone_top.png"));
 
-        top.setCenter(0, 0);
-        base.setCenter(0, 0);
-
         top.setOriginCenter();
         base.setOriginCenter();
 
@@ -131,7 +128,7 @@ public class Kanone extends Entity {
 //        g.fill(farbe);
 //        g.setColor(org.newdawn.slick.Color.white);
         top.draw(batch);
-        batch.draw(top,0,0, 4, 4);
+        batch.draw(top, 0, 0, 4, 4);
         /*if (Game.DEBUG) {
             g.drawRect((float) position.getX(), (float) position.getY(), 10, 5);
             g.drawLine((float) position.getX(), (float) position.getY(),
@@ -182,23 +179,24 @@ public class Kanone extends Entity {
             if (cooldown == 0) {
                 float x = MathUtils.cosDeg(alpha + beta + 180) * kraft;
                 float y = MathUtils.sinDeg(alpha + beta + 180) * kraft;
-                Eddy.Color farbe = Eddy.Color.ROT;
-                /*int selectedEddy = Game.getLevel().getSelectedEddy();
+                Eddy.Color farbe;
+                int selectedEddy = ESPGame.getLevel().getSelectedEddy();
+                System.out.println(selectedEddy);
                 switch (selectedEddy) {
                     case 0:
-                        farbe = Color.ROT;
+                        farbe = Eddy.Color.ROT;
                         break;
                     case 1:
-                        farbe = Color.BLAU;
+                        farbe = Eddy.Color.BLAU;
                         break;
                     case 2:
-                        farbe = Color.GRUEN;
+                        farbe = Eddy.Color.GRUEN;
                         break;
                     default:
-                        farbe = Color.ROT;
+                        farbe = Eddy.Color.ROT;
                         break;
-                }*/
-                //if (hasAmmo(selectedEddy)) {
+                }
+                if (hasAmmo(selectedEddy)) {
                     Eddy eddy = new Eddy(position.x + x / (float)Math.hypot(x, y) * 64,
                             position.y + y / (float)Math.hypot(x, y) * 64,
                             x, y, farbe, ESPGame.getLevel().getPlanet().getOrbit()); // Farbe
@@ -213,7 +211,7 @@ public class Kanone extends Entity {
 //                    Level.level().createTextDisplayer(position,
 //                            Vector.randomVector(), 150, "No Ammo!!");
 //                    Sounds.EMPTY.play();
-//                }
+                }
                 cooldown = MAXCOOLDOWN;
             }
             kraft = 0.0f;
@@ -222,24 +220,24 @@ public class Kanone extends Entity {
             cooldown--;
     }
 
-    /*public boolean hasAmmo(int farbe) {
+    public boolean hasAmmo(int farbe) {
         int c;
         switch (farbe) {
             case 0:
-                c = Level.level().getReserveRot();
+                c = ESPGame.getLevel().getReserveRot();
                 break;
             case 1:
-                c = Level.level().getReserveBlau();
+                c = ESPGame.getLevel().getReserveBlau();
                 break;
             case 2:
-                c = Level.level().getReserveGruen();
+                c = ESPGame.getLevel().getReserveGruen();
                 break;
             default:
                 throw new IllegalArgumentException(
                         "Wrong arguments in 'hasAmmo()' in 'Kanone.java'. Only valid integer-arguments: 0, 1, 2.");
         }
         return c > 0;
-    }*/
+    }
 
     public void mousePressed(int button, int x, int y) {
         if (button == 0)

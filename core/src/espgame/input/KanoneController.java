@@ -2,6 +2,7 @@ package espgame.input;
 
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
+import espgame.ESPGame;
 import espgame.entity.Kanone;
 
 /**
@@ -35,8 +36,7 @@ public class KanoneController implements InputProcessor {
         if(button == Input.Buttons.LEFT)
             kanone.startChargeup();
         if(button == Input.Buttons.RIGHT)
-            System.out.println("Right mouse button");
-        // TODO: Change to eddy select
+            ESPGame.getLevel().setSelectedEddy((ESPGame.getLevel().getSelectedEddy() + 1) % 3);
         return true;
     }
 
