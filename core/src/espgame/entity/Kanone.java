@@ -28,6 +28,8 @@ public class Kanone extends Entity {
     
     public static final int NO_AMMO_DUR = 90;
     public static final String NO_AMMO_TEXT = "Keine Eddys!";
+    public static final float SHAKE_MAGNITUDE = 3;
+    public static final int SHAKE_DURATION = 15;
 
     private Sprite base, top;
     //private Shape farbe;
@@ -233,7 +235,7 @@ public class Kanone extends Entity {
                     Sound empty = AssetLoader.get().getSound(AssetContainer.SOUND_KANON_EMPTY);
                     empty.stop();
                     empty.play();
-                    ESPGame.getLevel().shakeScreen(3, 15);
+                    ESPGame.getLevel().shakeScreen(SHAKE_MAGNITUDE, SHAKE_DURATION);
                     ESPGame.getLevel().createTextDisplayer(getPosition(), VectorUtils.randomNormalized().scl(0.5f), NO_AMMO_DUR, NO_AMMO_TEXT, Fontsize.Klein);
                 }
                 cooldown = MAXCOOLDOWN;

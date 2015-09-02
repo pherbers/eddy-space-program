@@ -54,7 +54,6 @@ public class HeMan extends Entity {
 	public HeMan() {
 		super(0, 0);
 		init();
-		System.out.println("HeMan deployed.");
 	}
 
 	private void init() {
@@ -232,7 +231,6 @@ public class HeMan extends Entity {
 		TextDisplayer d = ESPGame.getLevel().createTextDisplayer(getPosition(), VectorUtils.randomNormalized().scl(.5f),
 				TEXTDURATION, "+" + r, Fontsize.Gross);
 		d.setColor(Color.RED);
-		System.out.println("my pos: "+getPosition()+" text pos: "+d.getPosition());
 		d = ESPGame.getLevel().createTextDisplayer(getPosition(), VectorUtils.randomNormalized().scl(.5f), TEXTDURATION, "+" + g, Fontsize.Gross);
 		d.setColor(Color.GREEN);
 		d = ESPGame.getLevel().createTextDisplayer(getPosition(), VectorUtils.randomNormalized().scl(.5f), TEXTDURATION, "+" + b, Fontsize.Gross);

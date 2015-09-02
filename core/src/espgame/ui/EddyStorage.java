@@ -42,7 +42,6 @@ public class EddyStorage extends Table {
 	}
 
 	public void update() {
-		System.out.println("storage update. sel: "+level.getSelectedEddy());
 		for(int i = 0;i<list.size();i++){
 			list.get(i).setActive(i == level.getSelectedEddy());
 		}

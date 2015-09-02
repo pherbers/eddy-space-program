@@ -260,7 +260,6 @@ public class Level implements Screen {
 			backgroundCam.update();
 			shake_dur--;
 			shake_mag -= shake_linear;
-			System.out.println(shake_mag + "," + shake_dur + ", " + shake_linear);
 		}
 		camera.update();
 
@@ -362,7 +361,6 @@ public class Level implements Screen {
 				spawnHeman = false;
 				heman = new HeMan();
 				addEntity(heman);
-				System.out.println("He-Man ist nun in der EntityListe.");
 			}
 		}
 
