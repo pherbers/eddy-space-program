@@ -35,6 +35,8 @@ public class ESPGame extends Game {
 		AssetLoader.get().collect();
 		AssetLoader.get().load();
 
+		bindTextures();
+
 		// TODO start level with difficulty
 		newGame();
 	}
@@ -63,6 +65,12 @@ public class ESPGame extends Game {
 		//
 		// if (requestedMenu != activeMenu)
 		// setActiveMenu(requestedMenu);
+	}
+
+	private void bindTextures() {
+		for (Texture t: AssetLoader.get().getTextureContainer()) {
+			t.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
+		}
 	}
 
 	public Level newGame() {

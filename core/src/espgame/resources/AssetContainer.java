@@ -1,8 +1,9 @@
 package espgame.resources;
 
 import java.util.HashMap;
+import java.util.Iterator;
 
-public abstract class AssetContainer<T> {
+public abstract class AssetContainer<T> implements Iterable<T> {
 	public static final String SHIP_IDLE = "ship_idle";
 	public static final String SHIP_SAMMELN_1 = "ship_collect_1";
 	public static final String SHIP_SAMMELN_2 = "ship_collect_2";
@@ -80,6 +81,11 @@ public abstract class AssetContainer<T> {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+
+	@Override
+	public Iterator<T> iterator() {
+		return textureMap.values().iterator();
 	}
 
 	protected abstract T handleMissing();
