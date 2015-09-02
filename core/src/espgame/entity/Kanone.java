@@ -73,7 +73,6 @@ public class Kanone extends Entity {
         farbBackground.setOriginCenter();
 
         updatePosition();
-        System.out.println(base.getOriginX() + ", " + base.getOriginY());
 //        farbe = new Rectangle((float) planet.getRadius(), 0, 30, 30);
 //        farbe = farbe.transform(Transform.createTranslateTransform(15, -15));
 //        farbe = farbe.transform(Transform.createRotateTransform((float) alpha));

@@ -8,17 +8,22 @@ import java.util.Random;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
@@ -53,7 +58,14 @@ public class Level implements Screen {
 	public static final int HEMANLEVEL = 2;
 	public static final int EDDYCAP = 10;
 
+	public static final int MIN_WORLD_WIDTH = 800,
+	                        MAX_WORLD_WIDTH = 1920,
+	                        MIN_WORLD_HEIGHT = 800,
+	                        MAX_WORLD_HEIGHT = 1080;
+
 	public static final float STAR_PERCENTAGE = 0.0005f;
+
+	public static final float BACKGROUND_SCREEN_SHAKE_FACTOR = 0.5f;
 
 	private int hemanCoutdown = HEMANCOUNTDOWNBASE;
 
@@ -66,7 +78,8 @@ public class Level implements Screen {
 	private final ESPGame game;
 	private HeMan heman;
 	private Hintergrund hintergrund;
-	public OrthographicCamera camera;
+	public OrthographicCamera camera, backgroundCam;
+	public ExtendViewport worldViewport;
 	private boolean spawnHeman = false;
 	private int reserveRot, reserveBlau, reserveGruen;
 	private boolean paused, running, gameover;
@@ -74,7 +87,8 @@ public class Level implements Screen {
 	private int hemandelay = HEMANLEVEL;
 	private int points, level;
 	private int selectedEddy = 0;
-	private int shake_mag, shake_dur;
+	private int shake_dur;
+	private float shake_mag, shake_linear;
 
 	private Stage stage;
 	private Table table;
@@ -94,6 +108,10 @@ public class Level implements Screen {
 		camera = new OrthographicCamera();
 		camera.setToOrtho(false, 800, 480);
 		camera.position.set(0, 0, 0);
+		backgroundCam = new OrthographicCamera();
+		backgroundCam.setToOrtho(false, 800, 480);
+		backgroundCam.position.set(0, 0, 0);
+		worldViewport = new ExtendViewport(1024, 768, 1920, 1080, camera);
 
 		stage = new Stage(new ScreenViewport());
 		Gdx.input.setInputProcessor(stage);
@@ -172,6 +190,8 @@ public class Level implements Screen {
 		newObjective(level);
 
 		spawnHeman = true;
+
+		worldViewport.apply(true);
 	}
 
 	@Override
@@ -186,10 +206,11 @@ public class Level implements Screen {
 		Gdx.gl.glClearColor(0, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-		game.batch.setProjectionMatrix(camera.combined);
-		
+		game.batch.setProjectionMatrix(backgroundCam.combined);
 		game.batch.begin();
 		hintergrund.render(game.batch);
+		game.batch.flush();
+		game.batch.setProjectionMatrix(camera.combined);
 		for (int i = 0; i < entities.size(); i++) {
 			Entity e = entities.get(i);
 			e.render(game.batch);
@@ -228,15 +249,20 @@ public class Level implements Screen {
 		}
 
 		 //shakey cam
-		 if (shake_dur == 0) {
-		 camera.position.x = 0;
-		 camera.position.y = 0;
-		 shake_mag = 0;
-		 } else {
-		 camera.position.x = shakeValue();
-		 camera.position.y = shakeValue();
-		 shake_dur--;
-		 }
+		if (shake_dur == 0) {
+			camera.position.x = 0;
+			camera.position.y = 0;
+			shake_mag = 0;
+		} else {
+			camera.position.x = shakeValue();
+			camera.position.y = shakeValue();
+			backgroundCam.position.x = camera.position.x * BACKGROUND_SCREEN_SHAKE_FACTOR;
+			backgroundCam.position.y = camera.position.y * BACKGROUND_SCREEN_SHAKE_FACTOR;
+			backgroundCam.update();
+			shake_dur--;
+			shake_mag -= shake_linear;
+			System.out.println(shake_mag + "," + shake_dur + ", " + shake_linear);
+		}
 		camera.update();
 
 		// Entities sicher entfernen
@@ -354,10 +380,16 @@ public class Level implements Screen {
 
 	@Override
 	public void resize(int width, int height) {
-		camera.setToOrtho(false, width, height);
+		//camera.setToOrtho(false, width, height);
 		// TODO match hintergrund to new screensize?
-		camera.update();
-		hintergrund.resize(width, height);
+		//camera.update();
+		worldViewport.setMinWorldWidth(MathUtils.clamp(width, MIN_WORLD_WIDTH, MAX_WORLD_WIDTH));
+		worldViewport.setMinWorldHeight(MathUtils.clamp(height, MIN_WORLD_HEIGHT, MAX_WORLD_HEIGHT));
+		worldViewport.update(width, height, true);
+		backgroundCam.setToOrtho(true, width, height);
+		backgroundCam.position.set(0,0,0);
+		backgroundCam.update();
+		hintergrund.resize((int)worldViewport.getWorldWidth(), (int)worldViewport.getWorldHeight());
 		stage.getViewport().update(width, height, true);
 		// viewport.update(width, height);
 	}
@@ -684,18 +716,20 @@ public class Level implements Screen {
 		// TODO show highscores
 	}
 
-	public void shakeScreen(int magnitude, int duration) {
+	public void shakeScreen(float magnitude, int duration) {
 		if (shake_dur < duration) {
 			shake_dur = duration;
+			shake_linear = shake_mag / shake_dur;
 		}
 		if (shake_mag < magnitude) {
 			shake_mag = magnitude;
+			shake_linear = shake_mag / shake_dur;
 		}
 	}
 
-	public int shakeValue() {
+	public float shakeValue() {
 		Random r = new Random();
-		int i = r.nextInt(shake_mag + 1);
+		float i = r.nextFloat() * shake_mag;
 		if (r.nextBoolean())
 			i *= -1;
 		return i;

@@ -30,7 +30,10 @@ public class Hintergrund {
 			pixmap.setColor(Color.WHITE);
 			pixmap.fillCircle(r.nextInt(sizeX), r.nextInt(sizeY),r.nextInt(2));
 		}
+		if (texture != null)
+			texture.dispose();
 		texture = new Texture(pixmap);
+		texture.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
 		pixmap.dispose();
 	}
 
@@ -42,7 +45,7 @@ public class Hintergrund {
 	}
 
 	public void render(SpriteBatch batch) {
-		batch.draw(texture,-texture.getWidth()/2,-texture.getHeight()/2, sizeX, sizeY);
+		batch.draw(texture,-sizeX/2,-sizeY/2, sizeX, sizeY);
 	}
 
 }
