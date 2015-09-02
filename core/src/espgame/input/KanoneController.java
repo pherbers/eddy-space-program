@@ -62,6 +62,7 @@ public class KanoneController implements InputProcessor {
 
     @Override
     public boolean scrolled(int amount) {
-        return false;
+        ESPGame.getLevel().setSelectedEddy(Math.floorMod(ESPGame.getLevel().getSelectedEddy() + amount, 3));
+        return true;
     }
 }
