@@ -17,7 +17,13 @@ public class KanoneController implements InputProcessor {
 
     @Override
     public boolean keyDown(int keycode) {
-        return false;
+        if (keycode == Input.Keys.NUM_1)
+            ESPGame.getLevel().setSelectedEddy(0);
+        if (keycode == Input.Keys.NUM_2)
+            ESPGame.getLevel().setSelectedEddy(1);
+        if (keycode == Input.Keys.NUM_3)
+            ESPGame.getLevel().setSelectedEddy(2);
+        return true;
     }
 
     @Override

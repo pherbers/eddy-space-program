@@ -1,7 +1,5 @@
 package espgame.entity;
 
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
@@ -11,7 +9,6 @@ import espgame.level.Orbit;
 import espgame.resources.AssetContainer;
 import espgame.resources.AssetLoader;
 
-import java.io.IOException;
 import java.util.Random;
 
 /**
@@ -41,7 +38,8 @@ public class Eddy extends Entity {
 	private float rotation;
 	private boolean clockwise;
 	private boolean highlighted = false;
-	public static boolean highlight = false;
+	public static boolean highlight = true;
+    private Sprite highlightSprite;
 	private Color highlightColor;
 
 	public static final float GRAVITYEASY = 1.0f, GRAVITYNORMAL = 0.9999f, GRAVITYHARD = 0.9998f;
@@ -52,12 +50,8 @@ public class Eddy extends Entity {
         super(x, y);
         setVelocity(vx, vy);
         this.orbit = orbit;
-        state = 0; // 0 = Abschussphase, 1 = Orbitphase, 2 = OutOfOrbit, 3 =
-        // Einsammelphase
+        state = 0; // 0 = Abschussphase, 1 = Orbitphase, 2 = OutOfOrbit, 3 = Einsammelphase
         this.farbe = farbe;
-        // if (farbe == Color.SCHWARZ)
-        // gravityDrag = 0;
-        // else
         gravityDrag = gravity;
         radius = RADIUS;
 
@@ -71,7 +65,6 @@ public class Eddy extends Entity {
                 position.y - orbit.getPosition().y);
         float gamma = MathUtils.atan2(v.y, v.y);
         float theta = MathUtils.atan2(velocity.y * 0.1f + v.y, velocity.x * 0.1f + v.x);
-        // Game.print(gamma + "\t" + theta);
         clockwise = v.y * velocity.x < v.x * velocity.y;
         /*try {
             emitter = Game.generateEmitter("res/particles/EddyParticle.xml");
@@ -85,8 +78,7 @@ public class Eddy extends Entity {
 
         // Highlight setzen
         Color color;
-        // switch (Game.getLevel().getSelectedEddy()) {
-        switch (0) {
+        switch (ESPGame.getLevel().getSelectedEddy()) {
             case 0:
                 color = Color.ROT;
                 break;
@@ -107,13 +99,11 @@ public class Eddy extends Entity {
 	public void render(SpriteBatch batch) {
 		if (visible) {
 			if (highlight && highlighted) {
-				// Sprites.EDDY_HIGHLIGHT.draw((float) (getX() - radius - 8),
-				// (float) (getY() - radius - 8),
-				// (float) (radius * 2 + 16), (float) (radius * 2 + 16),
-				// toSlickColor(highlightColor));
+                highlightSprite.draw(batch);
 			}
 			sprite.draw(batch);
-			// g.drawString(state + " " + velocity.getBetrag(), (float)
+
+            // g.drawString(state + " " + velocity.getBetrag(), (float)
 			// position.getX(), (float) position.getY());
 			// if (Game.DEBUG)
 			// g.drawLine((float) getX(), (float) getY(), 0, 0);
@@ -188,6 +178,7 @@ public class Eddy extends Entity {
 
 		}
 		sprite.setCenter(position.x, position.y);
+        highlightSprite.setCenter(position.x, position.y);
 
 	}
 
@@ -212,19 +203,40 @@ public class Eddy extends Entity {
 	 * org.newdawn.slick.Color.white; }
 	 */
 
-	/*
-	 * private org.newdawn.slick.Color toSlickColor(Color c){
-	 * org.newdawn.slick.Color col; switch (c) { case ROT: col =
-	 * org.newdawn.slick.Color.red; break; case GRUEN: col =
-	 * org.newdawn.slick.Color.green; break; case BLAU: col =
-	 * org.newdawn.slick.Color.blue; break; case GELB: col =
-	 * org.newdawn.slick.Color.yellow; break; case CYAN: col =
-	 * org.newdawn.slick.Color.cyan; break; case MAGENTA: col =
-	 * org.newdawn.slick.Color.magenta; break; case WEISS: col =
-	 * org.newdawn.slick.Color.white; break; case SCHWARZ: col =
-	 * org.newdawn.slick.Color.black; break; default: col =
-	 * org.newdawn.slick.Color.white; } return col; }
-	 */
+
+    private com.badlogic.gdx.graphics.Color toGdxColor(Color c) {
+        com.badlogic.gdx.graphics.Color col;
+        switch (c) {
+            case ROT:
+                col = com.badlogic.gdx.graphics.Color.RED;
+                break;
+            case GRUEN:
+                col = com.badlogic.gdx.graphics.Color.GREEN;
+                break;
+            case BLAU:
+                col = com.badlogic.gdx.graphics.Color.BLUE;
+                break;
+            case GELB:
+                col = com.badlogic.gdx.graphics.Color.YELLOW;
+                break;
+            case CYAN:
+                col = com.badlogic.gdx.graphics.Color.CYAN;
+                break;
+            case MAGENTA:
+                col = com.badlogic.gdx.graphics.Color.MAGENTA;
+                break;
+            case WEISS:
+                col = com.badlogic.gdx.graphics.Color.WHITE;
+                break;
+            case SCHWARZ:
+                col = com.badlogic.gdx.graphics.Color.BLACK;
+                break;
+            default:
+                col = com.badlogic.gdx.graphics.Color.WHITE;
+        }
+        return col;
+    }
+
 
     private void setColor() {
         String spriteKey = AssetContainer.EDDY_ROT;
@@ -261,6 +273,11 @@ public class Eddy extends Entity {
         sprite.setSize(radius * 2, radius * 2);
         sprite.setOriginCenter();
         sprite.setCenter(position.x, position.y);
+
+        highlightSprite = new Sprite(AssetLoader.get().getTexture(AssetContainer.EDDY_HIGHLIGHT));
+        highlightSprite.setSize(radius * 2 + 16, radius * 2 + 16);
+        highlightSprite.setOriginCenter();
+        highlightSprite.setCenter(position.x, position.y);
     }
 
 	public Explosion createCollideExplosion() {
@@ -531,7 +548,7 @@ public class Eddy extends Entity {
     }
 
     public void setHighlightedColor(Color c){
-        this.highlightColor = c;
+        this.highlightSprite.setColor(toGdxColor(c));
     }
 
     public static float getGravity() {

@@ -128,8 +128,8 @@ public class Level implements Screen {
 		table.add(new TextButton("Test2", skin));
 
 		stage.addActor(table);
-		table.drawDebug(new ShapeRenderer());
-		stage.setDebugAll(true);
+		//table.drawDebug(new ShapeRenderer());
+		//stage.setDebugAll(true);
 
 		// stage.addActor(new TextButton("test2",skin));
 	}
@@ -387,9 +387,9 @@ public class Level implements Screen {
 		worldViewport.setMinWorldHeight(MathUtils.clamp(height, MIN_WORLD_HEIGHT, MAX_WORLD_HEIGHT));
 		worldViewport.update(width, height, true);
 		backgroundCam.setToOrtho(true, width, height);
-		backgroundCam.position.set(0,0,0);
+		backgroundCam.position.set(0, 0, 0);
 		backgroundCam.update();
-		hintergrund.resize((int)worldViewport.getWorldWidth(), (int)worldViewport.getWorldHeight());
+		hintergrund.resize((int) worldViewport.getWorldWidth(), (int) worldViewport.getWorldHeight());
 		stage.getViewport().update(width, height, true);
 		table.setBounds(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		// viewport.update(width, height);
@@ -673,10 +673,33 @@ public class Level implements Screen {
 			selectedEddy = 2;
 		else if (selectedEddy < 0)
 			selectedEddy = 0;
-		/*
-		 * if (temp != selectedEddy && Game.game.getSchwierigkeit() == 0)
-		 * setHighlighted();
-		 */
+		if (temp != selectedEddy && getSchwierigkeit() == 0)
+			setHighlighted();
+	}
+
+	private void setHighlighted() {
+		for (Eddy e : eddys) {
+			Color color;
+			switch (selectedEddy) {
+				case 0:
+					color = Color.ROT;
+					break;
+				case 1:
+					color = Color.BLAU;
+					break;
+				case 2:
+					color = Color.GRUEN;
+					break;
+				default:
+					color = null;
+			}
+			Color joined = Eddy.joinColor(e.getColor(), color);
+			if (joined != null && joined != Color.SCHWARZ) {
+				e.setHighlighted(true);
+				e.setHighlightedColor(joined);
+			} else
+				e.setHighlighted(false);
+		}
 	}
 
 	public int getSelectedEddy() {
