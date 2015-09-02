@@ -14,6 +14,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.badlogic.gdx.utils.viewport.Viewport;
 import com.sun.media.sound.SoftSynthesizer;
 import com.sun.xml.internal.ws.policy.privateutil.PolicyUtils.Text;
 
@@ -75,6 +77,7 @@ public class Level implements Screen {
 	private Stage stage;
 	private Table table;
 	private ShapeRenderer shapeRenderer;
+	private Viewport viewport;
 
 	private Planet planet;
 	private Kanone kanone;
@@ -90,12 +93,12 @@ public class Level implements Screen {
 		camera.setToOrtho(false, 800, 480);
 		camera.position.set(0, 0, 0);
 
-		stage = new Stage();
+		stage = new Stage(new ScreenViewport());
 		Gdx.input.setInputProcessor(stage);
 		Skin skin = new Skin(Gdx.files.internal("uiskin.json"));
 		btn = new TextButton("test", skin);
-		btn.setPosition(300, 300);
-		btn.setSize(300, 60);
+		// btn.setPosition(300, 300);
+		// btn.setSize(300, 60);
 		btn.addListener(new ClickListener() {
 			@Override
 			public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
@@ -109,6 +112,7 @@ public class Level implements Screen {
 			}
 		});
 		stage.addActor(btn);
+		stage.addActor(new TextButton("test2",skin));
 	}
 
 	@Override
@@ -221,18 +225,16 @@ public class Level implements Screen {
 			e.update();
 		}
 
-		// shakey cam
-//		if (shake_dur == 0) {
-//			camera.position.x = 0;
-//			camera.position.y = 0;
-//			shake_mag = 0;
-//		} else {
-//			camera.position.x = shakeValue();
-//			camera.position.y = shakeValue();
-//			shake_dur--;
-//		}
-		camera.position.x = 0;
-		camera.position.y = 0;
+		 //shakey cam
+		 if (shake_dur == 0) {
+		 camera.position.x = 0;
+		 camera.position.y = 0;
+		 shake_mag = 0;
+		 } else {
+		 camera.position.x = shakeValue();
+		 camera.position.y = shakeValue();
+		 shake_dur--;
+		 }
 		camera.update();
 
 		// Entities sicher entfernen
@@ -355,6 +357,7 @@ public class Level implements Screen {
 		camera.update();
 		hintergrund.resize(width, height);
 		stage.getViewport().update(width, height, true);
+		// viewport.update(width, height);
 	}
 
 	private void newObjective(int level) {
