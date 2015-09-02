@@ -1,5 +1,10 @@
 package espgame.level;
 
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Random;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Screen;
@@ -16,23 +21,20 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
-import com.sun.media.sound.SoftSynthesizer;
-import com.sun.xml.internal.ws.policy.privateutil.PolicyUtils.Text;
 
 import espgame.ESPGame;
-import espgame.entity.*;
+import espgame.entity.Eddy;
+import espgame.entity.Eddy.Color;
+import espgame.entity.Entity;
+import espgame.entity.Explosion;
+import espgame.entity.HeMan;
+import espgame.entity.Kanone;
+import espgame.entity.Schiff;
 import espgame.input.KanoneController;
 import espgame.mechanics.TextDisplayer;
 import espgame.resources.AssetContainer;
 import espgame.resources.AssetLoader;
 import espgame.resources.Fontsize;
-import espgame.entity.Eddy.Color;
-
-import java.awt.Font;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Random;
 
 /**
  * Created by Patrick on 26.08.2015.
