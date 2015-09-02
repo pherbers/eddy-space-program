@@ -36,7 +36,8 @@ public abstract class AssetContainer<T> {
 	public static final String UI_GAMEOVER = "ui_gameover";
 	public static final String UI_TICK = "ui_tick";
 	public static final String UI_LOGO = "ui_logo";
-	public static final String UI_LOGO_ALT = "ui_logo_alt";
+	public static final String UI_LOGO_SM = "ui_logo_sm";
+	public static final String UI_LOGO_SM_ALT = "ui_smalt";
 	public static final String UI_LOGO_TINY = "ui_logo_tiny";
 	public static final String UI_SELECTION = "ui_selection";
 

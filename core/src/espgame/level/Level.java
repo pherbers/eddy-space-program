@@ -35,6 +35,7 @@ import espgame.mechanics.TextDisplayer;
 import espgame.resources.AssetContainer;
 import espgame.resources.AssetLoader;
 import espgame.resources.Fontsize;
+import espgame.ui.EddyStorage;
 
 /**
  * Created by Patrick on 26.08.2015.
@@ -86,7 +87,7 @@ public class Level implements Screen {
 	private KanoneController kanonec;
 	private InputMultiplexer input;
 
-	private TextButton btn;
+	private EddyStorage eddyStorage;
 
 	public Level(int schwierigkeit, final ESPGame game) {
 		this.schwierigkeit = schwierigkeit;
@@ -98,23 +99,22 @@ public class Level implements Screen {
 		stage = new Stage(new ScreenViewport());
 		Gdx.input.setInputProcessor(stage);
 		Skin skin = new Skin(Gdx.files.internal("uiskin.json"));
-		btn = new TextButton("test", skin);
-		// btn.setPosition(300, 300);
-		// btn.setSize(300, 60);
-		btn.addListener(new ClickListener() {
-			@Override
-			public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-				btn.setText("Test success!");
-				System.out.println("print");
-			}
 
-			@Override
-			public void clicked(InputEvent event, float x, float y) {
-				super.clicked(event, x, y);
-			}
-		});
-		stage.addActor(btn);
-		stage.addActor(new TextButton("test2",skin));
+		eddyStorage = new EddyStorage(this);
+		table = new Table(skin);
+		table.setBounds(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+		table.row().expand();
+		table.add(eddyStorage).top().left();
+		TextButton b = new TextButton("Test3", skin);
+		table.add(b).fillX().bottom();
+		table.row().expand();
+		table.add(new TextButton("Test2", skin));
+
+		stage.addActor(table);
+		table.drawDebug(new ShapeRenderer());
+		stage.setDebugAll(true);
+
+		// stage.addActor(new TextButton("test2",skin));
 	}
 
 	@Override
@@ -187,7 +187,7 @@ public class Level implements Screen {
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
 		game.batch.setProjectionMatrix(camera.combined);
-		
+
 		game.batch.begin();
 		hintergrund.render(game.batch);
 		for (int i = 0; i < entities.size(); i++) {
@@ -227,16 +227,16 @@ public class Level implements Screen {
 			e.update();
 		}
 
-		 //shakey cam
-		 if (shake_dur == 0) {
-		 camera.position.x = 0;
-		 camera.position.y = 0;
-		 shake_mag = 0;
-		 } else {
-		 camera.position.x = shakeValue();
-		 camera.position.y = shakeValue();
-		 shake_dur--;
-		 }
+		// shakey cam
+		if (shake_dur == 0) {
+			camera.position.x = 0;
+			camera.position.y = 0;
+			shake_mag = 0;
+		} else {
+			camera.position.x = shakeValue();
+			camera.position.y = shakeValue();
+			shake_dur--;
+		}
 		camera.update();
 
 		// Entities sicher entfernen
@@ -341,6 +341,9 @@ public class Level implements Screen {
 			}
 		}
 
+		// HUD updates
+		eddyStorage.update();
+
 	}
 
 	public Explosion createExplosion(Vector2 position, float explosionsRadius, int lifespan) {
@@ -359,6 +362,7 @@ public class Level implements Screen {
 		camera.update();
 		hintergrund.resize(width, height);
 		stage.getViewport().update(width, height, true);
+		table.setBounds(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		// viewport.update(width, height);
 	}
 
