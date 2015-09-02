@@ -16,6 +16,8 @@ import espgame.util.VectorUtils;
 public class Explosion extends Entity {
 
 	public static final int TEXT_DURATION = 220;
+	public static final int SHAKE_MAGNITUDE = 16;
+	public static final int SHAKE_DURATION = 40;
 
 	private int removedEddyCount = 0;
 	private float explosionRadius;
@@ -36,6 +38,7 @@ public class Explosion extends Entity {
 
 		Sound explosion = AssetLoader.get().getSound(AssetContainer.SOUND_EXPLOSION);
 		explosion.play();
+		ESPGame.getLevel().shakeScreen(SHAKE_MAGNITUDE, SHAKE_DURATION);
 	}
 
 	@Override

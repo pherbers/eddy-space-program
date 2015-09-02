@@ -7,6 +7,7 @@ import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
 import static espgame.resources.AssetContainer.*;
 
@@ -19,6 +20,8 @@ public class AssetLoader {
 	private AssetContainer<Sound> soundContainer;
 	private AssetContainer<Music> musicContainer;
 	private AssetContainer<BitmapFont> fontContainer;
+	
+	private Skin skin;
 
 	public static AssetLoader get() {
 		if (loader == null)
@@ -102,6 +105,7 @@ public class AssetLoader {
 
 	public synchronized void load() {
 		AssetManager manager = new AssetManager();
+		manager.load("ui/uiskin.json",Skin.class);
 
 		for (int i = 0; i < assetList.size(); i++) {
 			assetList.get(i).load(manager);
@@ -112,6 +116,7 @@ public class AssetLoader {
 		for (int i = 0; i < assetList.size(); i++) {
 			assetList.get(i).store(manager);
 		}
+		skin = manager.get("ui/uiskin.json");
 		System.out.println("Loaded all assets. Clears now.");
 		assetList.clear();
 	}

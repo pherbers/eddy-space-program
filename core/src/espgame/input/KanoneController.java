@@ -57,6 +57,7 @@ public class KanoneController implements InputProcessor {
     @Override
     public boolean mouseMoved(int screenX, int screenY) {
         kanone.updateMousePosition(screenX, screenY);
+        System.out.println("Mouse pos: "+screenX+", "+screenY);
         return true;
     }
 

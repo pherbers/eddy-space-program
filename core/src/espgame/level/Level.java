@@ -8,9 +8,14 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.sun.media.sound.SoftSynthesizer;
+import com.sun.xml.internal.ws.policy.privateutil.PolicyUtils.Text;
 
 import espgame.ESPGame;
 import espgame.entity.*;
@@ -65,6 +70,7 @@ public class Level implements Screen {
 	private int hemandelay = HEMANLEVEL;
 	private int points, level;
 	private int selectedEddy = 0;
+	private int shake_mag, shake_dur;
 
 	private Stage stage;
 	private Table table;
@@ -75,11 +81,34 @@ public class Level implements Screen {
 	private KanoneController kanonec;
 	private InputMultiplexer input;
 
+	private TextButton btn;
+
 	public Level(int schwierigkeit, final ESPGame game) {
 		this.schwierigkeit = schwierigkeit;
 		this.game = game;
 		camera = new OrthographicCamera();
 		camera.setToOrtho(false, 800, 480);
+		camera.position.set(0, 0, 0);
+
+		stage = new Stage();
+		Gdx.input.setInputProcessor(stage);
+		Skin skin = new Skin(Gdx.files.internal("uiskin.json"));
+		btn = new TextButton("test", skin);
+		btn.setPosition(300, 300);
+		btn.setSize(300, 60);
+		btn.addListener(new ClickListener() {
+			@Override
+			public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+				btn.setText("Test success!");
+				System.out.println("print");
+			}
+
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				super.clicked(event, x, y);
+			}
+		});
+		stage.addActor(btn);
 	}
 
 	@Override
@@ -118,19 +147,14 @@ public class Level implements Screen {
 		running = true;
 		gameover = false;
 		paused = false;
+		shake_dur = 0;
+		shake_mag = 0;
 
 		this.kanone = new Kanone(new Random().nextFloat() * 360);
 		entities.add(planet);
 		entities.add(schiff);
 		entities.add(kanone);
 		this.kanonec = new KanoneController(kanone);
-
-		stage = new Stage();
-		Gdx.input.setInputProcessor(stage);
-		table = new Table();
-		table.setFillParent(true);
-		stage.addActor(table);
-		shapeRenderer = new ShapeRenderer();
 
 		this.input = new InputMultiplexer();
 		input.addProcessor(kanonec);
@@ -146,6 +170,7 @@ public class Level implements Screen {
 
 	@Override
 	public void render(float delta) {
+		// Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		deltaTime += delta;
 		if (deltaTime > UPDATE_TIME) {
 			update();
@@ -155,11 +180,8 @@ public class Level implements Screen {
 		Gdx.gl.glClearColor(0, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-		camera.position.set(0, 0, 0);
-		camera.update();
-
 		game.batch.setProjectionMatrix(camera.combined);
-
+		
 		game.batch.begin();
 		hintergrund.render(game.batch);
 		for (int i = 0; i < entities.size(); i++) {
@@ -170,15 +192,10 @@ public class Level implements Screen {
 			Eddy e = eddys.get(i);
 			e.render(game.batch);
 		}
-
-		// Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-		// stage.act(Gdx.graphics.getDeltaTime());
-		// stage.draw();
-		// table.drawDebug(shapeRenderer); // This is optional, but enables
-		// debug
-		// lines for tables.
-
 		game.batch.end();
+
+		stage.act(delta);
+		stage.draw();
 	}
 
 	public void update() {
@@ -203,6 +220,20 @@ public class Level implements Screen {
 			Entity e = eddys.get(i);
 			e.update();
 		}
+
+		// shakey cam
+//		if (shake_dur == 0) {
+//			camera.position.x = 0;
+//			camera.position.y = 0;
+//			shake_mag = 0;
+//		} else {
+//			camera.position.x = shakeValue();
+//			camera.position.y = shakeValue();
+//			shake_dur--;
+//		}
+		camera.position.x = 0;
+		camera.position.y = 0;
+		camera.update();
 
 		// Entities sicher entfernen
 		while (!removeQueue.isEmpty()) {
@@ -294,7 +325,8 @@ public class Level implements Screen {
 
 		// He Man spawn
 		if (spawnHeman) {
-			System.out.println("He-Man steht unmittelbar bevor! " + hemanCoutdown);
+			// System.out.println("He-Man steht unmittelbar bevor! " +
+			// hemanCoutdown);
 			hemanCoutdown--;
 			if (hemanCoutdown == 0) {
 				hemanCoutdown = HEMANCOUNTDOWNBASE + new Random().nextInt(HEMANJITTER);
@@ -645,6 +677,23 @@ public class Level implements Screen {
 		// new Highscore(level, points, Game.getPlayerName(),
 		// Game.getLevel().getSchwierigkeit())));
 		// TODO show highscores
+	}
+
+	public void shakeScreen(int magnitude, int duration) {
+		if (shake_dur < duration) {
+			shake_dur = duration;
+		}
+		if (shake_mag < magnitude) {
+			shake_mag = magnitude;
+		}
+	}
+
+	public int shakeValue() {
+		Random r = new Random();
+		int i = r.nextInt(shake_mag + 1);
+		if (r.nextBoolean())
+			i *= -1;
+		return i;
 	}
 
 	public int getLevel() {

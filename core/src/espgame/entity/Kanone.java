@@ -234,6 +234,7 @@ public class Kanone extends Entity {
                     Sound empty = AssetLoader.get().getSound(AssetContainer.SOUND_KANON_EMPTY);
                     empty.stop();
                     empty.play();
+                    ESPGame.getLevel().shakeScreen(3, 15);
                     ESPGame.getLevel().createTextDisplayer(getPosition(), VectorUtils.randomNormalized().scl(0.5f), NO_AMMO_DUR, NO_AMMO_TEXT, Fontsize.Klein);
                 }
                 cooldown = MAXCOOLDOWN;
