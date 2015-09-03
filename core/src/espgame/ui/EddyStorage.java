@@ -2,8 +2,9 @@ package espgame.ui;
 
 import java.util.ArrayList;
 
-import com.badlogic.gdx.scenes.scene2d.ui.Cell;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 
 import espgame.level.Level;
@@ -16,11 +17,13 @@ public class EddyStorage extends Table {
 	private Level level;
 	private EddySelectionImage blau, gruen, rot;
 	private ArrayList<EddySelectionImage> list;
+	private LevelDisplayer displayer;
 
-	public EddyStorage(Level level) {
+	public EddyStorage(Level level, Skin skin) {
 		this.level = level;
 
 		AssetLoader loader = AssetLoader.get();
+		BitmapFont font = loader.getFont(AssetContainer.FONT_SMALL);
 
 		Image r = new Image(loader.getTexture(AssetContainer.EDDY_ROT));
 		Image g = new Image(loader.getTexture(AssetContainer.EDDY_GRUEN));
@@ -34,17 +37,21 @@ public class EddyStorage extends Table {
 		list.add(blau);
 		list.add(gruen);
 
-		
-		for(int i = 0;i<list.size();i++){
+		for (int i = 0; i < list.size(); i++) {
 			add(list.get(i));
 			row();
 		}
+
+		displayer = new LevelDisplayer(level, skin, font);
+		add(displayer).padTop(8).fill();
 	}
 
 	public void update() {
-		for(int i = 0;i<list.size();i++){
-			list.get(i).setActive(i == level.getSelectedEddy());
+		for (int i = 0; i < list.size(); i++) {
+			EddySelectionImage im = list.get(i);
+			im.setActive(i == level.getSelectedEddy());
+			im.setCount(level.getReserve(i));
 		}
+		displayer.update();
 	}
-
 }

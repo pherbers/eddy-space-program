@@ -23,7 +23,7 @@ import espgame.util.VectorUtils;
 public class Kanone extends Entity {
 
     private static final float MAX_WINKEL = 90f, MIN_WINKEL = -90f;
-    private static final int MAXCOOLDOWN = 60, MAXFORCE = 10, MINFORCE = 1;
+    public static final int MAXCOOLDOWN = 60, MAXFORCE = 10, MINFORCE = 1;
     private static final float SURFACE_DISTANCE = 24;
     
     public static final int NO_AMMO_DUR = 90;
@@ -283,6 +283,14 @@ public class Kanone extends Entity {
 	public void shoot() {
 		mouseDown = false;
 		shoot = true;
+	}
+	
+	public int getCoolodown(){
+		return cooldown;
+	}
+	
+	public float getKraft(){
+		return kraft;
 	}
 
 	public void updateMousePosition(int newx, int newy) {

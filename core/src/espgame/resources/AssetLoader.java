@@ -20,7 +20,7 @@ public class AssetLoader {
 	private AssetContainer<Sound> soundContainer;
 	private AssetContainer<Music> musicContainer;
 	private AssetContainer<BitmapFont> fontContainer;
-	
+
 	private Skin skin;
 
 	public static AssetLoader get() {
@@ -52,7 +52,7 @@ public class AssetLoader {
 			}
 		};
 		fontContainer = new AssetContainer<BitmapFont>() {
-			
+
 			@Override
 			protected BitmapFont handleMissing() {
 				System.err.println("Wanting to access a font. But it is missing.");
@@ -81,7 +81,8 @@ public class AssetLoader {
 		assetList.add(new TempAsset("sprites/eddys/pointyeddy.png", textureContainer, MENU_EDDY, Texture.class));
 		assetList.add(new TempAsset("sprites/eddys/pointynils.png", textureContainer, MENU_NILS, Texture.class));
 
-		assetList.add(new TempAsset("sprites/gui/EddySelectorBG.png", textureContainer, UI_EDDY_SELECTOR, Texture.class));
+		assetList.add(
+				new TempAsset("sprites/gui/EddySelectorBG.png", textureContainer, UI_EDDY_SELECTOR, Texture.class));
 		assetList.add(new TempAsset("sprites/gui/selection.png", textureContainer, UI_SELECTION, Texture.class));
 		assetList.add(new TempAsset("sprites/gui/haken.png", textureContainer, UI_TICK, Texture.class));
 
@@ -120,7 +121,7 @@ public class AssetLoader {
 
 	public synchronized void load() {
 		AssetManager manager = new AssetManager();
-		manager.load("ui/uiskin.json",Skin.class);
+		manager.load("ui/uiskin.json", Skin.class);
 
 		for (int i = 0; i < assetList.size(); i++) {
 			assetList.get(i).load(manager);
@@ -134,6 +135,10 @@ public class AssetLoader {
 		skin = manager.get("ui/uiskin.json");
 		System.out.println("Loaded all assets. Clears now.");
 		assetList.clear();
+	}
+
+	public Skin getSkin() {
+		return skin;
 	}
 
 	public AssetContainer<Texture> getTextureContainer() {

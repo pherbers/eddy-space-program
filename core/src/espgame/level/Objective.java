@@ -210,4 +210,12 @@ public class Objective implements Iterable<Color> {
 	public Iterator<Color> iterator() {
 		return farben.iterator();
 	}
+
+	public int getColorCount(int color) {
+		return anzahl[color];
+	}
+
+	public int[] getColorCount() {
+		return anzahl;
+	}
 }
