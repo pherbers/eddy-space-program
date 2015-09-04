@@ -18,6 +18,8 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
@@ -40,6 +42,8 @@ import espgame.resources.AssetContainer;
 import espgame.resources.AssetLoader;
 import espgame.resources.Fontsize;
 import espgame.ui.EddyStorage;
+import espgame.ui.KanoneDisplayer;
+import espgame.ui.ObjectiveDisplayer;
 
 /**
  * Created by Patrick on 26.08.2015.
@@ -56,12 +60,10 @@ public class Level implements Screen {
 	public static final int HEMANCOUNTDOWNBASE = 180;
 	public static final int HEMANJITTER = 25;
 	public static final int HEMANLEVEL = 2;
-	public static final int EDDYCAP = 10;
+	public static final int EDDYCAP = 9;
 
-	public static final int MIN_WORLD_WIDTH = 800,
-	                        MAX_WORLD_WIDTH = 1920,
-	                        MIN_WORLD_HEIGHT = 800,
-	                        MAX_WORLD_HEIGHT = 1080;
+	public static final int MIN_WORLD_WIDTH = 800, MAX_WORLD_WIDTH = 1920, MIN_WORLD_HEIGHT = 800,
+			MAX_WORLD_HEIGHT = 1080;
 
 	public static final float STAR_PERCENTAGE = 0.0005f;
 
@@ -101,6 +103,9 @@ public class Level implements Screen {
 	private InputMultiplexer input;
 
 	private EddyStorage eddyStorage;
+	private KanoneDisplayer kanoneDisplayer;
+	private ObjectiveDisplayer objectiveDisplayer;
+	private ImageButton endBT;
 
 	public Level(int schwierigkeit, final ESPGame game) {
 		this.schwierigkeit = schwierigkeit;
@@ -115,17 +120,22 @@ public class Level implements Screen {
 
 		stage = new Stage(new ScreenViewport());
 		Gdx.input.setInputProcessor(stage);
-		Skin skin = new Skin(Gdx.files.internal("uiskin.json"));
+		Skin skin = AssetLoader.get().getSkin();
 
-		eddyStorage = new EddyStorage(this);
+		endBT = new ImageButton(new Image(AssetLoader.get().getTexture(AssetContainer.UI_LOGO)).getDrawable());
+		endBT.setVisible(false);
+		Table leftTable = new Table(skin);
+		eddyStorage = new EddyStorage(this, skin);
+		kanoneDisplayer = new KanoneDisplayer(kanone, skin);
+		objectiveDisplayer = new ObjectiveDisplayer(objective);
 		table = new Table(skin);
 		table.setBounds(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-		table.row().expand();
-		table.add(eddyStorage).top().left();
-		TextButton b = new TextButton("Test3", skin);
-		table.add(b).fillX().bottom();
-		table.row().expand();
-		table.add(new TextButton("Test2", skin));
+		leftTable.add(eddyStorage).padLeft(3).padTop(3).top().left();
+		leftTable.row().expand();
+		leftTable.add(kanoneDisplayer).top().left().uniform();
+		table.add(leftTable).expand().top().left();
+		table.add(endBT).bottom().padBottom(50);
+		table.add(objectiveDisplayer).expand().center().right();
 
 		stage.addActor(table);
 		//table.drawDebug(new ShapeRenderer());
@@ -142,6 +152,7 @@ public class Level implements Screen {
 		addQueue = new LinkedList<Entity>();
 		removeQueue = new LinkedList<Entity>();
 		objective = new Objective();
+		objectiveDisplayer.setObjective(objective);
 		hintergrund = new Hintergrund(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), STAR_PERCENTAGE);
 		level = 1;
 		points = 0;
@@ -149,6 +160,7 @@ public class Level implements Screen {
 		schiff = new Schiff(ESPGame.getRandomOmega(), planet.getOrbit().getRadius() + 50, planet.getOrbit());
 
 		this.planet = planet;
+		kanone = new Kanone(new Random().nextFloat() * 360);
 
 		if (schwierigkeit == 2)
 			hemandelay = HEMANLEVEL + 1;
@@ -173,11 +185,11 @@ public class Level implements Screen {
 		shake_dur = 0;
 		shake_mag = 0;
 
-		this.kanone = new Kanone(new Random().nextFloat() * 360);
 		entities.add(planet);
 		entities.add(schiff);
 		entities.add(kanone);
 		this.kanonec = new KanoneController(kanone);
+		kanoneDisplayer.setKanone(kanone); // TODO: ist das nötig?
 
 		this.input = new InputMultiplexer();
 		input.addProcessor(kanonec);
@@ -187,6 +199,7 @@ public class Level implements Screen {
 		// BEGIN RUNDE 1
 		setReserved(3, 3, 3);
 		newObjective(level);
+		objectiveDisplayer.update();
 
 		spawnHeman = true;
 
@@ -218,6 +231,13 @@ public class Level implements Screen {
 			Eddy e = eddys.get(i);
 			e.render(game.batch);
 		}
+
+		// if(gameover){
+		// game.batch.flush();
+		// Gdx.gl.glClearColor(180, 20, 70, .5f);
+		// Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+		// }
+
 		game.batch.end();
 
 		stage.act(delta);
@@ -236,6 +256,7 @@ public class Level implements Screen {
 			// ui.setGameOver(false);
 			// Disable Gameover Overlay
 		}
+		endBT.setVisible(gameover);
 
 		for (int i = 0; i < entities.size(); i++) {
 			Entity e = entities.get(i);
@@ -247,7 +268,7 @@ public class Level implements Screen {
 			e.update();
 		}
 
-		 //shakey cam
+		// shakey cam
 		if (shake_dur == 0) {
 			camera.position.x = 0;
 			camera.position.y = 0;
@@ -266,10 +287,11 @@ public class Level implements Screen {
 		// Entities sicher entfernen
 		while (!removeQueue.isEmpty()) {
 			removeQueue.peek().onRemove();
-			if (removeQueue.peek() instanceof Eddy)
+			if (removeQueue.peek() instanceof Eddy) {
 				eddys.remove(removeQueue.pop());
-			else
+			} else {
 				entities.remove(removeQueue.pop());
+			}
 		}
 
 		// Entities sicher hinzufügen
@@ -340,15 +362,18 @@ public class Level implements Screen {
 				reserveGruen = 10;
 			if (reserveRot > 10)
 				reserveRot = 10;
-			if (!schiff.isBusy()) {
-				gameover = !objective.checkObjective(getReserve());
-			}
+			
 
 			// TODO obsolete?
 			// // Kollision mit Planet
 			// if (eddys.get(i).checkCollision(planet)) {
 			// eddys.remove(i);
 			// }
+		}
+		
+		//Objective überprüfen
+		if (!schiff.isBusy()) {
+			gameover = !objective.checkObjective(getReserve());	//TODO nils: ich musste es bewegen
 		}
 
 		// He Man spawn
@@ -366,7 +391,7 @@ public class Level implements Screen {
 
 		// HUD updates
 		eddyStorage.update();
-
+		kanoneDisplayer.update();
 	}
 
 	public Explosion createExplosion(Vector2 position, float explosionsRadius, int lifespan) {
@@ -380,9 +405,9 @@ public class Level implements Screen {
 
 	@Override
 	public void resize(int width, int height) {
-		//camera.setToOrtho(false, width, height);
+		// camera.setToOrtho(false, width, height);
 		// TODO match hintergrund to new screensize?
-		//camera.update();
+		// camera.update();
 		worldViewport.setMinWorldWidth(MathUtils.clamp(width, MIN_WORLD_WIDTH, MAX_WORLD_WIDTH));
 		worldViewport.setMinWorldHeight(MathUtils.clamp(height, MIN_WORLD_HEIGHT, MAX_WORLD_HEIGHT));
 		worldViewport.update(width, height, true);
@@ -516,6 +541,7 @@ public class Level implements Screen {
 			cap--;
 		}
 		newObjective(level);
+		objectiveDisplayer.update();
 		if (level % hemandelay == 0) {
 			spawnHeman = true;
 		}
@@ -548,12 +574,32 @@ public class Level implements Screen {
 		return false;
 	}
 
+	public int getReserve(int color) {
+		switch (color) {
+		case 0:
+			return getReserveRot();
+		case 1:
+			return getReserveBlau();
+		case 2:
+			return getReserveGruen();
+
+		default:
+			throw new IllegalArgumentException("bla");
+		}
+	}
+
 	public int getReserveRot() {
 		return reserveRot;
 	}
 
 	public void setReserveRot(int reserveRot) {
 		this.reserveRot = reserveRot;
+		if (reserveRot > EDDYCAP) {
+			reserveRot = EDDYCAP;
+		}
+		if (reserveRot < 0) {
+			reserveRot = 0;
+		}
 	}
 
 	public int getReserveBlau() {
@@ -562,6 +608,12 @@ public class Level implements Screen {
 
 	public void setReserveBlau(int reserveBlau) {
 		this.reserveBlau = reserveBlau;
+		if (reserveBlau > EDDYCAP) {
+			reserveBlau = EDDYCAP;
+		}
+		if (reserveBlau < 0) {
+			reserveBlau = 0;
+		}
 	}
 
 	public int getReserveGruen() {
@@ -570,6 +622,12 @@ public class Level implements Screen {
 
 	public void setReserveGruen(int reserveGruen) {
 		this.reserveGruen = reserveGruen;
+		if (reserveGruen > EDDYCAP) {
+			reserveGruen = EDDYCAP;
+		}
+		if (reserveGruen < 0) {
+			reserveGruen = 0;
+		}
 	}
 
 	public void setReserved(int r, int g, int b) {
@@ -632,13 +690,13 @@ public class Level implements Screen {
 	public void modReserve(int color, int mod) {
 		switch (color) {
 		case 0:
-			reserveRot += mod;
+			setReserveRot(getReserveRot() + mod);
 			break;
 		case 1:
-			reserveBlau += mod;
+			setReserveBlau(getReserveBlau() + mod);
 			break;
 		case 2:
-			reserveGruen += mod;
+			setReserveGruen(getReserveGruen() + mod);
 			break;
 		default:
 			throw new IllegalArgumentException();
