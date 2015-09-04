@@ -11,6 +11,9 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.ParticleEffect;
+import com.badlogic.gdx.graphics.g2d.ParticleEffectPool;
+import com.badlogic.gdx.graphics.g3d.particles.ParticleSystem;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Matrix4;
@@ -41,6 +44,7 @@ import espgame.mechanics.TextDisplayer;
 import espgame.resources.AssetContainer;
 import espgame.resources.AssetLoader;
 import espgame.resources.Fontsize;
+import espgame.resources.ParticleContainer;
 import espgame.ui.EddyStorage;
 import espgame.ui.KanoneDisplayer;
 import espgame.ui.ObjectiveDisplayer;
@@ -107,6 +111,9 @@ public class Level implements Screen {
 	private ObjectiveDisplayer objectiveDisplayer;
 	private ImageButton endBT;
 
+	public final ParticleContainer particleContainer;
+	private ArrayList<ParticleEffect> particleEffects;
+
 	public Level(int schwierigkeit, final ESPGame game) {
 		this.schwierigkeit = schwierigkeit;
 		this.game = game;
@@ -142,6 +149,8 @@ public class Level implements Screen {
 		//stage.setDebugAll(true);
 
 		// stage.addActor(new TextButton("test2",skin));
+		particleEffects = new ArrayList<ParticleEffect>();
+		particleContainer = new ParticleContainer();
 	}
 
 	@Override
@@ -203,6 +212,9 @@ public class Level implements Screen {
 
 		spawnHeman = true;
 
+		// Particles
+		particleContainer.loadParticles();
+
 		worldViewport.apply(true);
 	}
 
@@ -223,6 +235,13 @@ public class Level implements Screen {
 		hintergrund.render(game.batch);
 		game.batch.flush();
 		game.batch.setProjectionMatrix(camera.combined);
+		for (int i = particleEffects.size() - 1; i >= 0; i--) {
+			ParticleEffect p = particleEffects.get(i);
+			p.draw(game.batch);
+			if (p.isComplete()) {
+				particleEffects.remove(p);
+			}
+		}
 		for (int i = 0; i < entities.size(); i++) {
 			Entity e = entities.get(i);
 			e.render(game.batch);
@@ -283,6 +302,9 @@ public class Level implements Screen {
 			shake_mag -= shake_linear;
 		}
 		camera.update();
+		for (ParticleEffect p: particleEffects) {
+			p.update(UPDATE_TIME);
+		}
 
 		// Entities sicher entfernen
 		while (!removeQueue.isEmpty()) {
@@ -841,4 +863,7 @@ public class Level implements Screen {
 		return schiff;
 	}
 
+	public void addParticleSystem(ParticleEffect particleEffect) {
+		particleEffects.add(particleEffect);
+	}
 }

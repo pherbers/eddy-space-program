@@ -1,13 +1,15 @@
 package espgame.entity;
 
-import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g2d.*;
+import com.badlogic.gdx.graphics.g3d.particles.ParticleSystem;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import espgame.ESPGame;
 import espgame.level.Orbit;
 import espgame.resources.AssetContainer;
 import espgame.resources.AssetLoader;
+import espgame.resources.ParticleContainer;
 
 import java.util.Random;
 
@@ -42,6 +44,8 @@ public class Eddy extends Entity {
     private Sprite highlightSprite;
 	private Color highlightColor;
 
+    private ParticleEffect particleEffect;
+
 	public static final float GRAVITYEASY = 1.0f, GRAVITYNORMAL = 0.9999f, GRAVITYHARD = 0.9998f;
 
 	private static float gravity = GRAVITYNORMAL;
@@ -71,6 +75,7 @@ public class Eddy extends Entity {
         } catch (IOException e) {
             e.printStackTrace();
         }*/
+
         setColor();
         // ESPGame.getLevel().addParticleEmitter(emitter);
         if (getColor() == Color.SCHWARZ)
@@ -179,7 +184,7 @@ public class Eddy extends Entity {
 		}
 		sprite.setCenter(position.x, position.y);
         highlightSprite.setCenter(position.x, position.y);
-
+        particleEffect.setPosition(position.x, position.y);
 	}
 
     public static Eddy joinEddys(Eddy e1, Eddy e2) {
@@ -240,30 +245,40 @@ public class Eddy extends Entity {
 
     private void setColor() {
         String spriteKey = AssetContainer.EDDY_ROT;
+        ParticleEffect effect;
+        ParticleContainer container = ESPGame.getLevel().particleContainer;
         switch (farbe) {
             case ROT:
                 spriteKey = AssetContainer.EDDY_ROT;
+                effect = container.eddyRot;
                 break;
             case GRUEN:
                 spriteKey = AssetContainer.EDDY_GRUEN;
+                effect = container.eddyGruen;
                 break;
             case BLAU:
                 spriteKey = AssetContainer.EDDY_BLAU;
+                effect = container.eddyBlau;
                 break;
             case GELB:
                 spriteKey = AssetContainer.EDDY_GELB;
+                effect = container.eddyGelb;
                 break;
             case CYAN:
                 spriteKey = AssetContainer.EDDY_CYAN;
+                effect = container.eddyCyan;
                 break;
             case MAGENTA:
                 spriteKey = AssetContainer.EDDY_MAGENTA;
+                effect = container.eddyMagenta;
                 break;
             case WEISS:
                 spriteKey = AssetContainer.EDDY_WEISS;
+                effect = container.eddyWeiss;
                 break;
-            case SCHWARZ:
+            default:
                 spriteKey = AssetContainer.EDDY_WEISS;
+                effect = container.eddySchwarz;
                 break;
         }
         // setEmitterColor(farbe);
@@ -273,6 +288,10 @@ public class Eddy extends Entity {
         sprite.setSize(radius * 2, radius * 2);
         sprite.setOriginCenter();
         sprite.setCenter(position.x, position.y);
+
+        particleEffect = new ParticleEffect(effect);
+        ESPGame.getLevel().addParticleSystem(particleEffect);
+        particleEffect.start();
 
         highlightSprite = new Sprite(AssetLoader.get().getTexture(AssetContainer.EDDY_HIGHLIGHT));
         highlightSprite.setSize(radius * 2 + 16, radius * 2 + 16);
@@ -294,8 +313,7 @@ public class Eddy extends Entity {
 
     @Override
     public void onRemove() {
-        // emitter.wrapUp();
-        // Game.getLevel().removeEmitter(emitter);
+        particleEffect.setDuration(0);
     }
 
     public Color getColor() {
