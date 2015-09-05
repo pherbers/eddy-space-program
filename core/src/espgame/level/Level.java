@@ -302,8 +302,11 @@ public class Level implements Screen {
 			shake_mag -= shake_linear;
 		}
 		camera.update();
-		for (ParticleEffect p: particleEffects) {
+		for(int i = particleEffects.size() - 1; i >= 0; i--) {
+			ParticleEffect p = particleEffects.get(i);
 			p.update(UPDATE_TIME);
+			if(p.isComplete())
+				particleEffects.remove(i);
 		}
 
 		// Entities sicher entfernen
@@ -341,11 +344,11 @@ public class Level implements Screen {
 					Color dc = dominantEddy.getFarbe();
 					Color nc = noobEddy.getFarbe();
 					if (dc == Color.SCHWARZ || nc == Color.SCHWARZ || (dc == nc)) {
-						dominantEddy.createCollideExplosion();
+						dominantEddy.createCollideExplosion(Color.SCHWARZ);
 					} else {
 						Color col = Eddy.joinColor(dominantEddy.getFarbe(), noobEddy.getFarbe());
 						if (col == null) {
-							dominantEddy.createCollideExplosion();
+							dominantEddy.createCollideExplosion(noobEddy.getColor());
 							removeEddy(noobEddy);
 						} else {
 							addEddy(Eddy.joinEddys(dominantEddy, noobEddy));
@@ -367,7 +370,7 @@ public class Level implements Screen {
 					}
 				if (entities.get(j) instanceof Planet && eddys.get(i).isCollidable())
 					if (eddys.get(i).getPosition().dst(e.getPosition()) < e.getRadius() + eddys.get(i).getRadius()) {
-						eddys.get(i).createCollideExplosion();
+						eddys.get(i).createCollideExplosion(Color.SCHWARZ);
 						removeEddy(i);
 						continue;
 					}

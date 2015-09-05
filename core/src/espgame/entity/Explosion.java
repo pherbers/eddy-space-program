@@ -3,6 +3,8 @@ package espgame.entity;
 import java.util.ArrayList;
 
 import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 
@@ -23,6 +25,7 @@ public class Explosion extends Entity {
 	private float explosionRadius;
 	private boolean active = true;
 	private ArrayList<Eddy> destroyList;
+	private ParticleEffect particleEffect;
 
 	public Explosion(Vector2 position, float explosionRadius, int lifespan) {
 		super(position.x, position.y);
@@ -34,7 +37,12 @@ public class Explosion extends Entity {
 
 		destroyList = new ArrayList<Eddy>();
 
-		// TODO Particle here
+		// Particle Effects
+		ParticleEffect effect = new ParticleEffect(ESPGame.getLevel().particleContainer.explosion);
+		ESPGame.getLevel().addParticleSystem(effect);
+		effect.setPosition(this.position.x, this.position.y);
+		effect.start();
+		particleEffect = effect;
 
 		Sound explosion = AssetLoader.get().getSound(AssetContainer.SOUND_EXPLOSION);
 		explosion.play();
@@ -55,9 +63,8 @@ public class Explosion extends Entity {
 	public void remove() {
 		if (lifespan == 0)
 			active = false;
-		if (!active) // TODO if active && keine fartikel mehr
+		if (!active)
 			super.remove();
-		// TODO patikel entfernen??
 	}
 
 	public void removeObjects() {
@@ -99,6 +106,11 @@ public class Explosion extends Entity {
 			removeObjects();
 		}
 		ticklifespan();
+	}
+
+	public void setEmitterColors(Color c1, Color c2) {
+		particleEffect.findEmitter("Col1").getTint().setColors(new float[]{c1.r, c1.g, c1.b});
+		particleEffect.findEmitter("Col2").getTint().setColors(new float[]{c2.r, c2.g, c2.b});
 	}
 
 	public boolean isActive() {

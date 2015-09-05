@@ -209,7 +209,7 @@ public class Eddy extends Entity {
 	 */
 
 
-    private com.badlogic.gdx.graphics.Color toGdxColor(Color c) {
+    public static com.badlogic.gdx.graphics.Color toGdxColor(Color c) {
         com.badlogic.gdx.graphics.Color col;
         switch (c) {
             case ROT:
@@ -299,9 +299,11 @@ public class Eddy extends Entity {
         highlightSprite.setCenter(position.x, position.y);
     }
 
-	public Explosion createCollideExplosion() {
+	public Explosion createCollideExplosion(Color opposingColor) {
 		// TODO magic number
-		return ESPGame.getLevel().createExplosion(getPosition(), getRadius() * 1.5f, 15);
+        Explosion exp =ESPGame.getLevel().createExplosion(getPosition(), getRadius() * 1.5f, 15);
+        exp.setEmitterColors(toGdxColor(this.farbe), toGdxColor(opposingColor));
+		return exp;
 	}
 
         

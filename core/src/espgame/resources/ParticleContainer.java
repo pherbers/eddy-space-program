@@ -12,6 +12,7 @@ import com.badlogic.gdx.graphics.g2d.ParticleEmitter;
  */
 public class ParticleContainer {
     public final ParticleEffect eddyRot, eddyBlau, eddyGruen, eddyGelb, eddyCyan, eddyMagenta, eddyWeiss, eddySchwarz;
+    public final ParticleEffect explosion;
 
     public ParticleContainer() {
         eddyRot = new ParticleEffect();
@@ -22,36 +23,39 @@ public class ParticleContainer {
         eddyMagenta = new ParticleEffect();
         eddyWeiss = new ParticleEffect();
         eddySchwarz = new ParticleEffect();
+
+        explosion = new ParticleEffect();
     }
 
     public void loadParticles() {
         FileHandle eddyParticleSystem = Gdx.files.internal("particles/eddyParticle.p");
-        FileHandle eddyParticleSprite = Gdx.files.internal("sprites/particles");
+        FileHandle particleSprites = Gdx.files.internal("sprites/particles");
 
-        eddyRot.load(eddyParticleSystem, eddyParticleSprite);
+        eddyRot.load(eddyParticleSystem, particleSprites);
         setEmitterColor(eddyRot, Color.RED);
 
-        eddyBlau.load(eddyParticleSystem, eddyParticleSprite);
+        eddyBlau.load(eddyParticleSystem, particleSprites);
         setEmitterColor(eddyBlau, Color.BLUE);
 
-        eddyGruen.load(eddyParticleSystem, eddyParticleSprite);
+        eddyGruen.load(eddyParticleSystem, particleSprites);
         setEmitterColor(eddyGruen, Color.GREEN);
 
-        eddyGelb.load(eddyParticleSystem, eddyParticleSprite);
+        eddyGelb.load(eddyParticleSystem, particleSprites);
         setEmitterColor(eddyGelb, Color.YELLOW);
 
-        eddyCyan.load(eddyParticleSystem, eddyParticleSprite);
+        eddyCyan.load(eddyParticleSystem, particleSprites);
         setEmitterColor(eddyCyan, Color.CYAN);
 
-        eddyMagenta.load(eddyParticleSystem, eddyParticleSprite);
+        eddyMagenta.load(eddyParticleSystem, particleSprites);
         setEmitterColor(eddyMagenta, Color.MAGENTA);
 
-        eddyWeiss.load(eddyParticleSystem, eddyParticleSprite);
+        eddyWeiss.load(eddyParticleSystem, particleSprites);
         setEmitterColor(eddyWeiss, Color.WHITE);
 
-        eddySchwarz.load(eddyParticleSystem, eddyParticleSprite);
+        eddySchwarz.load(eddyParticleSystem, particleSprites);
         setEmitterColor(eddySchwarz, Color.GRAY);
 
+        explosion.load(Gdx.files.internal("particles/explosion.p"), particleSprites);
     }
 
     private static void setEmitterColor(ParticleEffect effect, Color color) {
