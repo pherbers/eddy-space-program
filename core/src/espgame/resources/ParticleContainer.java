@@ -13,6 +13,7 @@ import com.badlogic.gdx.graphics.g2d.ParticleEmitter;
 public class ParticleContainer {
     public final ParticleEffect eddyRot, eddyBlau, eddyGruen, eddyGelb, eddyCyan, eddyMagenta, eddyWeiss, eddySchwarz;
     public final ParticleEffect explosion;
+    public final ParticleEffect heman;
 
     public ParticleContainer() {
         eddyRot = new ParticleEffect();
@@ -25,6 +26,7 @@ public class ParticleContainer {
         eddySchwarz = new ParticleEffect();
 
         explosion = new ParticleEffect();
+        heman = new ParticleEffect();
     }
 
     public void loadParticles() {
@@ -56,6 +58,7 @@ public class ParticleContainer {
         setEmitterColor(eddySchwarz, Color.GRAY);
 
         explosion.load(Gdx.files.internal("particles/explosion.p"), particleSprites);
+        heman.load(Gdx.files.internal("particles/heman.p"), particleSprites);
     }
 
     private static void setEmitterColor(ParticleEffect effect, Color color) {

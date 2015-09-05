@@ -5,6 +5,7 @@ import java.util.Random;
 
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
@@ -41,6 +42,7 @@ public class HeMan extends Entity {
 	private int pauseTimer = PAUSETIMERMAX;
 
 	private Sound enterSound, getSound, twinkle;
+	private ParticleEffect particleEffect, introParticleEffect;
 
 	@Deprecated
 	public HeMan(float x, float y) {
@@ -98,6 +100,12 @@ public class HeMan extends Entity {
 		// Game.getLevel().addParticleEmitter(emitterB);
 		// TODO particles here
 
+		ParticleEffect effect = new ParticleEffect(ESPGame.getLevel().particleContainer.heman);
+		ESPGame.getLevel().addParticleSystem(effect);
+		effect.setPosition(this.position.x, this.position.y);
+		effect.start();
+		particleEffect = effect;
+
 		setPosition(start);
 		sprite.setSize(radius * 2, radius * 2);
 		sprite.setOriginCenter();
@@ -132,10 +140,7 @@ public class HeMan extends Entity {
 		}
 		sprite.setCenter(position.x, position.y);
 		sprite.rotate(ROTATION_INSTANCE + new Random().nextInt(3));
-		// emitterR.setPosition((float) getX(), (float) getY(), false);
-		// emitterG.setPosition((float) getX(), (float) getY(), false);
-		// emitterB.setPosition((float) getX(), (float) getY(), false);
-		// TODO particles
+		particleEffect.setPosition(position.x, position.y);
 
 		if (!showedUp && isInScreen()) {
 			onEnter();
@@ -175,6 +180,11 @@ public class HeMan extends Entity {
 			// Game.generateEmitter("res/particles/hemanIntro.xml"));
 			// Game.getLevel().addEntity(introSpawner);
 			// TODO partikels
+			ParticleEffect effect = new ParticleEffect(ESPGame.getLevel().particleContainer.eddyWeiss);
+			ESPGame.getLevel().addParticleSystem(effect);
+			effect.setPosition(this.position.x, this.position.y);
+			effect.start();
+			introParticleEffect = effect;
 
 			paused = true;
 			twinkle.play();
@@ -235,5 +245,12 @@ public class HeMan extends Entity {
 		d.setColor(Color.GREEN);
 		d = ESPGame.getLevel().createTextDisplayer(getPosition(), VectorUtils.randomNormalized().scl(.5f), TEXTDURATION, "+" + b, Fontsize.Gross);
 		d.setColor(Color.BLUE);
+	}
+
+	@Override
+	public void onRemove() {
+		super.onRemove();
+		particleEffect.setDuration(0);
+		introParticleEffect.setDuration(0);
 	}
 }

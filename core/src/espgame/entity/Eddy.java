@@ -306,13 +306,6 @@ public class Eddy extends Entity {
 		return exp;
 	}
 
-        
-
-    /*public Explosion createCollideExplosion() {
-        return Game.getLevel().createExplosion(position, getRadius() * 1.5, 15,
-                false, 1.2, 600, true);
-    }*/
-
     @Override
     public void onRemove() {
         particleEffect.setDuration(0);
