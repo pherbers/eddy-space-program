@@ -64,6 +64,7 @@ public class AssetLoader {
 
 	public void collect() {
 		assetList.add(new TempAsset("sprites/misc/schiff_idle.png", textureContainer, SHIP_IDLE, Texture.class));
+		assetList.add(new TempAsset("sprites/misc/schiff_active.png", textureContainer, SHIP_ACTIVE, Texture.class));
 		assetList.add(new TempAsset("sprites/misc/Kanone_base.png", textureContainer, KANONE_BASE, Texture.class));
 		assetList.add(new TempAsset("sprites/misc/Kanone_top.png", textureContainer, KANONE_TOP, Texture.class));
 		assetList.add(new TempAsset("sprites/misc/Orbit.png", textureContainer, ORBIT, Texture.class));

@@ -5,8 +5,7 @@ import java.util.Iterator;
 
 public abstract class AssetContainer<T> implements Iterable<T> {
 	public static final String SHIP_IDLE = "ship_idle";
-	public static final String SHIP_SAMMELN_1 = "ship_collect_1";
-	public static final String SHIP_SAMMELN_2 = "ship_collect_2";
+	public static final String SHIP_ACTIVE = "sip_active";
 	public static final String KANONE_BASE = "cacon_base";
 	public static final String KANONE_TOP = "canon_top";
 	public static final String ORBIT = "orbit";

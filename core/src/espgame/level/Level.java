@@ -56,7 +56,7 @@ public class Level implements Screen {
 
 	private float deltaTime;
 
-	private static final float UPDATE_TIME = 1f / 60f;
+	public static final float UPDATE_TIME = 1f / 60f;
 
 	private static final float PLANET_SIZE = 128;
 	private static final float PLANET_ORBIT_RADIUS = 400;

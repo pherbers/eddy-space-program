@@ -1,14 +1,16 @@
 package espgame.entity;
 
-import java.io.IOException;
 import java.util.ArrayList;
 
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 
 import espgame.ESPGame;
+import espgame.level.Level;
 import espgame.level.Orbit;
 import espgame.resources.AssetContainer;
 import espgame.resources.AssetLoader;
@@ -20,27 +22,28 @@ public class Schiff extends Entity {
 	private final static double ORBIT_VELOCITY = -0.002;
 	private final static double ORBIT_VELOCITY_EINSAMMELN = -0.04;
 
-	private Sprite idle;
-	private Sprite[] flug;
-	// private Animation fluganim; /TODO delete?
-	private int state = 0; // 0 = idle, 1 = flug
+	private Sprite schiff;
+	private Animation fluganim;
+	private int state = 0; // 0 = schiff, 1 = flug
 	private ArrayList<Eddy> eddys;
 
 	private float omega; // Winkel im orbit
 	private float distance; // Entfernung vom Mittelpunkt
 	private int checkCountdown;
 	private double transition;
+	private float stateTime = 0.0f;
 
 	public Schiff(float omega, float distance, Orbit orbit) {
 		super(0, 0);
-		// idle = Sprites.SCHIFF_IDLE;
-		// flug = Sprites.SCHIFF_FLUG;
-		// fluganim = new Animation(flug, 500);
+
+		Texture shipActive = AssetLoader.get().getTexture(AssetContainer.SHIP_ACTIVE);
+		fluganim = new Animation(0.375f, new TextureRegion(shipActive, 0, 0, shipActive.getWidth(), shipActive.getHeight() / 2),
+				new TextureRegion(shipActive, 0, shipActive.getHeight() / 2, shipActive.getWidth(), shipActive.getHeight() / 2));
+		fluganim.setPlayMode(Animation.PlayMode.LOOP);
 		this.omega = omega;
 		this.distance = distance;
 		explodeable = false;
-		// idle = new Sprite(new Texture("sprites/misc/schiff_idle.png"));
-		idle = new Sprite(AssetLoader.get().getTextureContainer().get(AssetContainer.SHIP_IDLE));
+		schiff = new Sprite(AssetLoader.get().getTextureContainer().get(AssetContainer.SHIP_IDLE));
 
 		updatePosition();
 	}
@@ -52,19 +55,21 @@ public class Schiff extends Entity {
 		// if (Game.DEBUG)
 		// g.drawRect((float) position.getX(), (float) position.getY(), (float)
 		// 10, (float) 20);
-		// // idle.drawCentered((float) getX(), (float) getY());
+		// // schiff.drawCentered((float) getX(), (float) getY());
 		// // g.setAntiAlias(true);
 		// fluganim.draw((float) position.getX() - fluganim.getWidth() / 2,
 		// (float) position.getY() - fluganim.getHeight() / 2);
 		// // g.setAntiAlias(true);
-		idle.draw(batch);
+		schiff.draw(batch);
 	}
 
 	@Override
 	public void update() {
 		float rotation = (float) (omega / Math.PI * 180f) + 90f;
-		idle.setRotation(rotation);
-		idle.setCenter(position.x, position.y);
+		schiff.setRotation(rotation);
+		schiff.setCenter(position.x, position.y);
+		schiff.setRegion(fluganim.getKeyFrame(stateTime));
+		stateTime += Level.UPDATE_TIME;
 		// flug[0].setRotation(rotation);
 		// flug[1].setRotation(rotation);
 		switch (state) {
