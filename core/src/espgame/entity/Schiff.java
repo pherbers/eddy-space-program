@@ -47,7 +47,6 @@ public class Schiff extends Entity {
 		schiff = new Sprite(AssetLoader.get().getTextureContainer().get(AssetContainer.SHIP_IDLE));
 
 		updatePosition();
-		engineParticles = new ParticleEffect(ESPGame.getLevel().particleContainer.ship);
 	}
 
 	@Override
@@ -163,8 +162,8 @@ public class Schiff extends Entity {
 		// } catch (IOException e) {
 		// e.printStackTrace();
 		// }
+		engineParticles = new ParticleEffect(ESPGame.getLevel().particleContainer.ship);
 		ESPGame.getLevel().addParticleSystem(engineParticles);
-		engineParticles.reset();
 		engineParticles.start();
 		state = 1;
 		// active = flug;

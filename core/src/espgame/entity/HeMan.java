@@ -42,7 +42,7 @@ public class HeMan extends Entity {
 	private int pauseTimer = PAUSETIMERMAX;
 
 	private Sound enterSound, getSound, twinkle;
-	private ParticleEffect particleEffect, introParticleEffect;
+	private ParticleEffect particleEffect, introParticleEffect, getEffect;
 
 	@Deprecated
 	public HeMan(float x, float y) {
@@ -105,6 +105,8 @@ public class HeMan extends Entity {
 		effect.setPosition(this.position.x, this.position.y);
 		effect.start();
 		particleEffect = effect;
+
+		getEffect = new ParticleEffect(ESPGame.getLevel().particleContainer.hemanGet);
 
 		setPosition(start);
 		sprite.setSize(radius * 2, radius * 2);
@@ -215,6 +217,10 @@ public class HeMan extends Entity {
 		// e1.printStackTrace();
 		// }
 		// TODO farticle
+
+		getEffect.reset();
+		getEffect.setPosition(position.x, position.y);
+		ESPGame.getLevel().addParticleSystem(getEffect);
 
 		remove();
 

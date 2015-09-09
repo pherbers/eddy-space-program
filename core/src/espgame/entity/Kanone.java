@@ -91,7 +91,7 @@ public class Kanone extends Entity {
                 farbBackground.setColor(Color.RED);
                 break;
             case 1:
-                farbBackground.setColor(Color.BLUE);
+                farbBackground.setColor(new Color(0.0f, 0.2f, 1.0f, 1.0f));
                 break;
             case 2:
                 farbBackground.setColor(Color.GREEN);
