@@ -160,6 +160,10 @@ public class Level implements Screen {
 		eddys = new ArrayList<Eddy>();
 		addQueue = new LinkedList<Entity>();
 		removeQueue = new LinkedList<Entity>();
+
+		// Particles
+		particleContainer.loadParticles();
+
 		objective = new Objective();
 		objectiveDisplayer.setObjective(objective);
 		hintergrund = new Hintergrund(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), STAR_PERCENTAGE);
@@ -212,8 +216,6 @@ public class Level implements Screen {
 
 		spawnHeman = true;
 
-		// Particles
-		particleContainer.loadParticles();
 
 		worldViewport.apply(true);
 	}

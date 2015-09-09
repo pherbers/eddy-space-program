@@ -382,7 +382,7 @@ public class Eddy extends Entity {
     }
 
     public void disableParticles() {
-//        emitter.wrapUp();
+        particleEffect.setDuration(0);
     }
 
     public void enableparticles() {

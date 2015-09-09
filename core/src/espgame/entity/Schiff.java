@@ -3,10 +3,8 @@ package espgame.entity;
 import java.util.ArrayList;
 
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Animation;
-import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.g2d.*;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 
 import espgame.ESPGame;
@@ -15,6 +13,7 @@ import espgame.level.Orbit;
 import espgame.resources.AssetContainer;
 import espgame.resources.AssetLoader;
 import espgame.resources.Fontsize;
+import espgame.resources.ParticleContainer;
 import espgame.util.VectorUtils;
 
 public class Schiff extends Entity {
@@ -33,6 +32,8 @@ public class Schiff extends Entity {
 	private double transition;
 	private float stateTime = 0.0f;
 
+	private ParticleEffect engineParticles;
+
 	public Schiff(float omega, float distance, Orbit orbit) {
 		super(0, 0);
 
@@ -46,6 +47,7 @@ public class Schiff extends Entity {
 		schiff = new Sprite(AssetLoader.get().getTextureContainer().get(AssetContainer.SHIP_IDLE));
 
 		updatePosition();
+		engineParticles = new ParticleEffect(ESPGame.getLevel().particleContainer.ship);
 	}
 
 	@Override
@@ -91,6 +93,7 @@ public class Schiff extends Entity {
 			} else
 				omega += ORBIT_VELOCITY_EINSAMMELN;
 
+			engineParticles.setPosition(position.x, position.y);
 			updatePosition();
 			for (Eddy e : eddys) {
 				if (e.getState() < 3) {
@@ -125,7 +128,7 @@ public class Schiff extends Entity {
 				}
 				eddys.clear();
 				ESPGame.getLevel().nextLevel();
-				// sammel.wrapUp();
+				engineParticles.setDuration(0);
 			}
 			break;
 		}
@@ -141,8 +144,8 @@ public class Schiff extends Entity {
 
 	private void updatePosition() {
 		// TODO remove cast to float?
-		position.x = (float) (Math.cos(omega) * distance);
-		position.y = (float) (Math.sin(omega) * distance);
+		position.x = MathUtils.cos(omega) * distance;
+		position.y = MathUtils.sin(omega) * distance;
 		// if (sammel != null)
 		// sammel.setPosition(getXF(), getYF(), false);
 		// TODO particle
@@ -160,6 +163,9 @@ public class Schiff extends Entity {
 		// } catch (IOException e) {
 		// e.printStackTrace();
 		// }
+		ESPGame.getLevel().addParticleSystem(engineParticles);
+		engineParticles.reset();
+		engineParticles.start();
 		state = 1;
 		// active = flug;
 	}
