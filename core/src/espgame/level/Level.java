@@ -44,6 +44,7 @@ import espgame.resources.Fontsize;
 import espgame.ui.EddyStorage;
 import espgame.ui.KanoneDisplayer;
 import espgame.ui.ObjectiveDisplayer;
+import espgame.ui.uielements.LevelUI;
 
 /**
  * Created by Patrick on 26.08.2015.
@@ -93,7 +94,6 @@ public class Level implements Screen {
 	private float shake_mag, shake_linear;
 
 	private Stage stage;
-	private Table table;
 	private ShapeRenderer shapeRenderer;
 	private Viewport viewport;
 
@@ -102,10 +102,11 @@ public class Level implements Screen {
 	private KanoneController kanonec;
 	private InputMultiplexer input;
 
-	private EddyStorage eddyStorage;
-	private KanoneDisplayer kanoneDisplayer;
-	private ObjectiveDisplayer objectiveDisplayer;
-	private ImageButton endBT;
+	// private EddyStorage eddyStorage;
+	// private KanoneDisplayer kanoneDisplayer;
+	// private ObjectiveDisplayer objectiveDisplayer;
+	// private ImageButton endBT;
+	private LevelUI ui;
 
 	public Level(int schwierigkeit, final ESPGame game) {
 		this.schwierigkeit = schwierigkeit;
@@ -118,30 +119,6 @@ public class Level implements Screen {
 		backgroundCam.position.set(0, 0, 0);
 		worldViewport = new ExtendViewport(1024, 768, 1920, 1080, camera);
 
-		stage = new Stage(new ScreenViewport());
-		Gdx.input.setInputProcessor(stage);
-		Skin skin = AssetLoader.get().getSkin();
-
-		endBT = new ImageButton(new Image(AssetLoader.get().getTexture(AssetContainer.UI_LOGO)).getDrawable());
-		endBT.setVisible(false);
-		Table leftTable = new Table(skin);
-		eddyStorage = new EddyStorage(this, skin);
-		kanoneDisplayer = new KanoneDisplayer(kanone, skin);
-		objectiveDisplayer = new ObjectiveDisplayer(objective);
-		table = new Table(skin);
-		table.setBounds(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-		leftTable.add(eddyStorage).padLeft(3).padTop(3).top().left();
-		leftTable.row().expand();
-		leftTable.add(kanoneDisplayer).top().left().uniform();
-		table.add(leftTable).expand().top().left();
-		table.add(endBT).bottom().padBottom(50);
-		table.add(objectiveDisplayer).expand().center().right();
-
-		stage.addActor(table);
-		table.drawDebug(new ShapeRenderer());
-		stage.setDebugAll(true);
-
-		// stage.addActor(new TextButton("test2",skin));
 	}
 
 	@Override
@@ -152,7 +129,6 @@ public class Level implements Screen {
 		addQueue = new LinkedList<Entity>();
 		removeQueue = new LinkedList<Entity>();
 		objective = new Objective();
-		objectiveDisplayer.setObjective(objective);
 		hintergrund = new Hintergrund(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), STAR_PERCENTAGE);
 		level = 1;
 		points = 0;
@@ -189,17 +165,24 @@ public class Level implements Screen {
 		entities.add(schiff);
 		entities.add(kanone);
 		this.kanonec = new KanoneController(kanone);
-		kanoneDisplayer.setKanone(kanone); // TODO: ist das nötig?
 
 		this.input = new InputMultiplexer();
 		input.addProcessor(kanonec);
 
 		Gdx.input.setInputProcessor(input);
+		
+		stage = new Stage(new ScreenViewport());
+//		Gdx.input.setInputProcessor(stage);	TODO dis
+		Skin skin = AssetLoader.get().getSkin();
+		ui = new LevelUI(this, skin);
+		stage.addActor(ui);
+		stage.setDebugAll(true);
 
 		// BEGIN RUNDE 1
 		setReserved(3, 3, 3);
 		newObjective(level);
-		objectiveDisplayer.update();
+		ui.updateObjective();
+		
 
 		spawnHeman = true;
 
@@ -256,7 +239,6 @@ public class Level implements Screen {
 			// ui.setGameOver(false);
 			// Disable Gameover Overlay
 		}
-		endBT.setVisible(gameover);
 
 		for (int i = 0; i < entities.size(); i++) {
 			Entity e = entities.get(i);
@@ -390,8 +372,7 @@ public class Level implements Screen {
 		}
 
 		// HUD updates
-		eddyStorage.update();
-		kanoneDisplayer.update();
+		ui.update();
 	}
 
 	public Explosion createExplosion(Vector2 position, float explosionsRadius, int lifespan) {
@@ -416,7 +397,7 @@ public class Level implements Screen {
 		backgroundCam.update();
 		hintergrund.resize((int) worldViewport.getWorldWidth(), (int) worldViewport.getWorldHeight());
 		stage.getViewport().update(width, height, true);
-		table.setBounds(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+		ui.setBounds(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		// viewport.update(width, height);
 	}
 
@@ -541,7 +522,7 @@ public class Level implements Screen {
 			cap--;
 		}
 		newObjective(level);
-		objectiveDisplayer.update();
+		ui.updateObjective();
 		if (level % hemandelay == 0) {
 			spawnHeman = true;
 		}
@@ -816,6 +797,18 @@ public class Level implements Screen {
 
 	public Schiff getSchiff() {
 		return schiff;
+	}
+	
+	public boolean isGameover(){
+		return gameover;
+	}
+	
+	public Kanone getKanone(){
+		return kanone;
+	}
+	
+	public Objective getObjective(){
+		return objective;
 	}
 
 }

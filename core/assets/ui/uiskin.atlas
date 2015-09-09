@@ -27,11 +27,43 @@ esptextfield
   orig: 14, 14
   offset: 0, 0
   index: -1
+espborderCornerOL
+  rotate: false
+  xy: 46, 5
+  size: 3, 3
+  split: 3, 3, 3, 3
+  orig: 3, 3
+  offset: 0, 0
+  index: -1
+espborderHorizontal
+  rotate: false
+  xy: 49, 5
+  size: 3, 3
+  split: 3, 3, 3, 3
+  orig: 3, 3
+  offset: 0, 0
+  index: -1
+espborderVertikal
+  rotate: false
+  xy: 46, 8
+  size: 3, 3
+  split: 3, 3, 3, 3
+  orig: 3, 3
+  offset: 0, 0
+  index: -1
 check-on
   rotate: false
   xy: 125, 35
   size: 14, 14
   orig: 14, 14
+  offset: 0, 0
+  index: -1
+objectiveBack
+  rotate: false
+  xy: 34, 20
+  size: 8, 8
+  split: 0, 5, 0, 0
+  orig: 5, 3
   offset: 0, 0
   index: -1
 cursor

@@ -41,6 +41,11 @@ public abstract class AssetContainer<T> implements Iterable<T> {
 	public static final String UI_LOGO_SM_ALT = "ui_smalt";
 	public static final String UI_LOGO_TINY = "ui_logo_tiny";
 	public static final String UI_SELECTION = "ui_selection";
+	
+	public static final String UI_OBJECTIVE_TOP = "ui_objectivetop";
+	public static final String UI_OBJECTIVE_BOT = "ui_objectivebot";
+	public static final String UI_OBJECTIVE_LEFT = "ui_objectiveleft";
+	public static final String UI_OBJECTIVE_BACKGROUND = "ui_objectivebg";
 
 	public static final String SOUND_POP = "sound_pop";
 	public static final String SOUND_HEMAN_ENTER = "sound_hemanenter";
