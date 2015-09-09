@@ -86,6 +86,10 @@ public class AssetLoader {
 				new TempAsset("sprites/gui/EddySelectorBG.png", textureContainer, UI_EDDY_SELECTOR, Texture.class));
 		assetList.add(new TempAsset("sprites/gui/selection.png", textureContainer, UI_SELECTION, Texture.class));
 		assetList.add(new TempAsset("sprites/gui/haken.png", textureContainer, UI_TICK, Texture.class));
+		assetList.add(new TempAsset("sprites/gui/selectionBot.png", textureContainer, UI_OBJECTIVE_BOT, Texture.class));
+		assetList.add(new TempAsset("sprites/gui/selectionLeft.png", textureContainer, UI_OBJECTIVE_LEFT, Texture.class));
+		assetList.add(new TempAsset("sprites/gui/selectionTop.png", textureContainer, UI_OBJECTIVE_TOP, Texture.class));
+		assetList.add(new TempAsset("sprites/gui/selectionBg.png", textureContainer, UI_OBJECTIVE_BACKGROUND, Texture.class));
 
 		assetList.add(new TempAsset("sprites/gui/anleitung.png", textureContainer, UI_ANLEITUNG, Texture.class));
 		assetList.add(new TempAsset("sprites/gui/colors.png", textureContainer, UI_COLORS, Texture.class));

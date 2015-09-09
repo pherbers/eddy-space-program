@@ -21,8 +21,17 @@ public class Eddy extends Entity {
 
     private int points, invested, state, tier;
 
-	public enum Color {
-		ROT, BLAU, GRUEN, GELB, CYAN, MAGENTA, WEISS, SCHWARZ
+	public enum Color {		
+		ROT(0), BLAU(1), GRUEN(2), GELB(3), CYAN(4), MAGENTA(5), WEISS(6), SCHWARZ(7);
+		
+
+		private int index;
+		private Color(int index) {this.index=index;
+		}
+		
+		public int getIndex(){
+			return index;
+		}
 	};
 
 	private static final int POITSTIER0[] = { 15, 25, 50 };
