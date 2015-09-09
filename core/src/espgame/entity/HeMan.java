@@ -32,6 +32,7 @@ public class HeMan extends Entity {
 	public static final int INTRODISTANZ = 950;
 	public static final int BACKUPLIFESPAWN = 250;
 	public static final int ROTATION_INSTANCE = 3;
+	public static final int STERNSCHNUPPE_DAUER = 900;
 
 	private Random r;
 	private Vector2 target;
@@ -87,18 +88,6 @@ public class HeMan extends Entity {
 		start.scl(10);
 		start = start.add(target);
 		velocity.scl(-1 * VELOCITIYMULTYPLY);
-
-		// try {
-		// emitterR = Game.generateEmitter("res/particles/hemanR.xml");
-		// emitterG = Game.generateEmitter("res/particles/hemanG.xml");
-		// emitterB = Game.generateEmitter("res/particles/hemanB.xml");
-		// } catch (IOException e) {
-		// e.printStackTrace();
-		// }
-		// Game.getLevel().addParticleEmitter(emitterR);
-		// Game.getLevel().addParticleEmitter(emitterG);
-		// Game.getLevel().addParticleEmitter(emitterB);
-		// TODO particles here
 
 		ParticleEffect effect = new ParticleEffect(ESPGame.getLevel().particleContainer.heman);
 		ESPGame.getLevel().addParticleSystem(effect);
@@ -178,15 +167,10 @@ public class HeMan extends Entity {
 			Vector2 m = new Vector2(velocity);
 			m.scl(SPAWNVELOCITYMULTIPLY);
 
-			// introSpawner = new ParticleSpawner(position, m, 900,
-			// Game.generateEmitter("res/particles/hemanIntro.xml"));
-			// Game.getLevel().addEntity(introSpawner);
-			// TODO partikels
 			ParticleEffect effect = new ParticleEffect(ESPGame.getLevel().particleContainer.eddyWeiss);
-			ESPGame.getLevel().addParticleSystem(effect);
-			effect.setPosition(this.position.x, this.position.y);
-			effect.start();
+			ParticleSpawner spawner = new ParticleSpawner(getPosition(), m, effect, STERNSCHNUPPE_DAUER);
 			introParticleEffect = effect;
+			ESPGame.getLevel().addEntity(spawner);
 
 			paused = true;
 			twinkle.play();
