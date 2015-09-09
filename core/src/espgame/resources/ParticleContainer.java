@@ -13,7 +13,7 @@ import com.badlogic.gdx.graphics.g2d.ParticleEmitter;
 public class ParticleContainer {
     public final ParticleEffect eddyRot, eddyBlau, eddyGruen, eddyGelb, eddyCyan, eddyMagenta, eddyWeiss, eddySchwarz;
     public final ParticleEffect explosion;
-    public final ParticleEffect heman, hemanGet;
+    public final ParticleEffect heman, hemanGet, sternschnuppe;
     public final ParticleEffect ship;
 
     public ParticleContainer() {
@@ -29,6 +29,7 @@ public class ParticleContainer {
         explosion = new ParticleEffect();
         heman = new ParticleEffect();
         hemanGet = new ParticleEffect();
+        sternschnuppe = new ParticleEffect();
         ship = new ParticleEffect();
     }
 
@@ -63,6 +64,7 @@ public class ParticleContainer {
         explosion.load(Gdx.files.internal("particles/explosion.p"), particleSprites);
         heman.load(Gdx.files.internal("particles/heman.p"), particleSprites);
         hemanGet.load(Gdx.files.internal("particles/hemanGet.p"), particleSprites);
+        sternschnuppe.load(Gdx.files.internal("particles/sternschnuppe.p"), particleSprites);
         ship.load(Gdx.files.internal("particles/ship.p"), particleSprites);
     }
 

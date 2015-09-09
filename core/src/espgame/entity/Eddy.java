@@ -57,6 +57,8 @@ public class Eddy extends Entity {
 
 	public static final float GRAVITYEASY = 1.0f, GRAVITYNORMAL = 0.9999f, GRAVITYHARD = 0.9998f;
 
+    public static final float EDDY_DESPAWN_DISTANCE = 2000;
+
 	private static float gravity = GRAVITYNORMAL;
 
     public Eddy(float x, float y, float vx, float vy, Color farbe, Orbit orbit) {
@@ -177,8 +179,8 @@ public class Eddy extends Entity {
                 float entf = position.dst(orbit.getPosition());
                 if (entf < orbit.getRadius()) {
                     setState(1);
-                } else if (entf > 2000 && isCollidable()) {
-                    // TODO: ESPGame.getLevel().removeEddy(this);
+                } else if (entf > EDDY_DESPAWN_DISTANCE && isCollidable()) {
+                    ESPGame.getLevel().removeEddy(this);
                 }
                 break;
             case 3: // TODO: Einsammeln
@@ -351,6 +353,8 @@ public class Eddy extends Entity {
             collidable = false;
         } else if (state == 4)
             visible = false;
+        else if (state == 2)
+            particleEffect.setDuration(0);
     }
 
     public int getTier() {

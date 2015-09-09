@@ -38,6 +38,6 @@ public class ParticleSpawner extends Entity{
 	public void onRemove() {
 		super.onRemove();
 		effect.setDuration(0);
-	};
+	}
 
 }

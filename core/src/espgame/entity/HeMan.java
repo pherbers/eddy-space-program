@@ -167,7 +167,7 @@ public class HeMan extends Entity {
 			Vector2 m = new Vector2(velocity);
 			m.scl(SPAWNVELOCITYMULTIPLY);
 
-			ParticleEffect effect = new ParticleEffect(ESPGame.getLevel().particleContainer.eddyWeiss);
+			ParticleEffect effect = new ParticleEffect(ESPGame.getLevel().particleContainer.sternschnuppe);
 			ParticleSpawner spawner = new ParticleSpawner(getPosition(), m, effect, STERNSCHNUPPE_DAUER);
 			introParticleEffect = effect;
 			ESPGame.getLevel().addEntity(spawner);
@@ -191,16 +191,6 @@ public class HeMan extends Entity {
 	public void collect() {
 		enterSound.stop();
 		getSound.play();
-
-		// try {
-		// getSpawner = new ParticleSpawner(position, new Vector(), 5,
-		// Game.generateEmitter("res/particles/hemanGet.xml"));
-		// getSpawner.setEmitterImage(Sprites.STERN.getResourceReference());
-		// Game.getLevel().addEntity(getSpawner);
-		// } catch (IOException e1) {
-		// e1.printStackTrace();
-		// }
-		// TODO farticle
 
 		getEffect.reset();
 		getEffect.setPosition(position.x, position.y);
