@@ -1,5 +1,6 @@
 package espgame;
 
+import java.io.File;
 import java.util.Random;
 
 import com.badlogic.gdx.ApplicationAdapter;
@@ -12,6 +13,8 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import espgame.entity.Entity;
 import espgame.level.Level;
 import espgame.resources.AssetLoader;
+import espgame.resources.FileManager;
+import espgame.screens.HighscoreScreen;
 
 public class ESPGame extends Game {
 
@@ -20,6 +23,10 @@ public class ESPGame extends Game {
 	public SpriteBatch batch;
 	public static ESPGame game;
 	private boolean hasLevel;
+	private boolean firstTimePlaying;
+
+	private FileManager fileManager;
+
 	Texture img;
 
 	public ESPGame() {
@@ -31,14 +38,19 @@ public class ESPGame extends Game {
 		batch = new SpriteBatch();
 		img = new Texture("badlogic.jpg");
 		game = this;
-		
+
 		AssetLoader.get().collect();
 		AssetLoader.get().load();
 
 		bindTextures();
 
+		fileManager = new FileManager(this);
+		fileManager.initHighScores();
+
 		// TODO start level with difficulty
 		newGame();
+
+		setScreen(new HighscoreScreen());
 	}
 
 	@Override
@@ -68,7 +80,7 @@ public class ESPGame extends Game {
 	}
 
 	private void bindTextures() {
-		for (Texture t: AssetLoader.get().getTextureContainer()) {
+		for (Texture t : AssetLoader.get().getTextureContainer()) {
 			t.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
 		}
 	}
@@ -88,6 +100,10 @@ public class ESPGame extends Game {
 			level.onRemove();
 		hasLevel = false;
 		return level;
+	}
+
+	public FileManager getFileManager() {
+		return fileManager;
 	}
 
 	public static void setLevel(Level level) {
@@ -118,5 +134,13 @@ public class ESPGame extends Game {
 	public static float getRandomOmega() {
 		// TODO remove cast?
 		return (float) (new Random().nextFloat() * 2f * Math.PI);
+	}
+
+	public boolean isFirstTimePlaying() {
+		return firstTimePlaying;
+	}
+
+	public void setFirstTimePlaying(boolean firstTimePlaying) {
+		this.firstTimePlaying = firstTimePlaying;
 	}
 }

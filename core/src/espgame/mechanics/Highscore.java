@@ -1,10 +1,12 @@
 package espgame.mechanics;
 
 import java.io.Serializable;
+import java.util.Date;
 
-public class Highscore implements Serializable, Comparable<Highscore>{
+public class Highscore implements Serializable, Comparable<Highscore> {
 	private static final long serialVersionUID = 6257523437558730335L;
 	private int score, level, schwierigkeit;
+	private long timestamp;
 
 	public int getLevel() {
 		return level;
@@ -57,5 +59,17 @@ public class Highscore implements Serializable, Comparable<Highscore>{
 
 	public void setSchwierigkeit(int schwierigkeit) {
 		this.schwierigkeit = schwierigkeit;
+	}
+
+	public long getTimestamp() {
+		return timestamp;
+	}
+
+	public void setTimestamp(long timestamp) {
+		this.timestamp = timestamp;
+	}
+	
+	public Date getTime(){
+		return new Date(getTimestamp());
 	}
 }

@@ -189,7 +189,7 @@ public class Level implements Screen {
 		Skin skin = AssetLoader.get().getSkin();
 		ui = new LevelUI(this, skin);
 		stage.addActor(ui);
-		stage.setDebugAll(false);
+		stage.setDebugAll(true);
 
 		// BEGIN RUNDE 1
 		setReserved(3, 3, 3);
