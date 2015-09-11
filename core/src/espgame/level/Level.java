@@ -98,8 +98,6 @@ public class Level implements Screen {
 	private float shake_mag, shake_linear;
 
 	private Stage stage;
-	private ShapeRenderer shapeRenderer;
-	private Viewport viewport;
 
 	private Planet planet;
 	private Kanone kanone;
@@ -453,7 +451,6 @@ public class Level implements Screen {
 	public void dispose() {
 		Gdx.input.setInputProcessor(null);
 		stage.dispose();
-		shapeRenderer.dispose();
 	}
 
 	public void addEntity(Entity e) {

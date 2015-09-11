@@ -4,6 +4,7 @@ import java.util.Random;
 
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.Color;
 
@@ -44,8 +45,12 @@ public class Hintergrund {
 		init();
 	}
 
-	public void render(SpriteBatch batch) {
-		batch.draw(texture,-sizeX/2,-sizeY/2, sizeX, sizeY);
+	public void render(Batch batch) {
+		batch.draw(texture, -sizeX / 2, -sizeY / 2, sizeX, sizeY);
+	}
+
+	public void renderMenu(Batch batch) {
+		batch.draw(texture,0,0, sizeX, sizeY);
 	}
 
 }
