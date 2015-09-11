@@ -12,6 +12,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import espgame.entity.Entity;
 import espgame.level.Level;
 import espgame.resources.AssetLoader;
+import espgame.ui.menus.MainMenu;
 
 public class ESPGame extends Game {
 
@@ -29,7 +30,6 @@ public class ESPGame extends Game {
 	@Override
 	public void create() {
 		batch = new SpriteBatch();
-		img = new Texture("badlogic.jpg");
 		game = this;
 		
 		AssetLoader.get().collect();
@@ -38,7 +38,8 @@ public class ESPGame extends Game {
 		bindTextures();
 
 		// TODO start level with difficulty
-		newGame();
+		setScreen(new MainMenu());
+		//newGame();
 	}
 
 	@Override
@@ -74,6 +75,7 @@ public class ESPGame extends Game {
 	}
 
 	public Level newGame() {
+		screen.dispose();
 		levelBeenden();
 		setLevel(new Level(0, this));
 		// level.init();
