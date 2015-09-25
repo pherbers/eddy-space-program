@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -23,6 +24,7 @@ public abstract class ESPMenu implements Screen {
 
     public Stage stage;
     public Table table;
+    public Group backgroundGroup;
     public Hintergrund hintergrund;
     private ExtendViewport viewport;
     private OrthographicCamera camera;
@@ -52,6 +54,8 @@ public abstract class ESPMenu implements Screen {
             }
         };
         stage.addActor(hintergrundActor);
+        backgroundGroup = new Group();
+        stage.addActor(backgroundGroup);
         stage.addActor(table);
         skin = AssetLoader.get().getSkin();
         init();
