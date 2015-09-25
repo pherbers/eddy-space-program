@@ -1,5 +1,6 @@
 package espgame.ui.menus;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Interpolation;
@@ -8,6 +9,8 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.ui.Button;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
@@ -25,53 +28,57 @@ public class MainMenu extends ESPMenu {
 
     @Override
     public void init() {
-        TextButton btnStartGame = new TextButton("Start Gaem", skin);
+        Button btnStartGame = new TextButton("Start Gaem", skin);
         btnStartGame.addListener(new ClickListener() {
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
                 ESPGame.game.newGame();
             }
         });
-        TextButton btnSettings = new TextButton("Settings", skin);
+        Button btnSettings = new TextButton("Settings", skin);
         btnSettings.addListener(new ClickListener() {
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
                 ESPGame.game.newGame();
             }
         });
-        TextButton btnHighscores = new TextButton("Highscores", skin);
+        Button btnHighscores = new TextButton("Highscores", skin);
         btnHighscores.addListener(new ClickListener() {
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
                 ESPGame.game.newGame();
             }
         });
-        TextButton btnCredits = new TextButton("Credits", skin);
+        Button btnCredits = new TextButton("Credits", skin);
         btnCredits.addListener(new ClickListener() {
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
                 ESPGame.game.newGame();
             }
         });
-        TextButton btnExit = new TextButton("Exit", skin);
+        Button btnExit = new TextButton("Exit", skin);
         btnExit.addListener(new ClickListener() {
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-                ESPGame.game.newGame();
+                Gdx.app.exit();
             }
         });
+        Image title = new Image(AssetLoader.get().getTexture(AssetContainer.UI_ESP_TITLE));
+        table.add(title).center().top().expandX().padTop(50);
+        table.row();
         Table buttonGroup = new Table();
-        buttonGroup.add(btnStartGame).width(300).height(50).right().top().padRight(100).padTop(25);
+        buttonGroup.add(btnStartGame).width(300).height(50).right().top().padTop(25);
         buttonGroup.row();
-        buttonGroup.add(btnSettings).width(300).height(50).right().top().padRight(100).padTop(25);
+        buttonGroup.add(btnSettings).width(300).height(50).right().top().padTop(25);
         buttonGroup.row();
-        buttonGroup.add(btnCredits).width(300).height(50).right().top().padRight(100).padTop(25);
+        buttonGroup.add(btnCredits).width(300).height(50).right().top().padTop(25);
         buttonGroup.row();
-        buttonGroup.add(btnHighscores).width(300).height(50).right().top().padRight(100).padTop(25);
+        buttonGroup.add(btnHighscores).width(300).height(50).right().top().padTop(25);
         buttonGroup.row();
-        buttonGroup.add(btnExit).width(300).height(50).right().top().padRight(100).padTop(25);
-        table.add(buttonGroup).expand().right().top().padRight(100).padTop(100);
+        buttonGroup.add(btnExit).width(300).height(50).right().top().padTop(25);
+        table.add(buttonGroup).expandY().right().padRight(100).padLeft(0);
         backgroundGroup.addActor(new EddyActor());
+        stage.setDebugAll(false);
     }
 
     public class EddyActor extends Actor {

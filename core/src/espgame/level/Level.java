@@ -177,17 +177,18 @@ public class Level implements Screen {
 		entities.add(kanone);
 		this.kanonec = new KanoneController(kanone);
 
-		this.input = new InputMultiplexer();
-		input.addProcessor(kanonec);
-
-		Gdx.input.setInputProcessor(input);
-		
 		stage = new Stage(new ScreenViewport());
 //		Gdx.input.setInputProcessor(stage);	TODO dis
 		Skin skin = AssetLoader.get().getSkin();
 		ui = new LevelUI(this, skin);
 		stage.addActor(ui);
 		stage.setDebugAll(false);
+
+		this.input = new InputMultiplexer();
+		input.addProcessor(stage);
+		input.addProcessor(kanonec);
+
+		Gdx.input.setInputProcessor(input);
 
 		// BEGIN RUNDE 1
 		setReserved(3, 3, 3);

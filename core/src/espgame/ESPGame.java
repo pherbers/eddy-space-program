@@ -97,6 +97,12 @@ public class ESPGame extends Game {
 		game.hasLevel = true;
 	}
 
+	public void toMenu() {
+		levelBeenden();
+		screen.dispose();
+		setScreen(new MainMenu());
+	}
+
 	public boolean hasLevel() {
 		return hasLevel;
 	}
@@ -121,4 +127,5 @@ public class ESPGame extends Game {
 		// TODO remove cast?
 		return (float) (new Random().nextFloat() * 2f * Math.PI);
 	}
+
 }

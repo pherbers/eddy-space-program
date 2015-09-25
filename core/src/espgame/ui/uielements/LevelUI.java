@@ -1,11 +1,18 @@
 package espgame.ui.uielements;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
+import com.badlogic.gdx.InputProcessor;
+import com.badlogic.gdx.scenes.scene2d.Event;
+import com.badlogic.gdx.scenes.scene2d.EventListener;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import espgame.ESPGame;
 import espgame.level.Level;
 import espgame.resources.AssetContainer;
 import espgame.resources.AssetLoader;
@@ -30,6 +37,13 @@ public class LevelUI extends Table {
 		AssetLoader loader = AssetLoader.get();
 
 		endBT = new ImageButton(new Image(loader.getTexture(AssetContainer.UI_LOGO)).getDrawable());
+		endBT.addListener(new ClickListener() {
+			@Override
+			public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+				ESPGame.game.toMenu();
+				return true;
+			}
+		});
 		endBT.setVisible(false);
 		Table leftTable = new Table(skin);
 		eddyStorage = new EddyStorage(level, skin);
