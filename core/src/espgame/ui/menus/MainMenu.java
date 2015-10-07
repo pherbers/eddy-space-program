@@ -18,6 +18,8 @@ import espgame.ESPGame;
 import espgame.entity.Eddy;
 import espgame.resources.AssetContainer;
 import espgame.resources.AssetLoader;
+import espgame.screens.HighscoreScreen;
+import espgame.screens.OptionsScreen;
 
 import java.util.Random;
 
@@ -39,21 +41,14 @@ public class MainMenu extends ESPMenu {
         btnSettings.addListener(new ClickListener() {
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-                ESPGame.game.newGame();
+                ESPGame.game.changeMenu(new OptionsScreen());
             }
         });
         Button btnHighscores = new TextButton("Highscores", skin);
         btnHighscores.addListener(new ClickListener() {
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-                ESPGame.game.newGame();
-            }
-        });
-        Button btnCredits = new TextButton("Credits", skin);
-        btnCredits.addListener(new ClickListener() {
-            @Override
-            public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-                ESPGame.game.newGame();
+                ESPGame.game.changeMenu(new HighscoreScreen());
             }
         });
         Button btnExit = new TextButton("Exit", skin);
@@ -70,8 +65,6 @@ public class MainMenu extends ESPMenu {
         buttonGroup.add(btnStartGame).width(300).height(50).right().top().padTop(25);
         buttonGroup.row();
         buttonGroup.add(btnSettings).width(300).height(50).right().top().padTop(25);
-        buttonGroup.row();
-        buttonGroup.add(btnCredits).width(300).height(50).right().top().padTop(25);
         buttonGroup.row();
         buttonGroup.add(btnHighscores).width(300).height(50).right().top().padTop(25);
         buttonGroup.row();

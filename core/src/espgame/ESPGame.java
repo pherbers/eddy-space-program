@@ -17,6 +17,8 @@ import espgame.resources.Einstellungen;
 import espgame.resources.FileManager;
 import espgame.screens.HighscoreScreen;
 import espgame.screens.OptionsScreen;
+import espgame.ui.menus.ESPMenu;
+import espgame.ui.menus.MainMenu;
 
 public class ESPGame extends Game {
 	private static Level level;
@@ -60,9 +62,9 @@ public class ESPGame extends Game {
 		newGame();
 
 		// setScreen(new HighscoreScreen());
-		 setScreen(new HighscoreScreen(new Highscore(6, 200, "Test", 1, new
-		 Date().getTime())));
-//		setScreen(new OptionsScreen());
+//		 setScreen(new HighscoreScreen(new Highscore(6, 200, "Test", 1, new
+//		 Date().getTime())));
+		 setScreen(new MainMenu());
 	}
 
 	@Override
@@ -107,6 +109,12 @@ public class ESPGame extends Game {
 		// debuginit();
 		setScreen(level);
 		return level;
+	}
+
+	public void changeMenu(ESPMenu menu) {
+		if(screen != null)
+			screen.dispose();
+		setScreen(menu);
 	}
 
 	public Level levelBeenden() {
