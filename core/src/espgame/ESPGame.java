@@ -1,26 +1,36 @@
 package espgame;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.Date;
 import java.util.Random;
 
-import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
-import espgame.entity.Entity;
 import espgame.level.Level;
+import espgame.mechanics.Highscore;
 import espgame.resources.AssetLoader;
-import espgame.ui.menus.MainMenu;
+import espgame.resources.Einstellungen;
+import espgame.resources.FileManager;
+import espgame.screens.HighscoreScreen;
+import espgame.screens.OptionsScreen;
 
 public class ESPGame extends Game {
-
 	private static Level level;
 
 	public SpriteBatch batch;
 	public static ESPGame game;
 	private boolean hasLevel;
+	private boolean firstTimePlaying;
+	private int schwierigkeit;
+	private String bufferedPlayerName;
+	private Einstellungen bufferedEinstellungen;
+
+	private FileManager fileManager;
+
 	Texture img;
 
 	public ESPGame() {
@@ -31,15 +41,28 @@ public class ESPGame extends Game {
 	public void create() {
 		batch = new SpriteBatch();
 		game = this;
-		
+
 		AssetLoader.get().collect();
 		AssetLoader.get().load();
 
 		bindTextures();
 
+		fileManager = new FileManager(this);
+		try {
+			fileManager.initFiles();
+		} catch (IOException e) {
+			e.printStackTrace();
+			// TODO handle
+		}
+		loadSettings();
+
 		// TODO start level with difficulty
-		setScreen(new MainMenu());
-		//newGame();
+		newGame();
+
+		// setScreen(new HighscoreScreen());
+		 setScreen(new HighscoreScreen(new Highscore(6, 200, "Test", 1, new
+		 Date().getTime())));
+//		setScreen(new OptionsScreen());
 	}
 
 	@Override
@@ -69,15 +92,16 @@ public class ESPGame extends Game {
 	}
 
 	private void bindTextures() {
-		for (Texture t: AssetLoader.get().getTextureContainer()) {
+		for (Texture t : AssetLoader.get().getTextureContainer()) {
 			t.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
 		}
 	}
 
 	public Level newGame() {
-		screen.dispose();
+		if (screen != null)
+			screen.dispose();
 		levelBeenden();
-		setLevel(new Level(0, this));
+		setLevel(new Level(getSchwierigkeit(), this));
 		// level.init();
 		// if (DEBUG)
 		// debuginit();
@@ -92,9 +116,33 @@ public class ESPGame extends Game {
 		return level;
 	}
 
+	public FileManager getFileManager() {
+		return fileManager;
+	}
+
 	public static void setLevel(Level level) {
 		ESPGame.level = level;
 		game.hasLevel = true;
+	}
+
+	private void loadSettings() {
+		Einstellungen e = null;
+		try {
+			e = AssetLoader.get().loadEinstellungen();
+		} catch (FileNotFoundException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+			e = Einstellungen.getDefaultEinstellungen();
+		} catch (ClassNotFoundException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+			e = Einstellungen.getDefaultEinstellungen();
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+			e = Einstellungen.getDefaultEinstellungen();
+		}
+		setBufferedEinstellungen(e);
 	}
 
 	public void toMenu() {
@@ -126,6 +174,40 @@ public class ESPGame extends Game {
 	public static float getRandomOmega() {
 		// TODO remove cast?
 		return (float) (new Random().nextFloat() * 2f * Math.PI);
+	}
+
+	public boolean isFirstTimePlaying() {
+		return firstTimePlaying;
+	}
+
+	public void setFirstTimePlaying(boolean firstTimePlaying) {
+		this.firstTimePlaying = firstTimePlaying;
+	}
+
+	public int getSchwierigkeit() {
+		return schwierigkeit;
+	}
+
+	public void setSchwierigkeit(int schwierigkeit) {
+		this.schwierigkeit = schwierigkeit;
+		System.out.println("Schwierigkeit geändert: " + schwierigkeit);
+		// TODO eddy highlight?
+	}
+
+	public String getBufferedPlayerName() {
+		return bufferedPlayerName;
+	}
+
+	public void setBufferedPlayerName(String bufferedPlayerName) {
+		this.bufferedPlayerName = bufferedPlayerName;
+	}
+
+	public Einstellungen getBufferedEinstellungen() {
+		return bufferedEinstellungen;
+	}
+
+	private void setBufferedEinstellungen(Einstellungen bufferedEinstellungen) {
+		this.bufferedEinstellungen = bufferedEinstellungen;
 	}
 
 }

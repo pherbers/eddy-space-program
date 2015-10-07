@@ -21,6 +21,8 @@ import espgame.resources.AssetLoader;
  * Created by Patrick on 11.09.2015.
  */
 public abstract class ESPMenu implements Screen {
+	
+	protected static final float STAR_PERCENTAGE = 0.0001f;
 
     public Stage stage;
     public Table table;
@@ -29,22 +31,27 @@ public abstract class ESPMenu implements Screen {
     private ExtendViewport viewport;
     private OrthographicCamera camera;
     protected Skin skin;
+    private float starPercentage;
 
-    public ESPMenu() {
+	public ESPMenu(float starPercentage) {
+		this.starPercentage = starPercentage;
+	}
 
-    }
+	public ESPMenu() {
+		this(Level.STAR_PERCENTAGE);
+	}
 
-    @Override
-    public void show() {
-        stage = new Stage();
-        Gdx.input.setInputProcessor(stage);
-        camera = new OrthographicCamera();
-        viewport = new ExtendViewport(1920, 1080, camera);
-        stage.setViewport(viewport);
+	@Override
+	public void show() {
+		stage = new Stage();
+		Gdx.input.setInputProcessor(stage);
+		camera = new OrthographicCamera();
+		viewport = new ExtendViewport(1920, 1080, camera);
+		stage.setViewport(viewport);
 
-        table = new Table();
-        table.setFillParent(true);
-        hintergrund = new Hintergrund(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), Level.STAR_PERCENTAGE);
+		table = new Table();
+		table.setFillParent(true);
+		hintergrund = new Hintergrund(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), starPercentage);
 
         Actor hintergrundActor = new Actor() {
             @Override
@@ -61,47 +68,46 @@ public abstract class ESPMenu implements Screen {
         init();
     }
 
-    @Override
-    public void render(float delta) {
-        Gdx.gl.glClearColor(0f, 0f, 0f, 1f);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        stage.act(delta);
-        stage.draw();
-    }
+	@Override
+	public void render(float delta) {
+		Gdx.gl.glClearColor(0f, 0f, 0f, 1f);
+		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+		stage.act(delta);
+		stage.draw();
+	}
 
-    @Override
-    public void resize(int width, int height) {
-        viewport.setMinWorldWidth(MathUtils.clamp(width, Level.MIN_WORLD_WIDTH, Level.MAX_WORLD_WIDTH));
-        viewport.setMinWorldHeight(MathUtils.clamp(height, Level.MIN_WORLD_HEIGHT, Level.MAX_WORLD_HEIGHT));
-        camera.setToOrtho(false, width, height);
-        camera.position.set(0, 0, 0);
-        camera.update();
-        stage.getViewport().update(width, height, true);
-        table.setBounds(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        hintergrund.resize((int) viewport.getWorldWidth(), (int) viewport.getWorldHeight());
-    }
+	@Override
+	public void resize(int width, int height) {
+		viewport.setMinWorldWidth(MathUtils.clamp(width, Level.MIN_WORLD_WIDTH, Level.MAX_WORLD_WIDTH));
+		viewport.setMinWorldHeight(MathUtils.clamp(height, Level.MIN_WORLD_HEIGHT, Level.MAX_WORLD_HEIGHT));
+		camera.setToOrtho(false, width, height);
+		camera.position.set(0, 0, 0);
+		camera.update();
+		stage.getViewport().update(width, height, true);
+		table.setBounds(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+		hintergrund.resize((int) viewport.getWorldWidth(), (int) viewport.getWorldHeight());
+	}
 
+	@Override
+	public void pause() {
 
-    @Override
-    public void pause() {
+	}
 
-    }
+	@Override
+	public void resume() {
 
-    @Override
-    public void resume() {
+	}
 
-    }
+	@Override
+	public void hide() {
 
-    @Override
-    public void hide() {
+	}
 
-    }
+	@Override
+	public void dispose() {
 
-    @Override
-    public void dispose() {
-
-    }
-
-    public abstract void init();
+	}
+	
+	public abstract void init();
 
 }

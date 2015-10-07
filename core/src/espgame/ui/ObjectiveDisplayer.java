@@ -55,7 +55,6 @@ public class ObjectiveDisplayer extends Table {
 
 	public void update() {
 		clearChildren();
-		System.out.println("Objective displayer update");
 		displayedEddys = new ArrayList<ObjectiveEddy>();
 
 		for (int i = 0; i < objective.size(); i++) {

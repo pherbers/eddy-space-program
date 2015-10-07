@@ -1,5 +1,61 @@
 package espgame.resources;
 
+import static espgame.resources.AssetContainer.EDDY_BLAU;
+import static espgame.resources.AssetContainer.EDDY_CYAN;
+import static espgame.resources.AssetContainer.EDDY_GELB;
+import static espgame.resources.AssetContainer.EDDY_GRUEN;
+import static espgame.resources.AssetContainer.EDDY_HIGHLIGHT;
+import static espgame.resources.AssetContainer.EDDY_MAGENTA;
+import static espgame.resources.AssetContainer.EDDY_ROT;
+import static espgame.resources.AssetContainer.EDDY_WEISS;
+import static espgame.resources.AssetContainer.FONT_BIG;
+import static espgame.resources.AssetContainer.FONT_MEDIUM;
+import static espgame.resources.AssetContainer.FONT_SMALL;
+import static espgame.resources.AssetContainer.HEMAN;
+import static espgame.resources.AssetContainer.KANONE_BASE;
+import static espgame.resources.AssetContainer.KANONE_TOP;
+import static espgame.resources.AssetContainer.MENU_EDDY;
+import static espgame.resources.AssetContainer.MENU_NILS;
+import static espgame.resources.AssetContainer.MUSIC;
+import static espgame.resources.AssetContainer.ORBIT;
+import static espgame.resources.AssetContainer.PLANET_MAIN;
+import static espgame.resources.AssetContainer.PLANET_SECRET_1;
+import static espgame.resources.AssetContainer.PLANET_SECRET_2;
+import static espgame.resources.AssetContainer.PLANET_SECRET_3;
+import static espgame.resources.AssetContainer.PLANET_VARIANT;
+import static espgame.resources.AssetContainer.SHIP_ACTIVE;
+import static espgame.resources.AssetContainer.SHIP_IDLE;
+import static espgame.resources.AssetContainer.SOUND_BUTTON_PRESS;
+import static espgame.resources.AssetContainer.SOUND_EXPLOSION;
+import static espgame.resources.AssetContainer.SOUND_HEMAN_ENTER;
+import static espgame.resources.AssetContainer.SOUND_HEMAN_GET;
+import static espgame.resources.AssetContainer.SOUND_KANON_EMPTY;
+import static espgame.resources.AssetContainer.SOUND_POP;
+import static espgame.resources.AssetContainer.SOUND_TWINKLE;
+import static espgame.resources.AssetContainer.UI_ANLEITUNG;
+import static espgame.resources.AssetContainer.UI_COLORS;
+import static espgame.resources.AssetContainer.UI_CREDITS;
+import static espgame.resources.AssetContainer.UI_EDDY_SELECTOR;
+import static espgame.resources.AssetContainer.UI_ESP_TITLE;
+import static espgame.resources.AssetContainer.UI_GAMEOVER;
+import static espgame.resources.AssetContainer.UI_LOGO;
+import static espgame.resources.AssetContainer.UI_LOGO_SM;
+import static espgame.resources.AssetContainer.UI_LOGO_SM_ALT;
+import static espgame.resources.AssetContainer.UI_LOGO_TINY;
+import static espgame.resources.AssetContainer.UI_OBJECTIVE_BACKGROUND;
+import static espgame.resources.AssetContainer.UI_OBJECTIVE_BOT;
+import static espgame.resources.AssetContainer.UI_OBJECTIVE_LEFT;
+import static espgame.resources.AssetContainer.UI_OBJECTIVE_TOP;
+import static espgame.resources.AssetContainer.UI_SELECTION;
+import static espgame.resources.AssetContainer.UI_TICK;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 
 import com.badlogic.gdx.assets.AssetManager;
@@ -9,7 +65,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
-import static espgame.resources.AssetContainer.*;
+import espgame.ESPGame;
 
 public class AssetLoader {
 
@@ -87,9 +143,11 @@ public class AssetLoader {
 		assetList.add(new TempAsset("sprites/gui/selection.png", textureContainer, UI_SELECTION, Texture.class));
 		assetList.add(new TempAsset("sprites/gui/haken.png", textureContainer, UI_TICK, Texture.class));
 		assetList.add(new TempAsset("sprites/gui/selectionBot.png", textureContainer, UI_OBJECTIVE_BOT, Texture.class));
-		assetList.add(new TempAsset("sprites/gui/selectionLeft.png", textureContainer, UI_OBJECTIVE_LEFT, Texture.class));
+		assetList.add(
+				new TempAsset("sprites/gui/selectionLeft.png", textureContainer, UI_OBJECTIVE_LEFT, Texture.class));
 		assetList.add(new TempAsset("sprites/gui/selectionTop.png", textureContainer, UI_OBJECTIVE_TOP, Texture.class));
-		assetList.add(new TempAsset("sprites/gui/selectionBg.png", textureContainer, UI_OBJECTIVE_BACKGROUND, Texture.class));
+		assetList.add(
+				new TempAsset("sprites/gui/selectionBg.png", textureContainer, UI_OBJECTIVE_BACKGROUND, Texture.class));
 
 		assetList.add(new TempAsset("sprites/gui/anleitung.png", textureContainer, UI_ANLEITUNG, Texture.class));
 		assetList.add(new TempAsset("sprites/gui/colors.png", textureContainer, UI_COLORS, Texture.class));
@@ -172,6 +230,35 @@ public class AssetLoader {
 
 	public BitmapFont getFont(String key) {
 		return fontContainer.get(key);
+	}
+
+	public Einstellungen loadEinstellungen() throws FileNotFoundException, IOException, ClassNotFoundException {
+		ESPGame game = ESPGame.game;
+		FileManager manager = game.getFileManager();
+		File file = manager.getOptionsFile();
+
+		if (game.isFirstTimePlaying()) {
+			return Einstellungen.getDefaultEinstellungen();
+		}
+
+		FileInputStream fi = new FileInputStream(file);
+		ObjectInputStream oi = new ObjectInputStream(fi);
+		Einstellungen e = (Einstellungen) oi.readObject();
+		oi.close();
+
+		return e;
+	}
+
+	public void saveEinstellungen() throws FileNotFoundException, IOException {
+		Einstellungen e = Einstellungen.collectCurrentEinstellungen();
+		File outputFile = ESPGame.game.getFileManager().getOptionsFile();
+		if (!outputFile.exists())
+			outputFile.createNewFile();
+
+		FileOutputStream fo = new FileOutputStream(outputFile);
+		ObjectOutputStream oo = new ObjectOutputStream(fo);
+		oo.writeObject(e);
+		oo.close();
 	}
 
 	public class TempAsset {

@@ -8,6 +8,7 @@ import com.badlogic.gdx.scenes.scene2d.EventListener;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 
@@ -29,6 +30,7 @@ public class LevelUI extends Table {
 	private EddyStorage eddyStorage;
 	private KanoneDisplayer kanoneDisplayer;
 	private ObjectiveDisplayer objectiveDisplayer;
+	private Label fpsLB;
 
 	public LevelUI(Level level, Skin skin) {
 		super(skin);
@@ -49,9 +51,12 @@ public class LevelUI extends Table {
 		eddyStorage = new EddyStorage(level, skin);
 		kanoneDisplayer = new KanoneDisplayer(level.getKanone(), skin, loader.getFont(AssetContainer.FONT_SMALL),
 				SHOW_MERGED_PROGRESSBARS);
+		fpsLB = new Label("", skin);
 		
 		objectiveDisplayer = new ObjectiveDisplayer(level.getObjective(), skin);
 		setBounds(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+		add(fpsLB).top().left();
+		row();
 		leftTable.add(eddyStorage).padLeft(3).padTop(3).left();
 		System.out.println(eddyStorage.getWidth());
 		leftTable.row();
@@ -66,6 +71,8 @@ public class LevelUI extends Table {
 		kanoneDisplayer.update();
 		objectiveDisplayer.updateCheck();
 		endBT.setVisible(level.isGameover());
+		
+		fpsLB.setText("FPS: "+Gdx.graphics.getFramesPerSecond());
 	}
 
 	public void updateObjective() {

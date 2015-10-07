@@ -5,10 +5,13 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 
+import espgame.ESPGame;
 import espgame.resources.AssetContainer;
 import espgame.resources.AssetLoader;
 
 public class ObjectiveEddy extends Image {
+
+	public static final int NO_TICK_DIFF = 2;
 
 	private Drawable tick;
 	private Drawable backround;
@@ -19,12 +22,11 @@ public class ObjectiveEddy extends Image {
 		super(eddy);
 
 		tick = new Image(AssetLoader.get().getTexture(AssetContainer.UI_TICK)).getDrawable();
-		backround= new Image(AssetLoader.get().getTexture(AssetContainer.UI_OBJECTIVE_BACKGROUND)).getDrawable();
+		backround = new Image(AssetLoader.get().getTexture(AssetContainer.UI_OBJECTIVE_BACKGROUND)).getDrawable();
 	}
 
 	@Override
 	public void draw(Batch batch, float parentAlpha) {
-		// TODO Auto-generated method stub
 		super.draw(batch, parentAlpha);
 
 		float imageX = getImageX();
@@ -41,7 +43,8 @@ public class ObjectiveEddy extends Image {
 
 		getDrawable().draw(batch, x + imageX, y + imageY, imageWidth * scaleX, imageHeight * scaleY);
 
-		if (erledigt) {
+		int diff = ESPGame.getLevel().getSchwierigkeit();
+		if (erledigt && diff < NO_TICK_DIFF) {
 			float w = (imageWidth * scaleX) / 3;
 			float h = (imageHeight * scaleY) / 3;
 			tick.draw(batch, (x + imageX), (y + imageY), w, h);
@@ -58,7 +61,7 @@ public class ObjectiveEddy extends Image {
 		this.erledigt = erledigt;
 	}
 
-	public void setBorder(Drawable border){
-		this.border=border;
+	public void setBorder(Drawable border) {
+		this.border = border;
 	}
 }
