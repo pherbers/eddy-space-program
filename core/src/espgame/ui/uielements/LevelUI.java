@@ -1,19 +1,14 @@
 package espgame.ui.uielements;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
-import com.badlogic.gdx.InputProcessor;
-import com.badlogic.gdx.scenes.scene2d.Event;
-import com.badlogic.gdx.scenes.scene2d.EventListener;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import espgame.ESPGame;
+
 import espgame.level.Level;
 import espgame.resources.AssetContainer;
 import espgame.resources.AssetLoader;
@@ -35,14 +30,14 @@ public class LevelUI extends Table {
 	public LevelUI(Level level, Skin skin) {
 		super(skin);
 		this.level = level;
-
+		
 		AssetLoader loader = AssetLoader.get();
 
 		endBT = new ImageButton(new Image(loader.getTexture(AssetContainer.UI_LOGO)).getDrawable());
 		endBT.addListener(new ClickListener() {
 			@Override
 			public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-				ESPGame.game.toMenu();
+				getLevel().endLevel(true);
 				return true;
 			}
 		});
@@ -64,6 +59,10 @@ public class LevelUI extends Table {
 		add(leftTable).expand().left();
 		add(endBT).bottom().padBottom(50);
 		add(objectiveDisplayer).expand().center().right();
+	}
+	
+	public Level getLevel(){
+		return level;
 	}
 
 	public void update() {

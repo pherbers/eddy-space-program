@@ -2,9 +2,13 @@ package espgame;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Music.OnCompletionListener;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import espgame.level.Level;
+import espgame.mechanics.Highscore;
+import espgame.resources.AssetContainer;
 import espgame.resources.AssetLoader;
 import espgame.resources.Einstellungen;
 import espgame.resources.FileManager;
@@ -23,8 +27,8 @@ public class ESPGame extends Game {
 	private boolean hasLevel;
 	private boolean firstTimePlaying;
 	private int schwierigkeit;
-	private String bufferedPlayerName;
-	private Einstellungen bufferedEinstellungen;
+	private Einstellungen einstellungen;
+	private Music currentMusic;
 
 	private FileManager fileManager;
 
@@ -52,14 +56,15 @@ public class ESPGame extends Game {
 			// TODO handle
 		}
 		loadSettings();
+		playNextSong();
 
 		// TODO start level with difficulty
 		newGame();
 
 		// setScreen(new HighscoreScreen());
-//		 setScreen(new HighscoreScreen(new Highscore(6, 200, "Test", 1, new
-//		 Date().getTime())));
-		 setScreen(new MainMenu());
+		// setScreen(new HighscoreScreen(new Highscore(6, 200, "Test", 1, new
+		// Date().getTime())));
+		setScreen(new MainMenu());
 	}
 
 	@Override
@@ -107,9 +112,17 @@ public class ESPGame extends Game {
 	}
 
 	public void changeMenu(ESPMenu menu) {
-		if(screen != null)
+		if (screen != null)
 			screen.dispose();
 		setScreen(menu);
+	}
+
+	@Override
+	public void dispose() {
+		super.dispose();
+
+		System.out.println("Exit registered.");
+		saveSettings();
 	}
 
 	public Level levelBeenden() {
@@ -131,27 +144,68 @@ public class ESPGame extends Game {
 	private void loadSettings() {
 		Einstellungen e = null;
 		try {
-			e = AssetLoader.get().loadEinstellungen();
-		} catch (FileNotFoundException e1) {
-			// TODO Auto-generated catch block
+			e = new Einstellungen(fileManager.getOptionsFile());
+		} catch (NumberFormatException e1) {
 			e1.printStackTrace();
-			e = Einstellungen.getDefaultEinstellungen();
-		} catch (ClassNotFoundException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-			e = Einstellungen.getDefaultEinstellungen();
+			System.out.println("Gespeicherte Property war nicht im richtigen Format");
 		} catch (IOException e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
-			e = Einstellungen.getDefaultEinstellungen();
+			System.out.println("Generelle IO Exception beim Laden der Settings");
+		} catch (NullPointerException e1) {
+			System.out.println("Eine Property nicht vorhanden!");
+			e1.printStackTrace();
+		} // TODO handle exceptions
+		finally {
+			if (e == null) {
+				e = Einstellungen.getDefaultEinstellungen();
+				System.out.println("Fehler bei den einstellungen! Erstelle Defaults.");
+			}
 		}
-		setBufferedEinstellungen(e);
+		
+		setSchwierigkeit(e.getSchwierigkeit());
+		setEinstellungen(e);
+	}
+
+	public void saveSettings() {
+		try {
+			einstellungen.save(fileManager.getOptionsFile());
+			System.out.println("Einstellungen erfolgreich gespeichert.");
+		} catch (IOException e) {
+			e.printStackTrace();
+			// TODO handle exception
+		}
 	}
 
 	public void toMenu() {
 		levelBeenden();
 		screen.dispose();
 		setScreen(new MainMenu());
+	}
+
+	public void playMusic(Music music) {
+		if (currentMusic != null) {
+			currentMusic.stop();
+		}
+		music.play();
+		music.setLooping(false);
+		music.setOnCompletionListener(new OnCompletionListener() {
+			@Override
+			public void onCompletion(Music music) {
+				System.out.println("Music ended detected!");
+				playNextSong();
+			}
+		});
+
+		music.setVolume(getEinstellungen().getMusicVolume());
+		if (getEinstellungen().isMusicMute()) {
+			music.setVolume(0);
+		}
+		currentMusic = music;
+	}
+
+	public void playNextSong() {
+		Music m = AssetLoader.get().getMusic(AssetContainer.MUSIC);
+		playMusic(m);
 	}
 
 	public boolean hasLevel() {
@@ -197,20 +251,22 @@ public class ESPGame extends Game {
 		// TODO eddy highlight?
 	}
 
-	public String getBufferedPlayerName() {
-		return bufferedPlayerName;
+	public Einstellungen getEinstellungen() {
+		return einstellungen;
 	}
 
-	public void setBufferedPlayerName(String bufferedPlayerName) {
-		this.bufferedPlayerName = bufferedPlayerName;
+	private void setEinstellungen(Einstellungen einstellungen) {
+		this.einstellungen = einstellungen;
 	}
 
-	public Einstellungen getBufferedEinstellungen() {
-		return bufferedEinstellungen;
+	public Music getMusicPlaying() {
+		return currentMusic;
 	}
 
-	private void setBufferedEinstellungen(Einstellungen bufferedEinstellungen) {
-		this.bufferedEinstellungen = bufferedEinstellungen;
+	public float getSoundVolume() {
+		Einstellungen e = getEinstellungen();
+		if (e.isSoundMute())
+			return 0;
+		return e.getSoundVolume();
 	}
-
 }

@@ -10,7 +10,10 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.ui.Button;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import espgame.ESPGame;
@@ -73,45 +76,45 @@ public class MainMenu extends ESPMenu {
         stage.setDebugAll(false);
     }
 
-    public class EddyActor extends Actor {
-        Sprite eddy;
-        float f = 0f;
-        boolean animplaying = true, moveup = true;
-        public EddyActor() {
-            eddy = new Sprite(AssetLoader.get().getTexture(AssetContainer.MENU_EDDY));
-            eddy.setX(-700);
-        }
+	public class EddyActor extends Actor {
+		Sprite eddy;
+		float f = 0f;
+		boolean animplaying = true, moveup = true;
 
-        @Override
-        public void act(float delta) {
-            super.act(delta);
+		public EddyActor() {
+			eddy = new Sprite(AssetLoader.get().getTexture(AssetContainer.MENU_EDDY));
+			eddy.setX(-700);
+		}
 
-            if(animplaying) {
-                eddy.setX(eddy.getX() + 100 * delta);
-                eddy.setY(Math.abs(MathUtils.sin(eddy.getX() * 0.035f) * 32) - 32);
-                if (eddy.getX() >= 90)
-                    animplaying = false;
+		@Override
+		public void act(float delta) {
+			super.act(delta);
 
-            } else {
-                f += delta;
-                if(f > 0.5f) {
-                    f = 0;
-                    float winkel = new Random().nextFloat() * 1.3f;
-                    Vector2 vel = new Vector2(MathUtils.cos(winkel), MathUtils.sin(winkel));
-                    vel.scl(300);
-                    backgroundGroup.addActor(new EddyParticle(new Vector2(700, 340), vel));
-                }
-            }
-        }
+			if (animplaying) {
+				eddy.setX(eddy.getX() + 100 * delta);
+				eddy.setY(Math.abs(MathUtils.sin(eddy.getX() * 0.035f) * 32) - 32);
+				if (eddy.getX() >= 90)
+					animplaying = false;
 
-        @Override
-        public void draw(Batch batch, float parentAlpha) {
-            super.draw(batch, parentAlpha);
-            eddy.draw(batch);
-        }
+			} else {
+				f += delta;
+				if (f > 0.5f) {
+					f = 0;
+					float winkel = new Random().nextFloat() * 1.3f;
+					Vector2 vel = new Vector2(MathUtils.cos(winkel), MathUtils.sin(winkel));
+					vel.scl(300);
+					backgroundGroup.addActor(new EddyParticle(new Vector2(700, 340), vel));
+				}
+			}
+		}
 
+		@Override
+		public void draw(Batch batch, float parentAlpha) {
+			super.draw(batch, parentAlpha);
+			eddy.draw(batch);
+		}
 
-    }
+	}
 
     static int lastColor;
 

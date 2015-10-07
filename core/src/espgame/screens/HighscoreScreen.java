@@ -29,6 +29,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import espgame.ESPGame;
 import espgame.level.Level;
 import espgame.mechanics.Highscore;
+import espgame.resources.Einstellungen;
 import espgame.ui.menus.ESPMenu;
 import espgame.ui.menus.MainMenu;
 
@@ -38,10 +39,10 @@ public class HighscoreScreen extends ESPMenu {
 	public static final int MAX_VIEWMODE = 3;
 	public static final int NONEWPOS = -1;
 	public static final String SKILLNAME[] = { "Leicht", "Mittel", "Schwer" };
-	public static final String DEFAULT_ENTRY = "Hier klicken um Namen einzugeben.";
 
 	public static ArrayList<Highscore> liste;
 
+	private boolean cleartext;
 	private boolean nameModus;
 	private int viewmode;
 	private int newPos = NONEWPOS;
@@ -69,7 +70,6 @@ public class HighscoreScreen extends ESPMenu {
 
 	@Override
 	public void init() {
-		Table scoreTB = new Table(skin);
 		stage.setDebugAll(true);
 
 		pageLB = new Label("Seite: 1", skin);
@@ -105,7 +105,7 @@ public class HighscoreScreen extends ESPMenu {
 		style.background = null;
 		ScrollPane pane = new ScrollPane(highscoreTable, style);
 		pane.setFadeScrollBars(false);
-		table.add(pane).expand().top().fillX().padTop(15);
+		table.add(pane).expand().top().fillX().padTop(15).uniform();
 
 		Table t = new Table(skin);
 		t.add(prevBT);
@@ -130,8 +130,8 @@ public class HighscoreScreen extends ESPMenu {
 		super.show();
 
 		stage.setKeyboardFocus(newEntryTF);
-		newEntryTF.setSelection(0, 0);
-		System.out.println("focus: " + stage.getKeyboardFocus());
+		if (newEntryTF != null)
+			newEntryTF.setSelection(0, newEntryTF.getText().length());
 	}
 
 	private void init(Highscore score) {
@@ -154,10 +154,10 @@ public class HighscoreScreen extends ESPMenu {
 
 	private void enableNameMode() {
 		nameModus = true;
+		cleartext = true;
 		nextBT.setVisible(false);
 		prevBT.setVisible(false);
 		pageLB.setVisible(false);
-		bacBT.setText("Highscore speichern");
 
 		updateHighscoreTable();
 	}
@@ -169,18 +169,16 @@ public class HighscoreScreen extends ESPMenu {
 		prevBT.setVisible(true);
 
 		updateHighscoreTable();
-		bacBT.setText("Zum Hauptmenue");
+		pageSwitch(0);
 	}
 
 	private void onBackKlick() {
-		boolean b = nameModus;
 		save();
-
-		if (nameModus) {
-			disableNameMode();
-		}
-		if (!b)
-			ESPGame.game.setScreen(new MainMenu());
+		//
+		// if (nameModus) {
+		// disableNameMode();
+		// }
+		ESPGame.game.changeMenu(new MainMenu());
 	}
 
 	public static void saveHighscores() {
@@ -246,11 +244,11 @@ public class HighscoreScreen extends ESPMenu {
 		highscoreTable.clear();
 
 		schwierigkeitLB = new Label("", skin);
-		highscoreTable.add(new Label("Platz", skin)).expand().padBottom(HEADERPADDING);
-		highscoreTable.add(new Label("Punkte", skin)).expand().padBottom(HEADERPADDING);
-		highscoreTable.add(new Label("Name", skin)).expand().padBottom(HEADERPADDING);
-		highscoreTable.add(new Label("Aufgestellt am", skin)).expand().padBottom(HEADERPADDING);
-		highscoreTable.add(schwierigkeitLB).expand().padBottom(HEADERPADDING);
+		highscoreTable.add(new Label("Platz", skin)).expand().padBottom(HEADERPADDING).uniform();
+		highscoreTable.add(new Label("Punkte", skin)).expand().padBottom(HEADERPADDING).uniform();
+		highscoreTable.add(new Label("Name", skin)).expand().padBottom(HEADERPADDING).uniform();
+		highscoreTable.add(new Label("Aufgestellt am", skin)).expand().padBottom(HEADERPADDING).uniform();
+		highscoreTable.add(schwierigkeitLB).expand().padBottom(HEADERPADDING).uniform();
 
 		Locale l = Locale.getDefault();
 		DateFormat day = DateFormat.getDateInstance(DateFormat.FULL, l);
@@ -286,11 +284,7 @@ public class HighscoreScreen extends ESPMenu {
 			newEntryTF.setTextFieldListener(new TextFieldListener() {
 				@Override
 				public void keyTyped(TextField textField, char key) {
-					System.out.println("changed? " + key + " (" + Character.getNumericValue(key) + ") text? "
-							+ newEntryTF.getText());
-					if (key == 13) {
-						onBackKlick();
-					}
+					onKeyTyped(key);
 				}
 			});
 
@@ -306,9 +300,9 @@ public class HighscoreScreen extends ESPMenu {
 				highscoreTable.add(newEntryTF).fill();
 				stage.setKeyboardFocus(highscoreTable);
 				newEntryTF.getOnscreenKeyboard().show(true);
-				String playername = ESPGame.game.getBufferedPlayerName();
+				String playername = ESPGame.game.getEinstellungen().getPlayername();
 				if (playername == null || playername.trim().equals("")) {
-					newEntryTF.setText(DEFAULT_ENTRY);
+					newEntryTF.setText(Einstellungen.DEFAULT_PLAYERNAME);
 				} else {
 					newEntryTF.setText(playername);
 				}
@@ -340,13 +334,27 @@ public class HighscoreScreen extends ESPMenu {
 		}
 	}
 
+	private void onKeyTyped(char key) {
+		// System.out
+		// .println("changed? " + key + " (" + Character.getNumericValue(key) +
+		// ") text? " + newEntryTF.getText());
+		if (key == 13) {
+			save();
+			disableNameMode();
+		}
+		// if (cleartext) {
+		// newEntryTF.setText(""+key);
+		// cleartext = false;
+		// }
+	}
+
 	private void save() {
 		if (newScore != null) {
 			String name = newEntryTF.getText().trim();
-			newScore.setName(name);
-			System.out.println("New Name: " + name);
 			if (name != null && !name.equals("")) {
-				ESPGame.game.setBufferedPlayerName(name);
+				System.out.println("New Name: " + name);
+				newScore.setName(name);
+				ESPGame.game.getEinstellungen().setPlayername(name);
 			}
 
 			// EPSGame.setPlayerName(nameTF.getText());

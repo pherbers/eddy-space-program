@@ -11,6 +11,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import espgame.ESPGame;
 import espgame.resources.AssetContainer;
 import espgame.resources.AssetLoader;
+import espgame.resources.Einstellungen;
 import espgame.ui.menus.ESPMenu;
 import espgame.ui.menus.MainMenu;
 import espgame.ui.uielements.ESPSlider;
@@ -43,8 +44,9 @@ public class OptionsScreen extends ESPMenu {
 		musicSlider = new ESPSlider(SLIDER_MIN, SLIDER_MAX, SLIDER_STEPSIZE, SLIDER_BUTTON_MOD, SLIDER_PADDING, skin) {
 			@Override
 			public void valueChanged() {
-				Music m = AssetLoader.get().getMusic(AssetContainer.MUSIC);
-				m.setVolume(musicSlider.getValue());
+				float value = musicSlider.getValue();
+				ESPGame.game.getMusicPlaying().setVolume(value);
+				ESPGame.game.getEinstellungen().setMusicVolume(value);
 			}
 		};
 		musicTable.add(toggleMusic).right().padRight(SLIDER_PADDING);
@@ -57,8 +59,7 @@ public class OptionsScreen extends ESPMenu {
 		soundSlider = new ESPSlider(SLIDER_MIN, SLIDER_MAX, SLIDER_STEPSIZE, SLIDER_BUTTON_MOD, SLIDER_PADDING, skin) {
 			@Override
 			public void valueChanged() {
-				System.out.println("dummy");
-				// TODO do
+				ESPGame.game.getEinstellungen().setSoundVolume(soundSlider.getValue());
 			}
 		};
 		soundTable.add(toggleSound).right().padRight(SLIDER_PADDING);
@@ -130,13 +131,19 @@ public class OptionsScreen extends ESPMenu {
 		});
 		table.add(backBT).padBottom(40).padTop(25);
 
+		Einstellungen e = ESPGame.game.getEinstellungen();
+		musicSlider.setValue(e.getMusicVolume());
+		soundSlider.setValue(e.getSoundVolume());
+
 		updateSchwierigkeitLB();
 		resizeSliders();
 		stage.setDebugAll(true);
 	}
 
 	private void updateSchwierigkeitLB() {
-		switch (ESPGame.game.getSchwierigkeit()) {
+		int diff = ESPGame.game.getSchwierigkeit();
+		ESPGame.game.getEinstellungen().setSchwierigkeit(diff);
+		switch (diff) {
 		case 0:
 			schwierigkeitsLB.setText(
 					"Leicht:\n-Kombinierbare Eddys werden hervorgehoben\n-Mehr Eddys zu Spielbeginn\n-Mehr Eddys bei jeder neuen Runde\n-Verringerte Gravitation\n-Verringerte Punkte");

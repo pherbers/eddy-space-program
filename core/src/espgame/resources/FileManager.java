@@ -19,7 +19,7 @@ public class FileManager {
 		String dir = getSystemEddyFolder();
 		File d = new File(dir + "/Eddy Space Program");
 		File f = new File(d + "/highscore.eddy");
-		File o = new File(d + "/settings.eddy");
+		File o = new File(d + "/settings.xml");
 
 		game.setFirstTimePlaying(false);
 		int createCounter = 0;

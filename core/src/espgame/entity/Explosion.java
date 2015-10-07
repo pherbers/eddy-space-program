@@ -45,7 +45,7 @@ public class Explosion extends Entity {
 		particleEffect = effect;
 
 		Sound explosion = AssetLoader.get().getSound(AssetContainer.SOUND_EXPLOSION);
-		explosion.play();
+		explosion.play(ESPGame.game.getSoundVolume());
 		ESPGame.getLevel().shakeScreen(SHAKE_MAGNITUDE, SHAKE_DURATION);
 	}
 
@@ -55,7 +55,8 @@ public class Explosion extends Entity {
 		if (getRemovedEddyCount() != 0) {
 			Vector2 v = VectorUtils.up();
 			v.scl(0.3f);
-			ESPGame.getLevel().createTextDisplayer(position, v, TEXT_DURATION, "-" + getRemovedEddyCount(), Fontsize.Mittel);
+			ESPGame.getLevel().createTextDisplayer(position, v, TEXT_DURATION, "-" + getRemovedEddyCount(),
+					Fontsize.Mittel);
 		}
 	}
 
@@ -109,8 +110,8 @@ public class Explosion extends Entity {
 	}
 
 	public void setEmitterColors(Color c1, Color c2) {
-		particleEffect.findEmitter("Col1").getTint().setColors(new float[]{c1.r, c1.g, c1.b});
-		particleEffect.findEmitter("Col2").getTint().setColors(new float[]{c2.r, c2.g, c2.b});
+		particleEffect.findEmitter("Col1").getTint().setColors(new float[] { c1.r, c1.g, c1.b });
+		particleEffect.findEmitter("Col2").getTint().setColors(new float[] { c2.r, c2.g, c2.b });
 	}
 
 	public boolean isActive() {
