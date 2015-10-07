@@ -15,31 +15,58 @@ public class FileManager {
 		this.game = game;
 	}
 
-	public void initHighScores() {
+	public void initFiles() throws IOException {
 		String dir = getSystemEddyFolder();
 		File d = new File(dir + "/Eddy Space Program");
-		File f = new File(d + "/highscores.eddy");
-		File o = new File(d + "/options.eddy");
+		File f = new File(d + "/highscore.eddy");
+		File o = new File(d + "/settings.eddy");
 
-		if (f.exists() && d.exists()) {
-			// Hat schonmal gespielt
-			System.out.println("Folder & File exist -> Played before");
-			game.setFirstTimePlaying(false);
-		} else {
-			// Spielt zum ersten Mal
-			Boolean b = d.mkdirs();
-			System.out.println("Folder or File does not exist" + b);
-			try {
-				f.createNewFile();
-			} catch (IOException e) {
-				// game.showErrorMessage("Konnte die Datei für Highscores nicht
-				// anlegen. Du wirst keine Highscores anlegen können.\nEin
-				// Neustart des Spiel könnte helfen.");
-				// TODO show error message
-				e.printStackTrace();
-			}
-			game.setFirstTimePlaying(true);
+		game.setFirstTimePlaying(false);
+		int createCounter = 0;
+		if (!d.exists()) {
+			d.mkdirs();
 		}
+		if (!f.exists()) {
+			f.createNewFile();
+			createCounter++;
+		}
+		if (!o.exists()) {
+			o.createNewFile();
+			createCounter++;
+		}
+
+		switch (createCounter) {
+		case 0:
+			System.out.println("Folder & File exist -> Played before");
+			break;
+		case 2:
+			System.out.println("Keine Datei hat bisher existiert. -> New Player");
+			game.setFirstTimePlaying(true);
+			break;
+		default:
+			//TODO what do??
+			break;
+		}
+		//
+		// if (f.exists() && d.exists()) {
+		// // Hat schonmal gespielt
+		// System.out.println("Folder & File exist -> Played before");
+		// game.setFirstTimePlaying(false);
+		// } else {
+		// // Spielt zum ersten Mal
+		// Boolean b = d.mkdirs();
+		// System.out.println("Folder or File does not exist" + b);
+		// try {
+		// f.createNewFile();
+		// } catch (IOException e) {
+		// // game.showErrorMessage("Konnte die Datei für Highscores nicht
+		// // anlegen. Du wirst keine Highscores anlegen können.\nEin
+		// // Neustart des Spiel könnte helfen.");
+		// // TODO show error message
+		// e.printStackTrace();
+		// }
+		// game.setFirstTimePlaying(true);
+		// }
 
 		setFileDir(d);
 		setOptionsFile(o);
@@ -49,15 +76,15 @@ public class FileManager {
 		// if (!loadOptions())
 		// einstellungen = Einstellungen.getDefaultEinstellungen();
 		// applyOptions();
-		//TODO settings
+		// TODO settings
 	}
-	
-	public String getSystemEddyFolder(){
+
+	public String getSystemEddyFolder() {
 		String dir = System.getProperty("user.home");
-		if(System.getProperty("os.name").toLowerCase().contains("windows")){
+		if (System.getProperty("os.name").toLowerCase().contains("windows")) {
 			dir = System.getenv("APPDATA");
 		}
-		
+
 		return dir;
 	}
 

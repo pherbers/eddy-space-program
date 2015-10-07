@@ -18,11 +18,12 @@ public class Highscore implements Serializable, Comparable<Highscore> {
 
 	private String name;
 
-	public Highscore(int level, int score, String name, int schwierigkeit) {
+	public Highscore(int level, int score, String name, int schwierigkeit, long timestamp) {
 		this.level = level;
 		this.score = score;
 		this.name = name;
 		this.setSchwierigkeit(schwierigkeit);
+		this.timestamp = timestamp;
 	}
 
 	public int getScore() {
@@ -68,8 +69,8 @@ public class Highscore implements Serializable, Comparable<Highscore> {
 	public void setTimestamp(long timestamp) {
 		this.timestamp = timestamp;
 	}
-	
-	public Date getTime(){
+
+	public Date getTime() {
 		return new Date(getTimestamp());
 	}
 }

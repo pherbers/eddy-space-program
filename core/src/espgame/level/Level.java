@@ -70,7 +70,7 @@ public class Level implements Screen {
 	public static final int MIN_WORLD_WIDTH = 800, MAX_WORLD_WIDTH = 1920, MIN_WORLD_HEIGHT = 800,
 			MAX_WORLD_HEIGHT = 1080;
 
-	public static final float STAR_PERCENTAGE = 0.0005f;
+	public static final float STAR_PERCENTAGE = 0.00015f;
 
 	public static final float BACKGROUND_SCREEN_SHAKE_FACTOR = 0.5f;
 
@@ -126,6 +126,8 @@ public class Level implements Screen {
 		
 		particleEffects = new ArrayList<ParticleEffect>();
 		particleContainer = new ParticleContainer();
+		
+		System.out.println("Starting a new gaem. Schwierigkeit: "+schwierigkeit);
 	}
 
 	@Override
