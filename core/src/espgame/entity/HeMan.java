@@ -159,7 +159,7 @@ public class HeMan extends Entity {
 
 	private void onEnter() {
 		twinkle.stop();
-		enterSound.play();
+		enterSound.play(ESPGame.game.getSoundVolume());
 	}
 
 	private void initIntro() {
@@ -173,7 +173,7 @@ public class HeMan extends Entity {
 			ESPGame.getLevel().addEntity(spawner);
 
 			paused = true;
-			twinkle.play();
+			twinkle.play(ESPGame.game.getSoundVolume());
 			// Game.print("I AM SUCCESS!");
 		} catch (Exception e) {
 			// Game.print("I AM ERROR!");
@@ -190,7 +190,7 @@ public class HeMan extends Entity {
 
 	public void collect() {
 		enterSound.stop();
-		getSound.play();
+		getSound.play(ESPGame.game.getSoundVolume());
 
 		getEffect.reset();
 		getEffect.setPosition(position.x, position.y);

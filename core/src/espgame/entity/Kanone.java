@@ -225,7 +225,7 @@ public class Kanone extends Entity {
                     
                     Sound pop = AssetLoader.get().getSound(AssetContainer.SOUND_POP);
                     pop.stop();
-                    pop.play();
+                    pop.play(ESPGame.game.getSoundVolume());
                     //ESPGame.print("Neuer Eddie erstellt!");
                     //if (!Sounds.POP.playing()) {
                     //Sounds.POP.play((float) Math.sqrt(kraft), 1.0f);
@@ -234,7 +234,7 @@ public class Kanone extends Entity {
                 } else {
                     Sound empty = AssetLoader.get().getSound(AssetContainer.SOUND_KANON_EMPTY);
                     empty.stop();
-                    empty.play();
+                    empty.play(ESPGame.game.getSoundVolume());
                     ESPGame.getLevel().shakeScreen(SHAKE_MAGNITUDE, SHAKE_DURATION);
                     ESPGame.getLevel().createTextDisplayer(getPosition(), VectorUtils.randomNormalized().scl(0.5f), NO_AMMO_DUR, NO_AMMO_TEXT, Fontsize.Klein);
                 }

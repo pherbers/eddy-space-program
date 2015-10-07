@@ -40,14 +40,17 @@ import espgame.entity.HeMan;
 import espgame.entity.Kanone;
 import espgame.entity.Schiff;
 import espgame.input.KanoneController;
+import espgame.mechanics.Highscore;
 import espgame.mechanics.TextDisplayer;
 import espgame.resources.AssetContainer;
 import espgame.resources.AssetLoader;
 import espgame.resources.Fontsize;
 import espgame.resources.ParticleContainer;
+import espgame.screens.HighscoreScreen;
 import espgame.ui.EddyStorage;
 import espgame.ui.KanoneDisplayer;
 import espgame.ui.ObjectiveDisplayer;
+import espgame.ui.menus.MainMenu;
 import espgame.ui.uielements.LevelUI;
 
 /**
@@ -104,10 +107,6 @@ public class Level implements Screen {
 	private KanoneController kanonec;
 	private InputMultiplexer input;
 
-	// private EddyStorage eddyStorage;
-	// private KanoneDisplayer kanoneDisplayer;
-	// private ObjectiveDisplayer objectiveDisplayer;
-	// private ImageButton endBT;
 	private LevelUI ui;
 
 	public final ParticleContainer particleContainer;
@@ -123,11 +122,11 @@ public class Level implements Screen {
 		backgroundCam.setToOrtho(false, 800, 480);
 		backgroundCam.position.set(0, 0, 0);
 		worldViewport = new ExtendViewport(1024, 768, 1920, 1080, camera);
-		
+
 		particleEffects = new ArrayList<ParticleEffect>();
 		particleContainer = new ParticleContainer();
-		
-		System.out.println("Starting a new gaem. Schwierigkeit: "+schwierigkeit);
+
+		System.out.println("Starting a new gaem. Schwierigkeit: " + schwierigkeit);
 	}
 
 	@Override
@@ -180,7 +179,7 @@ public class Level implements Screen {
 		this.kanonec = new KanoneController(kanone);
 
 		stage = new Stage(new ScreenViewport());
-//		Gdx.input.setInputProcessor(stage);	TODO dis
+		// Gdx.input.setInputProcessor(stage); TODO dis
 		Skin skin = AssetLoader.get().getSkin();
 		ui = new LevelUI(this, skin);
 		stage.addActor(ui);
@@ -196,10 +195,8 @@ public class Level implements Screen {
 		setReserved(3, 3, 3);
 		newObjective(level);
 		ui.updateObjective();
-		
 
 		spawnHeman = true;
-
 
 		worldViewport.apply(true);
 	}
@@ -287,10 +284,10 @@ public class Level implements Screen {
 			shake_mag -= shake_linear;
 		}
 		camera.update();
-		for(int i = particleEffects.size() - 1; i >= 0; i--) {
+		for (int i = particleEffects.size() - 1; i >= 0; i--) {
 			ParticleEffect p = particleEffects.get(i);
 			p.update(UPDATE_TIME);
-			if(p.isComplete())
+			if (p.isComplete())
 				particleEffects.remove(i);
 		}
 
@@ -372,7 +369,6 @@ public class Level implements Screen {
 				reserveGruen = 10;
 			if (reserveRot > 10)
 				reserveRot = 10;
-			
 
 			// TODO obsolete?
 			// // Kollision mit Planet
@@ -380,10 +376,12 @@ public class Level implements Screen {
 			// eddys.remove(i);
 			// }
 		}
-		
-		//Objective überprüfen
+
+		// Objective überprüfen
 		if (!schiff.isBusy()) {
-			gameover = !objective.checkObjective(getReserve());	//TODO nils: ich musste es bewegen
+			gameover = !objective.checkObjective(getReserve()); // TODO nils:
+																// ich musste es
+																// bewegen
 		}
 
 		// He Man spawn
@@ -747,17 +745,17 @@ public class Level implements Screen {
 		for (Eddy e : eddys) {
 			Color color;
 			switch (selectedEddy) {
-				case 0:
-					color = Color.ROT;
-					break;
-				case 1:
-					color = Color.BLAU;
-					break;
-				case 2:
-					color = Color.GRUEN;
-					break;
-				default:
-					color = null;
+			case 0:
+				color = Color.ROT;
+				break;
+			case 1:
+				color = Color.BLAU;
+				break;
+			case 2:
+				color = Color.GRUEN;
+				break;
+			default:
+				color = null;
 			}
 			Color joined = Eddy.joinColor(e.getColor(), color);
 			if (joined != null && joined != Color.SCHWARZ) {
@@ -798,12 +796,15 @@ public class Level implements Screen {
 		// container.getInput().removeMouseListener(kanone);
 	}
 
-	public void endLevel() {
+	public void endLevel(boolean addHighscore) {
 		running = false;
-		// Game.game.requestMenu(new HighscoresMenu(container,
-		// new Highscore(level, points, Game.getPlayerName(),
-		// Game.getLevel().getSchwierigkeit())));
-		// TODO show highscores
+		
+		if(addHighscore){
+			Highscore score = new Highscore(level, points, schwierigkeit);
+			ESPGame.game.changeMenu(new HighscoreScreen(score));
+		}else{
+			ESPGame.game.toMenu();
+		}
 	}
 
 	public void shakeScreen(float magnitude, int duration) {
@@ -848,16 +849,16 @@ public class Level implements Screen {
 	public Schiff getSchiff() {
 		return schiff;
 	}
-	
-	public boolean isGameover(){
+
+	public boolean isGameover() {
 		return gameover;
 	}
-	
-	public Kanone getKanone(){
+
+	public Kanone getKanone() {
 		return kanone;
 	}
-	
-	public Objective getObjective(){
+
+	public Objective getObjective() {
 		return objective;
 	}
 

@@ -76,6 +76,8 @@ public class AssetLoader {
 	private AssetContainer<Sound> soundContainer;
 	private AssetContainer<Music> musicContainer;
 	private AssetContainer<BitmapFont> fontContainer;
+	
+	private  ArrayList<Music> bufferedMusicContainer;
 
 	private Skin skin;
 
@@ -231,36 +233,7 @@ public class AssetLoader {
 	public BitmapFont getFont(String key) {
 		return fontContainer.get(key);
 	}
-
-	public Einstellungen loadEinstellungen() throws FileNotFoundException, IOException, ClassNotFoundException {
-		ESPGame game = ESPGame.game;
-		FileManager manager = game.getFileManager();
-		File file = manager.getOptionsFile();
-
-		if (game.isFirstTimePlaying()) {
-			return Einstellungen.getDefaultEinstellungen();
-		}
-
-		FileInputStream fi = new FileInputStream(file);
-		ObjectInputStream oi = new ObjectInputStream(fi);
-		Einstellungen e = (Einstellungen) oi.readObject();
-		oi.close();
-
-		return e;
-	}
-
-	public void saveEinstellungen() throws FileNotFoundException, IOException {
-		Einstellungen e = Einstellungen.collectCurrentEinstellungen();
-		File outputFile = ESPGame.game.getFileManager().getOptionsFile();
-		if (!outputFile.exists())
-			outputFile.createNewFile();
-
-		FileOutputStream fo = new FileOutputStream(outputFile);
-		ObjectOutputStream oo = new ObjectOutputStream(fo);
-		oo.writeObject(e);
-		oo.close();
-	}
-
+	
 	public class TempAsset {
 		private String path;
 		private AssetContainer<?> container;
