@@ -1,24 +1,19 @@
 package espgame;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.util.Date;
-import java.util.Random;
-
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-
 import espgame.level.Level;
-import espgame.mechanics.Highscore;
 import espgame.resources.AssetLoader;
 import espgame.resources.Einstellungen;
 import espgame.resources.FileManager;
-import espgame.screens.HighscoreScreen;
-import espgame.screens.OptionsScreen;
 import espgame.ui.menus.ESPMenu;
 import espgame.ui.menus.MainMenu;
+
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.Random;
 
 public class ESPGame extends Game {
 	private static Level level;

@@ -3,17 +3,16 @@ package espgame.ui.menus;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.ui.Button;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import espgame.ESPGame;
 import espgame.entity.Eddy;
 import espgame.resources.AssetContainer;
@@ -30,28 +29,28 @@ public class MainMenu extends ESPMenu {
 
     @Override
     public void init() {
-        Button btnStartGame = new TextButton("Start Gaem", skin);
+        Button btnStartGame = getImageButton(AssetContainer.NEUESSPIEL, AssetContainer.NEUESSPIEL_A);
         btnStartGame.addListener(new ClickListener() {
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
                 ESPGame.game.newGame();
             }
         });
-        Button btnSettings = new TextButton("Settings", skin);
+        Button btnSettings = getImageButton(AssetContainer.OPTIONEN, AssetContainer.OPTIONEN_A);
         btnSettings.addListener(new ClickListener() {
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
                 ESPGame.game.changeMenu(new OptionsScreen());
             }
         });
-        Button btnHighscores = new TextButton("Highscores", skin);
+        Button btnHighscores = getImageButton(AssetContainer.HIGHSCORES, AssetContainer.HIGHSCORES_A);
         btnHighscores.addListener(new ClickListener() {
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
                 ESPGame.game.changeMenu(new HighscoreScreen());
             }
         });
-        Button btnExit = new TextButton("Exit", skin);
+        Button btnExit = getImageButton(AssetContainer.BEENDEN, AssetContainer.BEENDEN_A);
         btnExit.addListener(new ClickListener() {
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
@@ -62,13 +61,13 @@ public class MainMenu extends ESPMenu {
         table.add(title).center().top().expandX().padTop(50);
         table.row();
         Table buttonGroup = new Table();
-        buttonGroup.add(btnStartGame).width(300).height(50).right().top().padTop(25);
+        buttonGroup.add(btnStartGame).width(256).height(64).right().top().padTop(25);
         buttonGroup.row();
-        buttonGroup.add(btnSettings).width(300).height(50).right().top().padTop(25);
+        buttonGroup.add(btnSettings).width(256).height(64).right().top().padTop(25);
         buttonGroup.row();
-        buttonGroup.add(btnHighscores).width(300).height(50).right().top().padTop(25);
+        buttonGroup.add(btnHighscores).width(256).height(64).right().top().padTop(25);
         buttonGroup.row();
-        buttonGroup.add(btnExit).width(300).height(50).right().top().padTop(25);
+        buttonGroup.add(btnExit).width(256).height(64).right().top().padTop(25);
         table.add(buttonGroup).expandY().right().padRight(100).padLeft(0);
         backgroundGroup.addActor(new EddyActor());
         stage.setDebugAll(false);

@@ -5,14 +5,15 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.Group;
-import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.*;
+import com.badlogic.gdx.scenes.scene2d.ui.Button;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
-import espgame.ESPGame;
 import espgame.level.Hintergrund;
 import espgame.level.Level;
 import espgame.resources.AssetLoader;
@@ -21,7 +22,7 @@ import espgame.resources.AssetLoader;
  * Created by Patrick on 11.09.2015.
  */
 public abstract class ESPMenu implements Screen {
-	
+
 	protected static final float STAR_PERCENTAGE = 0.0001f;
 
     public Stage stage;
@@ -107,7 +108,17 @@ public abstract class ESPMenu implements Screen {
 	public void dispose() {
 
 	}
-	
+
 	public abstract void init();
+
+	public static Button getImageButton(String imageId, String imageHoverId) {
+		TextureRegionDrawable off = new TextureRegionDrawable(new TextureRegion(AssetLoader.get().getTexture(imageId)));
+		TextureRegionDrawable on = new TextureRegionDrawable(new TextureRegion(AssetLoader.get().getTexture(imageHoverId)));
+		Button.ButtonStyle style = new Button.ButtonStyle();
+		style.up = off;
+		style.down = on;
+		style.over = on;
+		return new Button(style);
+	}
 
 }

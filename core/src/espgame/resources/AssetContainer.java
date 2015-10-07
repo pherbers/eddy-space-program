@@ -60,6 +60,44 @@ public abstract class AssetContainer<T> implements Iterable<T> {
 	public static final String FONT_MEDIUM = "airstrike_m";
 	public static final String FONT_BIG = "airstrike_b";
 
+	public static final String ANLEITUNG = "Anleitung";
+	public static final String ANLEITUNG_A = "Anleitung_a";
+	public static final String BEENDEN = "Beenden";
+	public static final String BEENDEN_A = "Beenden_a";
+	public static final String BUTTONMINUS = "ButtonMinus";
+	public static final String BUTTONMINUS_A = "ButtonMinus_a";
+	public static final String BUTTONMUSIK = "ButtonMusik";
+	public static final String BUTTONMUSIK_A = "ButtonMusik_a";
+	public static final String BUTTONMUSIK_D = "ButtonMusik_d";
+	public static final String BUTTONPLUS = "ButtonPlus";
+	public static final String BUTTONPLUS_A = "ButtonPlus_a";
+	public static final String BUTTONTON = "ButtonTon";
+	public static final String BUTTONTON_A = "ButtonTon_a";
+	public static final String BUTTONTON_D = "ButtonTon_d";
+	public static final String DIFF_EASY = "diff_easy";
+	public static final String DIFF_EASY_D = "diff_easy_d";
+	public static final String DIFF_HARD = "diff_hard";
+	public static final String DIFF_HARD_D = "diff_hard_d";
+	public static final String DIFF_NORMAL = "diff_normal";
+	public static final String DIFF_NORMAL_D = "diff_normal_d";
+	public static final String HIGHSCORES = "Highscores";
+	public static final String HIGHSCORES_A = "Highscores_a";
+	public static final String LEFT = "left";
+	public static final String LEFT_A = "left_a";
+	public static final String MENU = "Menu";
+	public static final String MENU_A = "Menu_a";
+	public static final String NEUESSPIEL = "NeuesSpiel";
+	public static final String NEUESSPIEL_A = "NeuesSpiel_a";
+	public static final String OPTIONEN = "Optionen";
+	public static final String OPTIONEN_A = "Optionen_a";
+	public static final String RESET = "Reset";
+	public static final String RESET_A = "Reset_a";
+	public static final String RIGHT = "right";
+	public static final String RIGHT_A = "right_a";
+	public static final String WEITER = "Weiter";
+	public static final String WEITER_A = "Weiter_a";
+	public static final String ZURUECK = "Zurueck";
+	public static final String ZURUECK_A = "Zurueck_a";
 	private HashMap<String, T> textureMap;
 
 	public AssetContainer() {
