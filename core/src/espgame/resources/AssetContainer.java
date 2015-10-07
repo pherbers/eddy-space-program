@@ -98,6 +98,9 @@ public abstract class AssetContainer<T> implements Iterable<T> {
 	public static final String WEITER_A = "Weiter_a";
 	public static final String ZURUECK = "Zurueck";
 	public static final String ZURUECK_A = "Zurueck_a";
+
+	public static final String OVERLAY_BLACK = "Overlay_black";
+	public static final String OVERLAY_RED = "Overlay_black";
 	private HashMap<String, T> textureMap;
 
 	public AssetContainer() {

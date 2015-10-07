@@ -5,31 +5,17 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.InputMultiplexer;
-import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
-import com.badlogic.gdx.graphics.g2d.ParticleEffectPool;
-import com.badlogic.gdx.graphics.g3d.particles.ParticleSystem;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
-import com.badlogic.gdx.utils.viewport.Viewport;
 
 import espgame.ESPGame;
 import espgame.entity.Eddy;
@@ -47,10 +33,8 @@ import espgame.resources.AssetLoader;
 import espgame.resources.Fontsize;
 import espgame.resources.ParticleContainer;
 import espgame.screens.HighscoreScreen;
-import espgame.ui.EddyStorage;
-import espgame.ui.KanoneDisplayer;
-import espgame.ui.ObjectiveDisplayer;
-import espgame.ui.menus.MainMenu;
+import espgame.screens.LevelOverlay;
+import espgame.screens.PauseScreen;
 import espgame.ui.uielements.LevelUI;
 
 /**
@@ -186,6 +170,17 @@ public class Level implements Screen {
 		stage.setDebugAll(true);
 
 		this.input = new InputMultiplexer();
+		input.addProcessor(new InputAdapter() {
+			@Override
+			public boolean keyDown(int keycode) {
+				if (keycode == Input.Keys.ESCAPE) {
+					togglePause();
+					System.out.println("Pause");
+					return true;
+				}
+				return false;
+			}
+		});
 		input.addProcessor(stage);
 		input.addProcessor(kanonec);
 
@@ -210,8 +205,16 @@ public class Level implements Screen {
 			deltaTime -= UPDATE_TIME;
 		}
 
+		render();
+
+		stage.act(delta);
+	}
+
+	public void render() {
 		Gdx.gl.glClearColor(0, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
+		camera.update();
 
 		game.batch.setProjectionMatrix(backgroundCam.combined);
 		game.batch.begin();
@@ -242,7 +245,6 @@ public class Level implements Screen {
 
 		game.batch.end();
 
-		stage.act(delta);
 		stage.draw();
 	}
 
@@ -283,7 +285,7 @@ public class Level implements Screen {
 			shake_dur--;
 			shake_mag -= shake_linear;
 		}
-		camera.update();
+
 		for (int i = particleEffects.size() - 1; i >= 0; i--) {
 			ParticleEffect p = particleEffects.get(i);
 			p.update(UPDATE_TIME);
@@ -775,11 +777,7 @@ public class Level implements Screen {
 			paused = !paused;
 			System.out.println("Is it paused? " + paused);
 			if (paused) {
-				// TODO Disable Kanonen Mauslistener
-				// TODO Show PauseMenü
-				// container.getInput().removeMouseListener(kanone);
-				// Game.game.requestMenu(new
-				// PauseMenu(Game.game.getContainer()));
+				ESPGame.game.setScreen(new LevelOverlay(this, new PauseScreen()));
 				System.out.println("Pause ein!");
 			} else {
 				// container.getInput().addMouseListener(kanone);

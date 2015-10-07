@@ -7,7 +7,6 @@ import com.badlogic.gdx.audio.Music.OnCompletionListener;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import espgame.level.Level;
-import espgame.mechanics.Highscore;
 import espgame.resources.AssetContainer;
 import espgame.resources.AssetLoader;
 import espgame.resources.Einstellungen;
@@ -15,7 +14,6 @@ import espgame.resources.FileManager;
 import espgame.ui.menus.ESPMenu;
 import espgame.ui.menus.MainMenu;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Random;
 
