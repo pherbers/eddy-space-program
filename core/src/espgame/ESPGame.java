@@ -12,8 +12,10 @@ import espgame.resources.AssetContainer;
 import espgame.resources.AssetLoader;
 import espgame.resources.Einstellungen;
 import espgame.resources.FileManager;
+import espgame.screens.LoadingScreen;
 import espgame.ui.menus.ESPMenu;
 import espgame.ui.menus.MainMenu;
+import sun.applet.Main;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -36,17 +38,14 @@ public class ESPGame extends Game {
 
 	public ESPGame() {
 		super();
+		
+		//TODO load icon here
 	}
 
 	@Override
 	public void create() {
 		batch = new SpriteBatch();
 		game = this;
-
-		AssetLoader.get().collect();
-		AssetLoader.get().load();
-
-		bindTextures();
 
 		fileManager = new FileManager(this);
 		try {
@@ -55,16 +54,17 @@ public class ESPGame extends Game {
 			e.printStackTrace();
 			// TODO handle
 		}
-		loadSettings();
-		playNextSong();
 
-		// TODO start level with difficulty
-		newGame();
-
-		// setScreen(new HighscoreScreen());
-		// setScreen(new HighscoreScreen(new Highscore(6, 200, "Test", 1, new
-		// Date().getTime())));
-		setScreen(new MainMenu());
+		setScreen(new LoadingScreen() {
+			@Override
+			public void everythingLoaded() {
+				loadSettings();
+				playNextSong();
+				System.out.println("Everything loaded.");
+				
+				changeMenu(new MainMenu());
+			}
+		});
 	}
 
 	@Override
@@ -91,12 +91,6 @@ public class ESPGame extends Game {
 		//
 		// if (requestedMenu != activeMenu)
 		// setActiveMenu(requestedMenu);
-	}
-
-	private void bindTextures() {
-		for (Texture t : AssetLoader.get().getTextureContainer()) {
-			t.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
-		}
 	}
 
 	public Level newGame() {
@@ -161,12 +155,16 @@ public class ESPGame extends Game {
 				System.out.println("Fehler bei den einstellungen! Erstelle Defaults.");
 			}
 		}
-		
+
 		setSchwierigkeit(e.getSchwierigkeit());
 		setEinstellungen(e);
 	}
 
 	public void saveSettings() {
+		if(einstellungen ==null){
+			System.err.println("Wollte die Einstellungen speichern. Aber diese existieren nicht.");
+			return;
+		}
 		try {
 			einstellungen.save(fileManager.getOptionsFile());
 			System.out.println("Einstellungen erfolgreich gespeichert.");
@@ -195,17 +193,24 @@ public class ESPGame extends Game {
 				playNextSong();
 			}
 		});
-
-		music.setVolume(getEinstellungen().getMusicVolume());
-		if (getEinstellungen().isMusicMute()) {
-			music.setVolume(0);
-		}
 		currentMusic = music;
+		updateMusicVolume();
 	}
 
 	public void playNextSong() {
 		Music m = AssetLoader.get().getMusic(AssetContainer.MUSIC);
 		playMusic(m);
+	}
+
+	public void updateMusicVolume() {
+		// System.out.println("Updating Music Volume. Vol:
+		// "+getEinstellungen().getMusicVolume()+" Mute:
+		// "+getEinstellungen().isMusicMute());
+		Music music = getMusicPlaying();
+		music.setVolume(getEinstellungen().getMusicVolume());
+		if (getEinstellungen().isMusicMute()) {
+			music.setVolume(0);
+		}
 	}
 
 	public boolean hasLevel() {
@@ -247,8 +252,6 @@ public class ESPGame extends Game {
 
 	public void setSchwierigkeit(int schwierigkeit) {
 		this.schwierigkeit = schwierigkeit;
-		System.out.println("Schwierigkeit geändert: " + schwierigkeit);
-		// TODO eddy highlight?
 	}
 
 	public Einstellungen getEinstellungen() {

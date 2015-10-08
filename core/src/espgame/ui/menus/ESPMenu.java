@@ -7,13 +7,15 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.scenes.scene2d.*;
+import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.Group;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
-import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
+
 import espgame.level.Hintergrund;
 import espgame.level.Level;
 import espgame.resources.AssetLoader;
@@ -25,10 +27,10 @@ public abstract class ESPMenu implements Screen {
 
 	protected static final float STAR_PERCENTAGE = 0.0001f;
 
-    public Stage stage;
-    public Table table;
-    public Group backgroundGroup;
-    public Hintergrund hintergrund;
+    protected Stage stage;
+    protected Table table;
+    protected Group backgroundGroup;
+    protected Hintergrund hintergrund;
     private ExtendViewport viewport;
     private OrthographicCamera camera;
     protected Skin skin;
@@ -117,8 +119,21 @@ public abstract class ESPMenu implements Screen {
 		Button.ButtonStyle style = new Button.ButtonStyle();
 		style.up = off;
 		style.down = on;
+		style.checked = on;
 		style.over = on;
 		return new Button(style);
+	}
+	
+	public static Button getToggleButton(String defaultImageID, String imageHoverID, String clickedID){
+		Button b = getImageButton(defaultImageID, imageHoverID);
+		b.getStyle().checked = new TextureRegionDrawable(
+				new TextureRegion(AssetLoader.get().getTexture(clickedID)));
+		b.getStyle().checkedOver = new TextureRegionDrawable(
+				new TextureRegion(AssetLoader.get().getTexture(imageHoverID)));
+		b.getStyle().over = new TextureRegionDrawable(
+				new TextureRegion(AssetLoader.get().getTexture(imageHoverID)));
+		
+		return b;
 	}
 
 }

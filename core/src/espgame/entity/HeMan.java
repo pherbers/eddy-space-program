@@ -1,6 +1,5 @@
 package espgame.entity;
 
-import java.io.IOException;
 import java.util.Random;
 
 import com.badlogic.gdx.audio.Sound;
@@ -143,23 +142,26 @@ public class HeMan extends Entity {
 
 		// TODO is this distance ok? Magic number?
 		if (getPosition().dst2(ESPGame.getLevel().getPlanet().getPosition()) > 5000 * 5000) {
-//			System.out.println("HeMan deleted becaouse distance! Last seen at: " + position);
+			// System.out.println("HeMan deleted becaouse distance! Last seen
+			// at: " + position);
 			remove();
 		}
 
 		// Summon intro
 		float f = position.dst(ESPGame.getLevel().getPlanet().getPosition());
 		if (f < INTRODISTANZ && !introplayed) {
-//			System.out.println("He-Man befindet sich in der Nähe zum Planeten. Intro!");
+			// System.out.println("He-Man befindet sich in der Nähe zum
+			// Planeten. Intro!");
 			initIntro();
 		}
 
-//		System.out.println("HeMan update. Pos: " + position.x + ", " + position.y);
+		// System.out.println("HeMan update. Pos: " + position.x + ", " +
+		// position.y);
 	}
 
 	private void onEnter() {
 		twinkle.stop();
-		enterSound.play(ESPGame.game.getSoundVolume());
+		enterSound.play(ESPGame.game.getSoundVolume() * 1.2f);
 	}
 
 	private void initIntro() {
@@ -173,7 +175,7 @@ public class HeMan extends Entity {
 			ESPGame.getLevel().addEntity(spawner);
 
 			paused = true;
-			twinkle.play(ESPGame.game.getSoundVolume());
+			twinkle.play(ESPGame.game.getSoundVolume() * 0.9f);
 			// Game.print("I AM SUCCESS!");
 		} catch (Exception e) {
 			// Game.print("I AM ERROR!");
@@ -190,7 +192,7 @@ public class HeMan extends Entity {
 
 	public void collect() {
 		enterSound.stop();
-		getSound.play(ESPGame.game.getSoundVolume());
+		getSound.play(ESPGame.game.getSoundVolume() * 3.4f);
 
 		getEffect.reset();
 		getEffect.setPosition(position.x, position.y);
@@ -221,9 +223,11 @@ public class HeMan extends Entity {
 		TextDisplayer d = ESPGame.getLevel().createTextDisplayer(getPosition(), VectorUtils.randomNormalized().scl(.5f),
 				TEXTDURATION, "+" + r, Fontsize.Gross);
 		d.setColor(Color.RED);
-		d = ESPGame.getLevel().createTextDisplayer(getPosition(), VectorUtils.randomNormalized().scl(.5f), TEXTDURATION, "+" + g, Fontsize.Gross);
+		d = ESPGame.getLevel().createTextDisplayer(getPosition(), VectorUtils.randomNormalized().scl(.5f), TEXTDURATION,
+				"+" + g, Fontsize.Gross);
 		d.setColor(Color.GREEN);
-		d = ESPGame.getLevel().createTextDisplayer(getPosition(), VectorUtils.randomNormalized().scl(.5f), TEXTDURATION, "+" + b, Fontsize.Gross);
+		d = ESPGame.getLevel().createTextDisplayer(getPosition(), VectorUtils.randomNormalized().scl(.5f), TEXTDURATION,
+				"+" + b, Fontsize.Gross);
 		d.setColor(Color.BLUE);
 	}
 

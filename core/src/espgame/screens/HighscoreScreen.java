@@ -17,6 +17,7 @@ import javax.swing.plaf.basic.BasicInternalFrameTitlePane.MaximizeAction;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane.ScrollPaneStyle;
@@ -29,6 +30,8 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import espgame.ESPGame;
 import espgame.level.Level;
 import espgame.mechanics.Highscore;
+import espgame.resources.AssetContainer;
+import espgame.resources.AssetLoader;
 import espgame.resources.Einstellungen;
 import espgame.ui.menus.ESPMenu;
 import espgame.ui.menus.MainMenu;
@@ -48,9 +51,10 @@ public class HighscoreScreen extends ESPMenu {
 	private int newPos = NONEWPOS;
 
 	private Label pageLB, schwierigkeitLB;
-	private TextButton nextBT, prevBT, bacBT;
+	private Button nextBT, prevBT, bacBT;
 	private Table highscoreTable;
 	private TextField newEntryTF;
+	private ScrollPane pane;
 
 	private Highscore newScore;
 
@@ -73,9 +77,9 @@ public class HighscoreScreen extends ESPMenu {
 		stage.setDebugAll(true);
 
 		pageLB = new Label("Seite: 1", skin);
-		prevBT = new TextButton("<", skin);
-		nextBT = new TextButton(">", skin);
-		bacBT = new TextButton("Zurück zum Menü", skin);
+		prevBT = getImageButton(AssetContainer.LEFT, AssetContainer.LEFT_A);
+		nextBT = getImageButton(AssetContainer.RIGHT, AssetContainer.RIGHT_A);
+		bacBT = getImageButton(AssetContainer.MENU, AssetContainer.MENU_A);
 		bacBT.addListener(new ClickListener() {
 			@Override
 			public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
@@ -103,7 +107,7 @@ public class HighscoreScreen extends ESPMenu {
 
 		ScrollPaneStyle style = new ScrollPaneStyle(skin.get(ScrollPaneStyle.class));
 		style.background = null;
-		ScrollPane pane = new ScrollPane(highscoreTable, style);
+		pane = new ScrollPane(highscoreTable, style);
 		pane.setFadeScrollBars(false);
 		table.add(pane).expand().top().fillX().padTop(15).uniform();
 
@@ -130,8 +134,16 @@ public class HighscoreScreen extends ESPMenu {
 		super.show();
 
 		stage.setKeyboardFocus(newEntryTF);
-		if (newEntryTF != null)
+		if (newEntryTF != null) {
 			newEntryTF.setSelection(0, newEntryTF.getText().length());
+
+			if (nameModus) {
+				float x = newEntryTF.getX();
+				float y = newEntryTF.getY();
+				System.out.println("Scrolling to: " + x + ", " + y);
+				pane.scrollTo(x, y, newEntryTF.getWidth(), newEntryTF.getHeight(), false, true);
+			}
+		}
 	}
 
 	private void init(Highscore score) {

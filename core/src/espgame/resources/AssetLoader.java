@@ -16,6 +16,7 @@ import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
 import espgame.ESPGame;
@@ -29,8 +30,8 @@ public class AssetLoader {
 	private AssetContainer<Sound> soundContainer;
 	private AssetContainer<Music> musicContainer;
 	private AssetContainer<BitmapFont> fontContainer;
-	
-	private  ArrayList<Music> bufferedMusicContainer;
+
+	private AssetManager manager;
 
 	private Skin skin;
 
@@ -137,33 +138,48 @@ public class AssetLoader {
 		assetList.add(new TempAsset("font/airstrike_big.fnt", fontContainer, FONT_BIG, BitmapFont.class));
 
 		assetList.add(new TempAsset("sprites/gui/buttons/Anleitung.png", textureContainer, ANLEITUNG, Texture.class));
-		assetList.add(new TempAsset("sprites/gui/buttons/Anleitung_a.png", textureContainer, ANLEITUNG_A, Texture.class));
+		assetList.add(
+				new TempAsset("sprites/gui/buttons/Anleitung_a.png", textureContainer, ANLEITUNG_A, Texture.class));
 		assetList.add(new TempAsset("sprites/gui/buttons/Beenden.png", textureContainer, BEENDEN, Texture.class));
 		assetList.add(new TempAsset("sprites/gui/buttons/Beenden_a.png", textureContainer, BEENDEN_A, Texture.class));
-		assetList.add(new TempAsset("sprites/gui/buttons/ButtonMinus.png", textureContainer, BUTTONMINUS, Texture.class));
-		assetList.add(new TempAsset("sprites/gui/buttons/ButtonMinus_a.png", textureContainer, BUTTONMINUS_A, Texture.class));
-		assetList.add(new TempAsset("sprites/gui/buttons/ButtonMusik.png", textureContainer, BUTTONMUSIK, Texture.class));
-		assetList.add(new TempAsset("sprites/gui/buttons/ButtonMusik_a.png", textureContainer, BUTTONMUSIK_A, Texture.class));
-		assetList.add(new TempAsset("sprites/gui/buttons/ButtonMusik_d.png", textureContainer, BUTTONMUSIK_D, Texture.class));
+		assetList.add(
+				new TempAsset("sprites/gui/buttons/ButtonMinus.png", textureContainer, BUTTONMINUS, Texture.class));
+		assetList.add(
+				new TempAsset("sprites/gui/buttons/ButtonMinus_a.png", textureContainer, BUTTONMINUS_A, Texture.class));
+		assetList.add(
+				new TempAsset("sprites/gui/buttons/ButtonMusik.png", textureContainer, BUTTONMUSIK, Texture.class));
+		assetList.add(
+				new TempAsset("sprites/gui/buttons/ButtonMusik_a.png", textureContainer, BUTTONMUSIK_A, Texture.class));
+		assetList.add(
+				new TempAsset("sprites/gui/buttons/ButtonMusik_d.png", textureContainer, BUTTONMUSIK_D, Texture.class));
 		assetList.add(new TempAsset("sprites/gui/buttons/ButtonPlus.png", textureContainer, BUTTONPLUS, Texture.class));
-		assetList.add(new TempAsset("sprites/gui/buttons/ButtonPlus_a.png", textureContainer, BUTTONPLUS_A, Texture.class));
+		assetList.add(
+				new TempAsset("sprites/gui/buttons/ButtonPlus_a.png", textureContainer, BUTTONPLUS_A, Texture.class));
 		assetList.add(new TempAsset("sprites/gui/buttons/ButtonTon.png", textureContainer, BUTTONTON, Texture.class));
-		assetList.add(new TempAsset("sprites/gui/buttons/ButtonTon_a.png", textureContainer, BUTTONTON_A, Texture.class));
-		assetList.add(new TempAsset("sprites/gui/buttons/ButtonTon_d.png", textureContainer, BUTTONTON_D, Texture.class));
+		assetList.add(
+				new TempAsset("sprites/gui/buttons/ButtonTon_a.png", textureContainer, BUTTONTON_A, Texture.class));
+		assetList.add(
+				new TempAsset("sprites/gui/buttons/ButtonTon_d.png", textureContainer, BUTTONTON_D, Texture.class));
 		assetList.add(new TempAsset("sprites/gui/buttons/diff_easy.png", textureContainer, DIFF_EASY, Texture.class));
-		assetList.add(new TempAsset("sprites/gui/buttons/diff_easy_d.png", textureContainer, DIFF_EASY_D, Texture.class));
+		assetList.add(
+				new TempAsset("sprites/gui/buttons/diff_easy_d.png", textureContainer, DIFF_EASY_D, Texture.class));
 		assetList.add(new TempAsset("sprites/gui/buttons/diff_hard.png", textureContainer, DIFF_HARD, Texture.class));
-		assetList.add(new TempAsset("sprites/gui/buttons/diff_hard_d.png", textureContainer, DIFF_HARD_D, Texture.class));
-		assetList.add(new TempAsset("sprites/gui/buttons/diff_normal.png", textureContainer, DIFF_NORMAL, Texture.class));
-		assetList.add(new TempAsset("sprites/gui/buttons/diff_normal_d.png", textureContainer, DIFF_NORMAL_D, Texture.class));
+		assetList.add(
+				new TempAsset("sprites/gui/buttons/diff_hard_d.png", textureContainer, DIFF_HARD_D, Texture.class));
+		assetList.add(
+				new TempAsset("sprites/gui/buttons/diff_normal.png", textureContainer, DIFF_NORMAL, Texture.class));
+		assetList.add(
+				new TempAsset("sprites/gui/buttons/diff_normal_d.png", textureContainer, DIFF_NORMAL_D, Texture.class));
 		assetList.add(new TempAsset("sprites/gui/buttons/Highscores.png", textureContainer, HIGHSCORES, Texture.class));
-		assetList.add(new TempAsset("sprites/gui/buttons/Highscores_a.png", textureContainer, HIGHSCORES_A, Texture.class));
+		assetList.add(
+				new TempAsset("sprites/gui/buttons/Highscores_a.png", textureContainer, HIGHSCORES_A, Texture.class));
 		assetList.add(new TempAsset("sprites/gui/buttons/left.png", textureContainer, LEFT, Texture.class));
 		assetList.add(new TempAsset("sprites/gui/buttons/left_a.png", textureContainer, LEFT_A, Texture.class));
 		assetList.add(new TempAsset("sprites/gui/buttons/Menu.png", textureContainer, MENU, Texture.class));
 		assetList.add(new TempAsset("sprites/gui/buttons/Menu_a.png", textureContainer, MENU_A, Texture.class));
 		assetList.add(new TempAsset("sprites/gui/buttons/NeuesSpiel.png", textureContainer, NEUESSPIEL, Texture.class));
-		assetList.add(new TempAsset("sprites/gui/buttons/NeuesSpiel_a.png", textureContainer, NEUESSPIEL_A, Texture.class));
+		assetList.add(
+				new TempAsset("sprites/gui/buttons/NeuesSpiel_a.png", textureContainer, NEUESSPIEL_A, Texture.class));
 		assetList.add(new TempAsset("sprites/gui/buttons/Optionen.png", textureContainer, OPTIONEN, Texture.class));
 		assetList.add(new TempAsset("sprites/gui/buttons/Optionen_a.png", textureContainer, OPTIONEN_A, Texture.class));
 		assetList.add(new TempAsset("sprites/gui/buttons/Reset.png", textureContainer, RESET, Texture.class));
@@ -176,9 +192,9 @@ public class AssetLoader {
 		assetList.add(new TempAsset("sprites/gui/buttons/Zurueck_a.png", textureContainer, ZURUECK_A, Texture.class));
 	}
 
+	@Deprecated
 	public synchronized void load() {
-		AssetManager manager = new AssetManager();
-		manager.load("ui/uiskin.json", Skin.class);
+		manager = new AssetManager();
 
 		for (int i = 0; i < assetList.size(); i++) {
 			assetList.get(i).load(manager);
@@ -194,8 +210,49 @@ public class AssetLoader {
 		assetList.clear();
 	}
 
+	public void prepareLoading() {
+		manager = new AssetManager();
+
+		for (int i = 0; i < assetList.size(); i++) {
+			assetList.get(i).load(manager);
+		}
+	}
+
+	public void storeAssets() {
+		for (int i = 0; i < assetList.size(); i++) {
+			assetList.get(i).store(manager);
+		}
+		System.out.println("Loaded all assets. Clears now.");
+		assetList.clear();
+	}
+
+	public boolean isFinished() {
+		return manager.update();
+	}
+
+	public float getProgress() {
+		return manager.getProgress();
+	}
+
 	public Skin getSkin() {
+		if(skin==null){
+			AssetManager m = new AssetManager();
+
+			m.load("ui/uiskin.json", Skin.class);
+			m.finishLoading();
+			skin = m.get("ui/uiskin.json");
+		}
+		
 		return skin;
+	}
+	
+	public Texture getLoadingIcon(){
+		AssetManager m = new AssetManager();
+
+		m.load("sprites/gui/logoTiny.png", Texture.class);
+		m.finishLoading();
+		Texture t = m.get("sprites/gui/logoTiny.png");
+		return t;
 	}
 
 	public AssetContainer<Texture> getTextureContainer() {
@@ -225,7 +282,7 @@ public class AssetLoader {
 	public BitmapFont getFont(String key) {
 		return fontContainer.get(key);
 	}
-	
+
 	public class TempAsset {
 		private String path;
 		private AssetContainer<?> container;
