@@ -34,6 +34,8 @@ public class LevelOverlay extends ScreenAdapter {
             super.resize(width, height);
             level.resize(width, height);
             menu.resize(width, height);
+            this.height = height;
+            this.width = width;
         }
     }
 
@@ -44,4 +46,9 @@ public class LevelOverlay extends ScreenAdapter {
         menu.render(delta);
     }
 
+    @Override
+    public void dispose() {
+        super.dispose();
+        menu.dispose();
+    }
 }

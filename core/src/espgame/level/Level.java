@@ -111,10 +111,10 @@ public class Level implements Screen {
 		particleContainer = new ParticleContainer();
 
 		System.out.println("Starting a new gaem. Schwierigkeit: " + schwierigkeit);
+
 	}
 
-	@Override
-	public void show() {
+	public void init() {
 		// Init & Setup
 		entities = new ArrayList<Entity>();
 		eddys = new ArrayList<Eddy>();
@@ -169,12 +169,24 @@ public class Level implements Screen {
 		stage.addActor(ui);
 		stage.setDebugAll(true);
 
+		// BEGIN RUNDE 1
+		setReserved(3, 3, 3);
+		newObjective(level);
+		ui.updateObjective();
+
+		spawnHeman = true;
+
+		worldViewport.apply(true);
+	}
+
+	@Override
+	public void show() {
 		this.input = new InputMultiplexer();
 		input.addProcessor(new InputAdapter() {
 			@Override
 			public boolean keyDown(int keycode) {
 				if (keycode == Input.Keys.ESCAPE) {
-					togglePause();
+					enablePause();
 					System.out.println("Pause");
 					return true;
 				}
@@ -185,15 +197,6 @@ public class Level implements Screen {
 		input.addProcessor(kanonec);
 
 		Gdx.input.setInputProcessor(input);
-
-		// BEGIN RUNDE 1
-		setReserved(3, 3, 3);
-		newObjective(level);
-		ui.updateObjective();
-
-		spawnHeman = true;
-
-		worldViewport.apply(true);
 	}
 
 	@Override
@@ -426,6 +429,7 @@ public class Level implements Screen {
 		hintergrund.resize((int) worldViewport.getWorldWidth(), (int) worldViewport.getWorldHeight());
 		stage.getViewport().update(width, height, true);
 		ui.setBounds(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+		camera.position.x = 0; camera.position.y = 0;
 		// viewport.update(width, height);
 	}
 
@@ -777,7 +781,10 @@ public class Level implements Screen {
 			paused = !paused;
 			System.out.println("Is it paused? " + paused);
 			if (paused) {
-				ESPGame.game.setScreen(new LevelOverlay(this, new PauseScreen()));
+				final PauseScreen menu = new PauseScreen();
+				final LevelOverlay screen = new LevelOverlay(this, menu);
+				menu.setOverlay(screen);
+				ESPGame.game.setScreen(screen);
 				System.out.println("Pause ein!");
 			} else {
 				// container.getInput().addMouseListener(kanone);
@@ -787,6 +794,18 @@ public class Level implements Screen {
 				System.out.println("Pause aus");
 			}
 		}
+	}
+
+	public void enablePause() {
+		final PauseScreen menu = new PauseScreen();
+		final LevelOverlay screen = new LevelOverlay(this, menu);
+		menu.setOverlay(screen);
+		ESPGame.game.setScreen(screen);
+		System.out.println("Pause ein!");
+	}
+
+	public void disablePause() {
+		ESPGame.game.changeScreen(this);
 	}
 
 	public void onRemove() {
@@ -799,7 +818,7 @@ public class Level implements Screen {
 		
 		if(addHighscore){
 			Highscore score = new Highscore(level, points, schwierigkeit);
-			ESPGame.game.changeMenu(new HighscoreScreen(score));
+			ESPGame.game.changeScreen(new HighscoreScreen(score));
 		}else{
 			ESPGame.game.toMenu();
 		}

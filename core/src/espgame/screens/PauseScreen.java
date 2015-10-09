@@ -1,16 +1,21 @@
 package espgame.screens;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.ScreenAdapter;
+import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Button;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
+import espgame.ESPGame;
 import espgame.level.Level;
 import espgame.resources.AssetContainer;
 import espgame.resources.AssetLoader;
@@ -25,11 +30,15 @@ public class PauseScreen extends ScreenAdapter {
     private ExtendViewport viewport;
     private OrthographicCamera camera;
     protected Skin skin;
+    private Screen overlay;
+    private Button optionsBtn;
 
     @Override
     public void show() {
         stage = new Stage();
-        Gdx.input.setInputProcessor(stage);
+        InputMultiplexer input = new InputMultiplexer();
+        input.addProcessor(stage);
+        Gdx.input.setInputProcessor(input);
         camera = new OrthographicCamera();
         viewport = new ExtendViewport(1920, 1080, camera);
         stage.setViewport(viewport);
@@ -41,14 +50,52 @@ public class PauseScreen extends ScreenAdapter {
                 batch.draw(overlay, 0, 0, stage.getWidth(), stage.getHeight());
             }
         });
-
+        input.addProcessor(new InputAdapter() {
+            @Override
+            public boolean keyDown(int keycode) {
+                if (keycode == Input.Keys.ESCAPE) {
+                    ESPGame.getLevel().disablePause();
+                    System.out.println("Pause");
+                    return true;
+                }
+                return false;
+            }
+        });
         table = new Table();
         table.setFillParent(true);
 
         stage.addActor(table);
         skin = AssetLoader.get().getSkin();
-        table.add(ESPMenu.getImageButton(AssetContainer.BEENDEN, AssetContainer.BEENDEN_A));
-
+        table.row();
+        Button weiterBtn = ESPMenu.getImageButton(AssetContainer.WEITER, AssetContainer.WEITER_A);
+        weiterBtn.addListener(new ClickListener() {
+            @Override
+            public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+                ESPGame.getLevel().disablePause();
+            }
+        });
+        table.add(weiterBtn).pad(20);
+        table.row();
+        optionsBtn = ESPMenu.getImageButton(AssetContainer.OPTIONEN, AssetContainer.OPTIONEN_A);
+        optionsBtn.addListener(new ClickListener() {
+            @Override
+            public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+                System.out.println("Overlay added");
+                ESPGame.game.changeScreen(new OptionsScreen(overlay));
+            }
+        });
+        table.add(optionsBtn).pad(20);
+        table.row();
+        Button exitBtn = ESPMenu.getImageButton(AssetContainer.MENU, AssetContainer.MENU_A);
+        exitBtn.addListener(new ClickListener() {
+            @Override
+            public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+                ESPGame.getLevel().endLevel(true);
+            }
+        });
+        table.add(exitBtn).pad(20);
+        table.row();
+        table.add(new Image(new TextureRegion(AssetLoader.get().getTexture(AssetContainer.UI_COLORS)))).pad(40);
     }
 
     @Override
@@ -68,4 +115,7 @@ public class PauseScreen extends ScreenAdapter {
         table.setBounds(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
     }
 
+    public void setOverlay(Screen overlayScreen) {
+        this.overlay = overlayScreen;
+    }
 }

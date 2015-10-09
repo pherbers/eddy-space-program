@@ -3,6 +3,7 @@ package espgame.screens;
 import java.util.Random;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
@@ -36,8 +37,15 @@ public class OptionsScreen extends ESPMenu {
 	private Button easyBT, mediumBT, hardBT;
 	private Button toggleMusic, toggleSound;
 
+	private Screen previousScreen;
+
 	public OptionsScreen() {
 		super(STAR_PERCENTAGE * 1.7f);
+	}
+
+	public OptionsScreen(Screen previousScreen) {
+		super(STAR_PERCENTAGE * 1.7f);
+		this.previousScreen = previousScreen;
 	}
 
 	@Override
@@ -146,9 +154,13 @@ public class OptionsScreen extends ESPMenu {
 		backBT.addListener(new ClickListener() {
 			@Override
 			public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-				// TODO lifecycle ???
-				ESPGame.game.setScreen(new MainMenu());
-				return super.touchDown(event, x, y, pointer, button);
+				if(previousScreen != null) {
+					ESPGame.game.changeScreen(previousScreen);
+					return true;
+				} else {
+					ESPGame.game.changeScreen(new MainMenu());
+					return true;
+				}
 			}
 		});
 		table.add(backBT).padBottom(40).padTop(25);
@@ -256,6 +268,8 @@ public class OptionsScreen extends ESPMenu {
 	public void resize(int width, int height) {
 		super.resize(width, height);
 		resizeSliders();
+		if(previousScreen != null)
+			previousScreen.resize(width, height);
 	}
 
 }

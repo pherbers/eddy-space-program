@@ -184,7 +184,7 @@ public class HighscoreScreen extends ESPMenu {
 		// if (nameModus) {
 		// disableNameMode();
 		// }
-		ESPGame.game.changeMenu(new MainMenu());
+		ESPGame.game.changeScreen(new MainMenu());
 	}
 
 	public static void saveHighscores() {

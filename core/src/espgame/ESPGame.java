@@ -2,6 +2,7 @@ package espgame;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Music.OnCompletionListener;
 import com.badlogic.gdx.graphics.Texture;
@@ -59,7 +60,7 @@ public class ESPGame extends Game {
 				playNextSong();
 				System.out.println("Everything loaded.");
 				
-				changeMenu(new MainMenu());
+				changeScreen(new MainMenu());
 			}
 		});
 	}
@@ -94,7 +95,9 @@ public class ESPGame extends Game {
 		if (screen != null)
 			screen.dispose();
 		levelBeenden();
-		setLevel(new Level(getSchwierigkeit(), this));
+		Level l = new Level(getSchwierigkeit(), this);
+		setLevel(l);
+		l.init();
 		// level.init();
 		// if (DEBUG)
 		// debuginit();
@@ -102,7 +105,7 @@ public class ESPGame extends Game {
 		return level;
 	}
 
-	public void changeMenu(ESPMenu menu) {
+	public void changeScreen(Screen menu) {
 		if (screen != null)
 			screen.dispose();
 		setScreen(menu);
