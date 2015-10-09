@@ -72,7 +72,7 @@ public abstract class LoadingScreen implements Screen {
 		table.setFillParent(true);
 		stage.addActor(table);
 		Image i = new Image(dr);
-		loadingLB = new Label("Ladevorgang", skin);
+		loadingLB = new Label("", skin);
 		table.add(loadingLB).expandY();
 		table.row();
 		table.add(i);
@@ -106,7 +106,7 @@ public abstract class LoadingScreen implements Screen {
 		for (int i = 0; i < punktCounter; i++) {
 			s += ".";
 		}
-		loadingLB.setText("Ladevorgang" + s);
+		loadingLB.setText(s);
 		int p = (int) (l.getProgress() * 100);
 		progressLB.setText(p + "%");
 
