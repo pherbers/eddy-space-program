@@ -7,9 +7,6 @@ import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.graphics.g2d.ParticleEffectPool;
 import com.badlogic.gdx.graphics.g2d.ParticleEmitter;
 
-/**
- * Created by Patrick on 04.09.2015.
- */
 public class ParticleContainer {
     public final ParticleEffect eddyRot, eddyBlau, eddyGruen, eddyGelb, eddyCyan, eddyMagenta, eddyWeiss, eddySchwarz;
     public final ParticleEffect explosion;

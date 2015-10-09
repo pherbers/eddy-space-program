@@ -15,9 +15,6 @@ import espgame.level.Level;
 import espgame.resources.AssetContainer;
 import espgame.resources.AssetLoader;
 
-/**
- * Created by Patrick on 07.10.2015.
- */
 public class PauseScreen extends ScreenAdapter {
 
     public Stage stage;

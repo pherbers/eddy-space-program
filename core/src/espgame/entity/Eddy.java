@@ -14,10 +14,6 @@ import espgame.resources.AssetContainer;
 import espgame.resources.AssetLoader;
 import espgame.resources.ParticleContainer;
 
-/**
- * Created by Patrick on 26.08.2015.
- */
-
 public class Eddy extends Entity {
 
 	private int points, invested, state, tier;

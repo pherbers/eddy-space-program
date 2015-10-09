@@ -16,10 +16,6 @@ import espgame.resources.AssetLoader;
 import espgame.resources.Fontsize;
 import espgame.util.VectorUtils;
 
-/**
- * Created by Patrick on 26.08.2015.
- */
-
 public class Kanone extends Entity {
 
 	private static final float MAX_WINKEL = 90f, MIN_WINKEL = -90f;

@@ -1,9 +1,11 @@
 package espgame.screens;
 
+import java.io.IOException;
 import java.util.Random;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -27,14 +29,15 @@ public class OptionsScreen extends ESPMenu {
 	public static final float SLIDER_PADDING = 5;
 
 	public static final float TOGGLEPADDING = 30;
-
 	public static final float SLIDER_SIZE_FACTOR = 4.1337f;
+	public static final String RESET_WARN_TEXT = "Das Spiel wird beendet und alle angelegten Dateien\n(z.B. Highscores) werden gelöscht. Sicher?";
 
 	private ESPSlider musicSlider, soundSlider;
 	private Table musicTable, soundTable;
 	private Label schwierigkeitsLB;
 	private Button easyBT, mediumBT, hardBT;
 	private Button toggleMusic, toggleSound;
+	private Label resetWarnLB;
 
 	public OptionsScreen() {
 		super(STAR_PERCENTAGE * 1.7f);
@@ -87,16 +90,53 @@ public class OptionsScreen extends ESPMenu {
 		soundTable.add(toggleSound).right().padRight(TOGGLEPADDING);
 		soundTable.add(soundSlider).expand().fill();
 		table.add(soundTable).expand().fillX().top().padTop(10);
-
 		Music m = AssetLoader.get().getMusic(AssetContainer.MUSIC);
 		musicSlider.setValue(m.getVolume());
+
+		Table additionalOptions = new Table(skin);
+		Button fullScreenBT = getImageButton(AssetContainer.BEENDEN, AssetContainer.BEENDEN_A);
+		fullScreenBT.addListener(new ClickListener() {
+			@Override
+			public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+				super.touchUp(event, x, y, pointer, button);
+				ESPGame.setFullScreen(!Gdx.graphics.isFullscreen());
+			}
+		});
+		Button resetBT = getImageButton(AssetContainer.RESET, AssetContainer.RESET_A);
+		resetBT.addListener(new ClickListener() {
+			@Override
+			public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+				super.touchUp(event, x, y, pointer, button);
+				hardReset();
+			}
+
+			@Override
+			public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
+				super.enter(event, x, y, pointer, fromActor);
+				resetWarnLB.setText(RESET_WARN_TEXT);
+			}
+
+			@Override
+			public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
+				super.exit(event, x, y, pointer, toActor);
+				resetWarnLB.setText("");
+			}
+		});
+		resetWarnLB = new Label("", skin);
+
+		table.row();
+		additionalOptions.add(fullScreenBT).expandX().uniform();
+		additionalOptions.add(resetWarnLB).expandX().uniform();
+		additionalOptions.add(resetBT).expandX().uniform();
+		table.add(additionalOptions).pad(10).expandX().fill();
 
 		table.row();
 		Table mid = new Table(skin);
 		Table buttons = new Table(skin);
-		easyBT = getImageButton(AssetContainer.DIFF_EASY_D, AssetContainer.DIFF_EASY);
-		mediumBT = getImageButton(AssetContainer.DIFF_NORMAL_D, AssetContainer.DIFF_NORMAL);
-		hardBT = getImageButton(AssetContainer.DIFF_HARD_D, AssetContainer.DIFF_HARD);
+		easyBT = getToggleButton(AssetContainer.DIFF_EASY_D, AssetContainer.DIFF_EASY, AssetContainer.DIFF_EASY);
+		mediumBT = getToggleButton(AssetContainer.DIFF_NORMAL_D, AssetContainer.DIFF_NORMAL,
+				AssetContainer.DIFF_NORMAL);
+		hardBT = getToggleButton(AssetContainer.DIFF_HARD_D, AssetContainer.DIFF_HARD, AssetContainer.DIFF_HARD);
 		schwierigkeitsLB = new Label("", skin);
 
 		buttons.add(new Label("Wähle eine Schwierigkeit:", skin)).pad(15);
@@ -161,7 +201,7 @@ public class OptionsScreen extends ESPMenu {
 
 		updateSchwierigkeitLB();
 		resizeSliders();
-		stage.setDebugAll(true);
+		// stage.setDebugAll(true);
 	}
 
 	private void updateSchwierigkeitLB() {
@@ -190,6 +230,24 @@ public class OptionsScreen extends ESPMenu {
 			schwierigkeitsLB.setText("???");
 			break;
 		}
+	}
+
+	private void hardReset() {
+		System.out.println("File reset angefordert!");
+		boolean success;
+		try {
+			success = ESPGame.game.getFileManager().delete();
+		} catch (IOException e) {
+			e.printStackTrace();
+			success = false;
+		}
+		System.out.println("File reset durchgeführt! Erfolg: " + success);
+
+		if (!success) {
+			// TODO what do?
+		}
+
+		Gdx.app.exit();
 	}
 
 	private Table setupCreditTable() {

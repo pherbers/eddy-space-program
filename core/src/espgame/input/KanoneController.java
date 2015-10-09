@@ -5,9 +5,6 @@ import com.badlogic.gdx.InputProcessor;
 import espgame.ESPGame;
 import espgame.entity.Kanone;
 
-/**
- * Created by Patrick on 28.08.2015.
- */
 public class KanoneController implements InputProcessor {
 
     private Kanone kanone;

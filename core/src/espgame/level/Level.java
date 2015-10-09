@@ -37,9 +37,6 @@ import espgame.screens.LevelOverlay;
 import espgame.screens.PauseScreen;
 import espgame.ui.uielements.LevelUI;
 
-/**
- * Created by Patrick on 26.08.2015.
- */
 public class Level implements Screen {
 
 	private float deltaTime;

@@ -5,9 +5,6 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.ScreenAdapter;
 import espgame.level.Level;
 
-/**
- * Created by Patrick on 07.10.2015.
- */
 public class LevelOverlay extends ScreenAdapter {
 
     private Level level;

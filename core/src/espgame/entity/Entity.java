@@ -7,10 +7,6 @@ import com.badlogic.gdx.math.Vector2;
 import espgame.ESPGame;
 import espgame.util.MathUtils;
 
-/**
- * Created by Patrick on 26.08.2015.
- */
-
 public abstract class Entity {
 
 	protected float radius, rotation;
