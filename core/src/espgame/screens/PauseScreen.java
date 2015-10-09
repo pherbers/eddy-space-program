@@ -30,8 +30,14 @@ public class PauseScreen extends ScreenAdapter {
     private ExtendViewport viewport;
     private OrthographicCamera camera;
     protected Skin skin;
-    private Screen overlay;
+    private LevelOverlay overlay;
     private Button optionsBtn;
+
+    public PauseScreen(){};
+
+    public PauseScreen(LevelOverlay overlay) {
+        this.overlay = overlay;
+    }
 
     @Override
     public void show() {
@@ -80,8 +86,7 @@ public class PauseScreen extends ScreenAdapter {
         optionsBtn.addListener(new ClickListener() {
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-                System.out.println("Overlay added");
-                ESPGame.game.changeScreen(new OptionsScreen(overlay));
+                overlay.setMenu(new OptionsScreen(overlay));
             }
         });
         table.add(optionsBtn).pad(20);
@@ -115,7 +120,7 @@ public class PauseScreen extends ScreenAdapter {
         table.setBounds(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
     }
 
-    public void setOverlay(Screen overlayScreen) {
+    public void setOverlay(LevelOverlay overlayScreen) {
         this.overlay = overlayScreen;
     }
 }

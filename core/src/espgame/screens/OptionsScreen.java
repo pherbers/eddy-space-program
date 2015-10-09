@@ -5,6 +5,9 @@ import java.util.Random;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -37,19 +40,30 @@ public class OptionsScreen extends ESPMenu {
 	private Button easyBT, mediumBT, hardBT;
 	private Button toggleMusic, toggleSound;
 
-	private Screen previousScreen;
+	private LevelOverlay overlay;
 
 	public OptionsScreen() {
 		super(STAR_PERCENTAGE * 1.7f);
 	}
 
-	public OptionsScreen(Screen previousScreen) {
+	public OptionsScreen(LevelOverlay previousScreen) {
 		super(STAR_PERCENTAGE * 1.7f);
-		this.previousScreen = previousScreen;
+		this.overlay = previousScreen;
 	}
 
 	@Override
 	public void init() {
+		if(overlay != null) {
+			drawBackground = false;
+			backgroundGroup.addActor(new Actor(){
+				Texture overlay = AssetLoader.get().getTexture(AssetContainer.OVERLAY_BLACK);
+				@Override
+				public void draw(Batch batch, float parentAlpha) {
+					super.draw(batch, parentAlpha);
+					batch.draw(overlay, 0, 0, stage.getWidth(), stage.getHeight());
+				}
+			});
+		}
 		table.add().padBottom(20);
 		table.row();
 
@@ -154,8 +168,8 @@ public class OptionsScreen extends ESPMenu {
 		backBT.addListener(new ClickListener() {
 			@Override
 			public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-				if(previousScreen != null) {
-					ESPGame.game.changeScreen(previousScreen);
+				if(overlay != null) {
+					overlay.setMenu(new PauseScreen(overlay));
 					return true;
 				} else {
 					ESPGame.game.changeScreen(new MainMenu());
@@ -268,8 +282,8 @@ public class OptionsScreen extends ESPMenu {
 	public void resize(int width, int height) {
 		super.resize(width, height);
 		resizeSliders();
-		if(previousScreen != null)
-			previousScreen.resize(width, height);
+//		if(overlay != null)
+//			overlay.resize(width, height);
 	}
 
 }

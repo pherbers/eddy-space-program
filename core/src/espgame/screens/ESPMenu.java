@@ -31,6 +31,7 @@ public abstract class ESPMenu implements Screen {
     protected Table table;
     protected Group backgroundGroup;
     protected Hintergrund hintergrund;
+	public boolean drawBackground = true;
     private ExtendViewport viewport;
     private OrthographicCamera camera;
     protected Skin skin;
@@ -60,7 +61,8 @@ public abstract class ESPMenu implements Screen {
             @Override
             public void draw(Batch batch, float parentAlpha) {
                 super.draw(batch, parentAlpha);
-                hintergrund.renderMenu(batch);
+				if(drawBackground)
+	                hintergrund.renderMenu(batch);
             }
         };
         stage.addActor(hintergrundActor);
@@ -73,8 +75,10 @@ public abstract class ESPMenu implements Screen {
 
 	@Override
 	public void render(float delta) {
-		Gdx.gl.glClearColor(0f, 0f, 0f, 1f);
-		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+		if(drawBackground) {
+			Gdx.gl.glClearColor(0f, 0f, 0f, 1f);
+			Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+		}
 		stage.act(delta);
 		stage.draw();
 	}

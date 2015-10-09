@@ -51,4 +51,11 @@ public class LevelOverlay extends ScreenAdapter {
         super.dispose();
         menu.dispose();
     }
+
+    public void setMenu(Screen menu) {
+        this.menu.dispose();
+        this.menu = menu;
+        menu.show();
+        menu.resize(width, height);
+    }
 }
