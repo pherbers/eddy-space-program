@@ -13,8 +13,6 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.Locale;
 
-import javax.swing.plaf.basic.BasicInternalFrameTitlePane.MaximizeAction;
-
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
@@ -22,7 +20,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane.ScrollPaneStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField.TextFieldListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
@@ -31,10 +28,7 @@ import espgame.ESPGame;
 import espgame.level.Level;
 import espgame.mechanics.Highscore;
 import espgame.resources.AssetContainer;
-import espgame.resources.AssetLoader;
 import espgame.resources.Einstellungen;
-import espgame.ui.menus.ESPMenu;
-import espgame.ui.menus.MainMenu;
 
 public class HighscoreScreen extends ESPMenu {
 

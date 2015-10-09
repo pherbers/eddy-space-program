@@ -1,4 +1,4 @@
-package espgame.ui.menus;
+package espgame.screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;

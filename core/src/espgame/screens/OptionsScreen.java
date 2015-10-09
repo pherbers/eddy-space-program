@@ -14,8 +14,6 @@ import espgame.ESPGame;
 import espgame.resources.AssetContainer;
 import espgame.resources.AssetLoader;
 import espgame.resources.Einstellungen;
-import espgame.ui.menus.ESPMenu;
-import espgame.ui.menus.MainMenu;
 import espgame.ui.uielements.ESPSlider;
 
 public class OptionsScreen extends ESPMenu {

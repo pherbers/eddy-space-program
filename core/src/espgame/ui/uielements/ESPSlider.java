@@ -10,7 +10,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
 import espgame.resources.AssetContainer;
-import espgame.ui.menus.ESPMenu;
+import espgame.screens.ESPMenu;
 
 public abstract class ESPSlider extends Table {
 

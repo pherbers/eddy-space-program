@@ -12,9 +12,8 @@ import espgame.resources.AssetLoader;
 import espgame.resources.Einstellungen;
 import espgame.resources.FileManager;
 import espgame.screens.LoadingScreen;
-import espgame.ui.menus.ESPMenu;
-import espgame.ui.menus.MainMenu;
-import sun.applet.Main;
+import espgame.screens.ESPMenu;
+import espgame.screens.MainMenu;
 
 import java.io.IOException;
 import java.util.Random;
