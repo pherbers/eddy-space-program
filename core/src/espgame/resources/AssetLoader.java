@@ -190,6 +190,8 @@ public class AssetLoader {
 		assetList.add(new TempAsset("sprites/gui/buttons/Weiter_a.png", textureContainer, WEITER_A, Texture.class));
 		assetList.add(new TempAsset("sprites/gui/buttons/Zurueck.png", textureContainer, ZURUECK, Texture.class));
 		assetList.add(new TempAsset("sprites/gui/buttons/Zurueck_a.png", textureContainer, ZURUECK_A, Texture.class));
+
+		assetList.add(new TempAsset("sprites/gui/overlay_black.png", textureContainer, OVERLAY_BLACK, Texture.class));
 	}
 
 	@Deprecated
