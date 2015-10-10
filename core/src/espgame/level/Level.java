@@ -50,6 +50,9 @@ public class Level implements Screen {
 	public static final int HEMANJITTER = 25;
 	public static final int HEMANLEVEL = 2;
 	public static final int EDDYCAP = 9;
+	public static final float DEFAULT_ZOOM = 1.0f;
+	public static final float BEGIN_ZOOM = 0.42f;
+	public static final float ZOOM_FACTOR = 0.01337f;
 
 	public static final int MIN_WORLD_WIDTH = 800, MAX_WORLD_WIDTH = 1920, MIN_WORLD_HEIGHT = 800,
 			MAX_WORLD_HEIGHT = 1080;
@@ -79,6 +82,7 @@ public class Level implements Screen {
 	private int points, level;
 	private int selectedEddy = 0;
 	private int shake_dur;
+	private float zoom;
 	private float shake_mag, shake_linear;
 
 	private Stage stage;
@@ -99,6 +103,7 @@ public class Level implements Screen {
 		camera = new OrthographicCamera();
 		camera.setToOrtho(false, 800, 480);
 		camera.position.set(0, 0, 0);
+		zoom = BEGIN_ZOOM;
 		backgroundCam = new OrthographicCamera();
 		backgroundCam.setToOrtho(false, 800, 480);
 		backgroundCam.position.set(0, 0, 0);
@@ -212,6 +217,8 @@ public class Level implements Screen {
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
 		camera.update();
+		backgroundCam.update();
+		System.out.println("zoom: " + zoom);
 
 		game.batch.setProjectionMatrix(backgroundCam.combined);
 		game.batch.begin();
@@ -278,10 +285,17 @@ public class Level implements Screen {
 			camera.position.y = shakeValue();
 			backgroundCam.position.x = camera.position.x * BACKGROUND_SCREEN_SHAKE_FACTOR;
 			backgroundCam.position.y = camera.position.y * BACKGROUND_SCREEN_SHAKE_FACTOR;
-			backgroundCam.update();
 			shake_dur--;
 			shake_mag -= shake_linear;
 		}
+
+		// cam zoom
+		zoom += ZOOM_FACTOR;
+		if (zoom >= DEFAULT_ZOOM) {
+			zoom = DEFAULT_ZOOM;
+		}
+		camera.zoom = zoom;
+		backgroundCam.zoom = zoom * BACKGROUND_SCREEN_SHAKE_FACTOR;
 
 		for (int i = particleEffects.size() - 1; i >= 0; i--) {
 			ParticleEffect p = particleEffects.get(i);
@@ -793,11 +807,11 @@ public class Level implements Screen {
 
 	public void endLevel(boolean addHighscore) {
 		running = false;
-		
-		if(addHighscore){
+
+		if (addHighscore) {
 			Highscore score = new Highscore(level, points, schwierigkeit);
 			ESPGame.game.changeMenu(new HighscoreScreen(score));
-		}else{
+		} else {
 			ESPGame.game.toMenu();
 		}
 	}

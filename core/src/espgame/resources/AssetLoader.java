@@ -108,7 +108,6 @@ public class AssetLoader {
 		assetList.add(new TempAsset("sprites/gui/anleitung.png", textureContainer, UI_ANLEITUNG, Texture.class));
 		assetList.add(new TempAsset("sprites/gui/colors.png", textureContainer, UI_COLORS, Texture.class));
 		assetList.add(new TempAsset("sprites/gui/credits.png", textureContainer, UI_CREDITS, Texture.class));
-		assetList.add(new TempAsset("sprites/gui/anleitung.png", textureContainer, UI_ANLEITUNG, Texture.class));
 		assetList.add(new TempAsset("sprites/gui/esp_title.png", textureContainer, UI_ESP_TITLE, Texture.class));
 		assetList.add(new TempAsset("sprites/gui/gameover.png", textureContainer, UI_GAMEOVER, Texture.class));
 		assetList.add(new TempAsset("sprites/gui/logo.png", textureContainer, UI_LOGO, Texture.class));

@@ -20,7 +20,7 @@ import java.util.Random;
 
 public class ESPGame extends Game {
 	public static final String PROJECT_TITLE = "Eddy Space Program";
-	public static final String PROJECT_VERSION = "Version 1.1";
+	public static final String PROJECT_VERSION = "Version 1.1 [Early Acces 1]";
 
 	private static Level level;
 

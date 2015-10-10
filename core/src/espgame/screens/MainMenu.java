@@ -1,5 +1,6 @@
 package espgame.screens;
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -49,6 +50,13 @@ public class MainMenu extends ESPMenu {
 				ESPGame.game.changeMenu(new HighscoreScreen());
 			}
 		});
+		Button btnAnleitung = getImageButton(AssetContainer.ANLEITUNG, AssetContainer.ANLEITUNG_A);
+		btnAnleitung.addListener(new ClickListener() {
+			@Override
+			public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+				ESPGame.game.changeMenu(new AnleitungScreen());
+			}
+		});
 		Button btnExit = getImageButton(AssetContainer.BEENDEN, AssetContainer.BEENDEN_A);
 		btnExit.addListener(new ClickListener() {
 			@Override
@@ -60,13 +68,15 @@ public class MainMenu extends ESPMenu {
 		table.add(title).center().top().expandX().padTop(50);
 		table.row();
 		Table buttonGroup = new Table();
-		buttonGroup.add(btnStartGame).width(256).height(64).right().top().padTop(25);
+		buttonGroup.add(btnStartGame).right().top().padTop(25);
 		buttonGroup.row();
-		buttonGroup.add(btnSettings).width(256).height(64).right().top().padTop(25);
+		buttonGroup.add(btnSettings).right().top().padTop(25);
 		buttonGroup.row();
-		buttonGroup.add(btnHighscores).width(256).height(64).right().top().padTop(25);
+		buttonGroup.add(btnHighscores).right().top().padTop(25);
 		buttonGroup.row();
-		buttonGroup.add(btnExit).width(256).height(64).right().top().padTop(25);
+		buttonGroup.add(btnAnleitung).right().top().padTop(25);
+		buttonGroup.row();
+		buttonGroup.add(btnExit).right().top().padTop(25);
 		table.add(buttonGroup).expandY().right().padRight(100).padLeft(0);
 
 		table.row();
@@ -178,6 +188,7 @@ public class MainMenu extends ESPMenu {
 	}
 
 	private void browseRocketBeans() {
+		ESPGame.setFullScreen(false);
 		try {
 			Desktop d = Desktop.getDesktop();
 			d.browse(new URI(BROWSE_URI));
