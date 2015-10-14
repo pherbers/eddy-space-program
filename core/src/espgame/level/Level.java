@@ -169,7 +169,7 @@ public class Level implements Screen {
 		Skin skin = AssetLoader.get().getSkin();
 		ui = new LevelUI(this, skin);
 		stage.addActor(ui);
-		stage.setDebugAll(true);
+		// stage.setDebugAll(true);
 
 		this.input = new InputMultiplexer();
 		input.addProcessor(new InputAdapter() {
@@ -218,7 +218,7 @@ public class Level implements Screen {
 
 		camera.update();
 		backgroundCam.update();
-		System.out.println("zoom: " + zoom);
+		// System.out.println("zoom: " + zoom);
 
 		game.batch.setProjectionMatrix(backgroundCam.combined);
 		game.batch.begin();

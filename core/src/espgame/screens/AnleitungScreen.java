@@ -13,7 +13,7 @@ import espgame.resources.AssetContainer;
 import espgame.resources.AssetLoader;
 
 public class AnleitungScreen extends ESPMenu {
-	
+
 	public static final int BUTTONPADDING = 20;
 
 	public AnleitungScreen() {
@@ -37,8 +37,8 @@ public class AnleitungScreen extends ESPMenu {
 		table.add(new Image(anleitung)).expand();
 		table.row();
 		table.add(backBT).padBottom(BUTTONPADDING).padTop(BUTTONPADDING);
-		
-		stage.setDebugAll(true);
+
+		// stage.setDebugAll(true);
 	}
 
 }

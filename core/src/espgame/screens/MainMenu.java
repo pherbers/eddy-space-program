@@ -24,7 +24,7 @@ import java.net.URISyntaxException;
 import java.util.Random;
 
 public class MainMenu extends ESPMenu {
-	
+
 	public static final String BROWSE_URI = "http://rocketbeans.tv/";
 
 	@Override
@@ -82,7 +82,7 @@ public class MainMenu extends ESPMenu {
 		table.row();
 		Table t = new Table(skin);
 		t.add(new Label(ESPGame.PROJECT_TITLE + ", " + ESPGame.PROJECT_VERSION, skin)).left().bottom().expandX().pad(7);
-		
+
 		Button rocketbeansButton = getImageButton(AssetContainer.UI_LOGO_SM, AssetContainer.UI_LOGO_SM_ALT);
 		rocketbeansButton.addListener(new ClickListener() {
 			@Override
@@ -93,10 +93,9 @@ public class MainMenu extends ESPMenu {
 		});
 		t.add(rocketbeansButton).expandX().right().pad(8);
 		table.add(t).expandX().fill();
-		
 
 		backgroundGroup.addActor(new EddyActor());
-		stage.setDebugAll(true);
+		// stage.setDebugAll(true);
 	}
 
 	public class EddyActor extends Actor {
@@ -194,7 +193,7 @@ public class MainMenu extends ESPMenu {
 			d.browse(new URI(BROWSE_URI));
 		} catch (Exception e) {
 			e.printStackTrace();
-			//TODO what do?
+			// TODO what do?
 		}
 	}
 
