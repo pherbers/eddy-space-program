@@ -41,6 +41,7 @@ public class HighscoreScreen extends ESPMenu {
 
 	private boolean cleartext;
 	private boolean nameModus;
+	private boolean playAgainEnabled;
 	private int viewmode;
 	private int newPos = NONEWPOS;
 
@@ -49,6 +50,7 @@ public class HighscoreScreen extends ESPMenu {
 	private Table highscoreTable;
 	private TextField newEntryTF;
 	private ScrollPane pane;
+	private Button playAgainBT;
 
 	private Highscore newScore;
 
@@ -60,8 +62,10 @@ public class HighscoreScreen extends ESPMenu {
 		super(Level.STAR_PERCENTAGE / 3f);
 		viewmode = MAX_VIEWMODE;
 
+		playAgainEnabled = false;
 		if (score != null) {
 			init(score);
+			playAgainEnabled = true;
 		}
 		// pageSwitch(0);
 	}
@@ -95,6 +99,14 @@ public class HighscoreScreen extends ESPMenu {
 				pageSwitch(-1);
 			}
 		});
+		playAgainBT = getImageButton(AssetContainer.ANLEITUNG, AssetContainer.ANLEITUNG_A);
+		playAgainBT.addListener(new ClickListener() {
+			@Override
+			public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+				super.touchUp(event, x, y, pointer, button);
+				ESPGame.game.newGame();
+			}
+		});
 
 		highscoreTable = new Table(skin);
 		updateHighscoreTable();
@@ -111,8 +123,11 @@ public class HighscoreScreen extends ESPMenu {
 		t.add(nextBT);
 
 		Table buttons = new Table(skin);
-		buttons.add(pageLB).left().padLeft(10);
+		buttons.add(pageLB).left().padLeft(10).uniform();
 		buttons.add(t).expand().center();
+		if (playAgainEnabled) {
+			buttons.add(playAgainBT).right().padRight(10).uniform();
+		}
 
 		table.row();
 		table.add(buttons).padBottom(20).padTop(15).expandX().fill();
@@ -164,6 +179,7 @@ public class HighscoreScreen extends ESPMenu {
 		nextBT.setVisible(false);
 		prevBT.setVisible(false);
 		pageLB.setVisible(false);
+		playAgainBT.setVisible(false);
 
 		updateHighscoreTable();
 	}
@@ -173,6 +189,7 @@ public class HighscoreScreen extends ESPMenu {
 		pageLB.setVisible(true);
 		nextBT.setVisible(true);
 		prevBT.setVisible(true);
+		playAgainBT.setVisible(true);
 
 		updateHighscoreTable();
 		pageSwitch(0);

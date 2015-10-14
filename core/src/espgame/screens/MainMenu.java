@@ -1,5 +1,6 @@
 package espgame.screens;
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -9,64 +10,94 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import espgame.ESPGame;
 import espgame.resources.AssetContainer;
 import espgame.resources.AssetLoader;
 
+import java.awt.Desktop;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.Random;
 
-/**
- * Created by Patrick on 09.09.2015.
- */
 public class MainMenu extends ESPMenu {
 
-    @Override
-    public void init() {
-        Button btnStartGame = getImageButton(AssetContainer.NEUESSPIEL, AssetContainer.NEUESSPIEL_A);
-        btnStartGame.addListener(new ClickListener() {
-            @Override
-            public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-                ESPGame.game.newGame();
-            }
-        });
-        Button btnSettings = getImageButton(AssetContainer.OPTIONEN, AssetContainer.OPTIONEN_A);
-        btnSettings.addListener(new ClickListener() {
-            @Override
-            public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-                ESPGame.game.changeScreen(new OptionsScreen());
-            }
-        });
-        Button btnHighscores = getImageButton(AssetContainer.HIGHSCORES, AssetContainer.HIGHSCORES_A);
-        btnHighscores.addListener(new ClickListener() {
-            @Override
-            public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-                ESPGame.game.changeScreen(new HighscoreScreen());
-            }
-        });
-        Button btnExit = getImageButton(AssetContainer.BEENDEN, AssetContainer.BEENDEN_A);
-        btnExit.addListener(new ClickListener() {
-            @Override
-            public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-                Gdx.app.exit();
-            }
-        });
-        Image title = new Image(AssetLoader.get().getTexture(AssetContainer.UI_ESP_TITLE));
-        table.add(title).center().top().expandX().padTop(50);
-        table.row();
-        Table buttonGroup = new Table();
-        buttonGroup.add(btnStartGame).width(256).height(64).right().top().padTop(25);
-        buttonGroup.row();
-        buttonGroup.add(btnSettings).width(256).height(64).right().top().padTop(25);
-        buttonGroup.row();
-        buttonGroup.add(btnHighscores).width(256).height(64).right().top().padTop(25);
-        buttonGroup.row();
-        buttonGroup.add(btnExit).width(256).height(64).right().top().padTop(25);
-        table.add(buttonGroup).expandY().right().padRight(100).padLeft(0);
-        backgroundGroup.addActor(new EddyActor());
-        stage.setDebugAll(false);
-    }
+    public static final String BROWSE_URI = "http://rocketbeans.tv/";
+    
+
+	@Override
+	public void init() {
+		Button btnStartGame = getImageButton(AssetContainer.NEUESSPIEL, AssetContainer.NEUESSPIEL_A);
+		btnStartGame.addListener(new ClickListener() {
+			@Override
+			public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+				ESPGame.game.newGame();
+			}
+		});
+		Button btnSettings = getImageButton(AssetContainer.OPTIONEN, AssetContainer.OPTIONEN_A);
+		btnSettings.addListener(new ClickListener() {
+			@Override
+			public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+				ESPGame.game.changeMenu(new OptionsScreen());
+			}
+		});
+		Button btnHighscores = getImageButton(AssetContainer.HIGHSCORES, AssetContainer.HIGHSCORES_A);
+		btnHighscores.addListener(new ClickListener() {
+			@Override
+			public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+				ESPGame.game.changeMenu(new HighscoreScreen());
+			}
+		});
+		Button btnAnleitung = getImageButton(AssetContainer.ANLEITUNG, AssetContainer.ANLEITUNG_A);
+		btnAnleitung.addListener(new ClickListener() {
+			@Override
+			public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+				ESPGame.game.changeMenu(new AnleitungScreen());
+			}
+		});
+		Button btnExit = getImageButton(AssetContainer.BEENDEN, AssetContainer.BEENDEN_A);
+		btnExit.addListener(new ClickListener() {
+			@Override
+			public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+				Gdx.app.exit();
+			}
+		});
+		Image title = new Image(AssetLoader.get().getTexture(AssetContainer.UI_ESP_TITLE));
+		table.add(title).center().top().expandX().padTop(50);
+		table.row();
+		Table buttonGroup = new Table();
+		buttonGroup.add(btnStartGame).right().top().padTop(25);
+		buttonGroup.row();
+		buttonGroup.add(btnSettings).right().top().padTop(25);
+		buttonGroup.row();
+		buttonGroup.add(btnHighscores).right().top().padTop(25);
+		buttonGroup.row();
+		buttonGroup.add(btnAnleitung).right().top().padTop(25);
+		buttonGroup.row();
+		buttonGroup.add(btnExit).right().top().padTop(25);
+		table.add(buttonGroup).expandY().right().padRight(100).padLeft(0);
+
+		table.row();
+		Table t = new Table(skin);
+		t.add(new Label(ESPGame.PROJECT_TITLE + ", " + ESPGame.PROJECT_VERSION, skin)).left().bottom().expandX().pad(7);
+
+		Button rocketbeansButton = getImageButton(AssetContainer.UI_LOGO_SM, AssetContainer.UI_LOGO_SM_ALT);
+		rocketbeansButton.addListener(new ClickListener() {
+			@Override
+			public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+				super.touchUp(event, x, y, pointer, button);
+				browseRocketBeans();
+			}
+		});
+		t.add(rocketbeansButton).expandX().right().pad(8);
+		table.add(t).expandX().fill();
+
+		backgroundGroup.addActor(new EddyActor());
+		// stage.setDebugAll(true);
+	}
 
 	public class EddyActor extends Actor {
 		Sprite eddy;
@@ -108,51 +139,63 @@ public class MainMenu extends ESPMenu {
 
 	}
 
-    static int lastColor;
+	static int lastColor;
 
-    public class EddyParticle extends Actor {
-        Sprite sprite;
-        Vector2 pos, vel;
-        float rotation;
-        public EddyParticle(Vector2 pos, Vector2 vel) {
-            Random r = new Random();
-            this.pos = pos;
-            this.vel = vel;
-            int col = r.nextInt(3);
-            if (col == lastColor)
-                col = (col+1) % 3;
-            lastColor = col;
-            boolean b = r.nextFloat() < 0.85;
-            String asset = "";
-            if(col == 0)
-                asset = b ? AssetContainer.EDDY_ROT : AssetContainer.EDDY_MAGENTA;
-            else if(col == 1)
-                asset = b ? AssetContainer.EDDY_BLAU : AssetContainer.EDDY_CYAN;
-            else if(col == 2)
-                asset = b ? AssetContainer.EDDY_GRUEN : AssetContainer.EDDY_GELB;
-            this.sprite = new Sprite(AssetLoader.get().getTexture(asset));
-            sprite.setSize(64, 64);
-            sprite.setOriginCenter();
-            sprite.setCenter(pos.x, pos.y);
-            rotation = new Random().nextFloat() * 400 - 200;
-        }
+	public class EddyParticle extends Actor {
+		Sprite sprite;
+		Vector2 pos, vel;
+		float rotation;
 
-        @Override
-        public void act(float delta) {
-            super.act(delta);
-            vel.add(0, -200 * delta);
-            pos.add(vel.x * delta, vel.y * delta);
-            sprite.setCenter(pos.x, pos.y);
-            sprite.rotate(rotation * delta);
-            if(pos.y < -100)
-                remove();
-        }
+		public EddyParticle(Vector2 pos, Vector2 vel) {
+			Random r = new Random();
+			this.pos = pos;
+			this.vel = vel;
+			int col = r.nextInt(3);
+			if (col == lastColor)
+				col = (col + 1) % 3;
+			lastColor = col;
+			boolean b = r.nextFloat() < 0.85;
+			String asset = "";
+			if (col == 0)
+				asset = b ? AssetContainer.EDDY_ROT : AssetContainer.EDDY_MAGENTA;
+			else if (col == 1)
+				asset = b ? AssetContainer.EDDY_BLAU : AssetContainer.EDDY_CYAN;
+			else if (col == 2)
+				asset = b ? AssetContainer.EDDY_GRUEN : AssetContainer.EDDY_GELB;
+			this.sprite = new Sprite(AssetLoader.get().getTexture(asset));
+			sprite.setSize(64, 64);
+			sprite.setOriginCenter();
+			sprite.setCenter(pos.x, pos.y);
+			rotation = new Random().nextFloat() * 400 - 200;
+		}
 
-        @Override
-        public void draw(Batch batch, float parentAlpha) {
-            super.draw(batch, parentAlpha);
-            sprite.draw(batch);
-        }
-    }
+		@Override
+		public void act(float delta) {
+			super.act(delta);
+			vel.add(0, -200 * delta);
+			pos.add(vel.x * delta, vel.y * delta);
+			sprite.setCenter(pos.x, pos.y);
+			sprite.rotate(rotation * delta);
+			if (pos.y < -100)
+				remove();
+		}
+
+		@Override
+		public void draw(Batch batch, float parentAlpha) {
+			super.draw(batch, parentAlpha);
+			sprite.draw(batch);
+		}
+	}
+
+	private void browseRocketBeans() {
+		ESPGame.setFullScreen(false);
+		try {
+			Desktop d = Desktop.getDesktop();
+			d.browse(new URI(BROWSE_URI));
+		} catch (Exception e) {
+			e.printStackTrace();
+			// TODO what do?
+		}
+	}
 
 }

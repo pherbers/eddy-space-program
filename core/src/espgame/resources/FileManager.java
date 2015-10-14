@@ -44,7 +44,7 @@ public class FileManager {
 			game.setFirstTimePlaying(true);
 			break;
 		default:
-			//TODO what do??
+			// TODO what do??
 			break;
 		}
 		//
@@ -110,6 +110,18 @@ public class FileManager {
 
 	public void setFileDir(File fileDir) {
 		this.fileDir = fileDir;
+	}
+
+	public boolean delete() throws IOException {
+		highscoresFile.delete();
+		optionsFile.delete();
+
+		fileDir.delete();
+
+		System.out.println("File reset report. Exist files? Settings: " + optionsFile.exists() + " Highscores: "
+				+ highscoresFile.exists() + " Directory: " + fileDir.exists());
+
+		return !fileDir.exists();
 	}
 
 }

@@ -20,6 +20,9 @@ import java.io.IOException;
 import java.util.Random;
 
 public class ESPGame extends Game {
+	public static final String PROJECT_TITLE = "Eddy Space Program";
+	public static final String PROJECT_VERSION = "Version 1.1 [Early Acces 1]";
+
 	private static Level level;
 
 	public SpriteBatch batch;
@@ -36,8 +39,6 @@ public class ESPGame extends Game {
 
 	public ESPGame() {
 		super();
-		
-		//TODO load icon here
 	}
 
 	@Override
@@ -59,8 +60,8 @@ public class ESPGame extends Game {
 				loadSettings();
 				playNextSong();
 				System.out.println("Everything loaded.");
-				
-				changeScreen(new MainMenu());
+
+				changeMenu(new MainMenu());
 			}
 		});
 	}
@@ -161,13 +162,13 @@ public class ESPGame extends Game {
 	}
 
 	public void saveSettings() {
-		if(einstellungen ==null){
+		if (einstellungen == null) {
 			System.err.println("Wollte die Einstellungen speichern. Aber diese existieren nicht.");
 			return;
 		}
 		try {
-			einstellungen.save(fileManager.getOptionsFile());
-			System.out.println("Einstellungen erfolgreich gespeichert.");
+			boolean b = einstellungen.save(fileManager.getOptionsFile());
+			System.out.println("Einstellungen gespeichert. Erfolg: " + b);
 		} catch (IOException e) {
 			e.printStackTrace();
 			// TODO handle exception
@@ -211,6 +212,11 @@ public class ESPGame extends Game {
 		if (getEinstellungen().isMusicMute()) {
 			music.setVolume(0);
 		}
+	}
+
+	public static void setFullScreen(boolean fullscreen) {
+		Gdx.graphics.setDisplayMode(Gdx.graphics.getDesktopDisplayMode().width,
+				Gdx.graphics.getDesktopDisplayMode().height, fullscreen);
 	}
 
 	public boolean hasLevel() {

@@ -20,9 +20,6 @@ import espgame.level.Hintergrund;
 import espgame.level.Level;
 import espgame.resources.AssetLoader;
 
-/**
- * Created by Patrick on 11.09.2015.
- */
 public abstract class ESPMenu implements Screen {
 
 	protected static final float STAR_PERCENTAGE = 0.0001f;
@@ -123,7 +120,6 @@ public abstract class ESPMenu implements Screen {
 		Button.ButtonStyle style = new Button.ButtonStyle();
 		style.up = off;
 		style.down = on;
-		style.checked = on;
 		style.over = on;
 		return new Button(style);
 	}

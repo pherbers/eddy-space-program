@@ -76,12 +76,16 @@ public class Einstellungen {
 		properties.setProperty(PLAYERNAME, getPlayername());
 	}
 
-	public void save(File file) throws IOException {
+	public boolean save(File file) throws IOException {
+		if(!file.exists()){
+			return false;
+		}
 		storeProperties();
 		System.out.println(
 				"Speichern der Einstellungen steht unmittelbar bevor! Einträge: " + properties.keySet().size());
 		FileOutputStream fos = new FileOutputStream(file);
 		properties.storeToXML(fos, "Eddy Space Program");
+		return true;
 	}
 
 	public int getSchwierigkeit() {
