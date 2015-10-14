@@ -10,6 +10,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
+import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -52,7 +53,7 @@ public class Level implements Screen {
 	public static final int EDDYCAP = 9;
 	public static final float DEFAULT_ZOOM = 1.0f;
 	public static final float BEGIN_ZOOM = 0.42f;
-	public static final float ZOOM_FACTOR = 0.01337f;
+	public static final float ZOOM_FACTOR = 0.01337f / 2;
 
 	public static final int MIN_WORLD_WIDTH = 800, MAX_WORLD_WIDTH = 1920, MIN_WORLD_HEIGHT = 800,
 			MAX_WORLD_HEIGHT = 1080;
@@ -60,6 +61,7 @@ public class Level implements Screen {
 	public static final float STAR_PERCENTAGE = 0.00015f;
 
 	public static final float BACKGROUND_SCREEN_SHAKE_FACTOR = 0.5f;
+	public static final float BACKGROUND_ZOOM_START = 0.6f;
 
 	private int hemanCoutdown = HEMANCOUNTDOWNBASE;
 
@@ -82,7 +84,7 @@ public class Level implements Screen {
 	private int points, level;
 	private int selectedEddy = 0;
 	private int shake_dur;
-	private float zoom;
+	private float zoomPercent;
 	private float shake_mag, shake_linear;
 
 	private Stage stage;
@@ -103,7 +105,7 @@ public class Level implements Screen {
 		camera = new OrthographicCamera();
 		camera.setToOrtho(false, 800, 480);
 		camera.position.set(0, 0, 0);
-		zoom = BEGIN_ZOOM;
+		zoomPercent = 0;
 		backgroundCam = new OrthographicCamera();
 		backgroundCam.setToOrtho(false, 800, 480);
 		backgroundCam.position.set(0, 0, 0);
@@ -176,8 +178,6 @@ public class Level implements Screen {
 		newObjective(level);
 		ui.updateObjective();
 
-		spawnHeman = true;
-
 		worldViewport.apply(true);
 	}
 
@@ -221,7 +221,7 @@ public class Level implements Screen {
 
 		camera.update();
 		backgroundCam.update();
-		// System.out.println("zoom: " + zoom);
+		// System.out.println("zoomPercent: " + zoomPercent);
 
 		game.batch.setProjectionMatrix(backgroundCam.combined);
 		game.batch.begin();
@@ -292,13 +292,14 @@ public class Level implements Screen {
 			shake_mag -= shake_linear;
 		}
 
-		// cam zoom
-		zoom += ZOOM_FACTOR;
-		if (zoom >= DEFAULT_ZOOM) {
-			zoom = DEFAULT_ZOOM;
+		// cam zoomPercent
+		zoomPercent += ZOOM_FACTOR;
+		if (zoomPercent >= 1) {
+			zoomPercent = 1;
 		}
-		camera.zoom = zoom;
-		backgroundCam.zoom = zoom * BACKGROUND_SCREEN_SHAKE_FACTOR;
+		camera.zoom = Interpolation.pow3Out.apply(BEGIN_ZOOM, DEFAULT_ZOOM, zoomPercent);
+		backgroundCam.zoom = Interpolation.pow3Out.apply(BACKGROUND_ZOOM_START, DEFAULT_ZOOM, zoomPercent);
+
 
 		for (int i = particleEffects.size() - 1; i >= 0; i--) {
 			ParticleEffect p = particleEffects.get(i);
