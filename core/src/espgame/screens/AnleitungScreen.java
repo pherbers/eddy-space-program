@@ -30,7 +30,7 @@ public class AnleitungScreen extends ESPMenu {
 			@Override
 			public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
 				super.touchUp(event, x, y, pointer, button);
-				ESPGame.game.changeMenu(new MainMenu());
+				ESPGame.game.changeScreen(new MainMenu());
 			}
 		});
 

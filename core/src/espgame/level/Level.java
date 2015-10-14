@@ -829,7 +829,7 @@ public class Level implements Screen {
 
 		if (addHighscore) {
 			Highscore score = new Highscore(level, points, schwierigkeit);
-			ESPGame.game.changeMenu(new HighscoreScreen(score));
+			ESPGame.game.changeScreen(new HighscoreScreen(score));
 		} else {
 			ESPGame.game.toMenu();
 		}

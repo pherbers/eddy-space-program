@@ -61,7 +61,7 @@ public class ESPGame extends Game {
 				playNextSong();
 				System.out.println("Everything loaded.");
 
-				changeMenu(new MainMenu());
+				changeScreen(new MainMenu());
 			}
 		});
 	}

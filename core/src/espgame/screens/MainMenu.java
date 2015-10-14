@@ -41,21 +41,21 @@ public class MainMenu extends ESPMenu {
 		btnSettings.addListener(new ClickListener() {
 			@Override
 			public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-				ESPGame.game.changeMenu(new OptionsScreen());
+				ESPGame.game.changeScreen(new OptionsScreen());
 			}
 		});
 		Button btnHighscores = getImageButton(AssetContainer.HIGHSCORES, AssetContainer.HIGHSCORES_A);
 		btnHighscores.addListener(new ClickListener() {
 			@Override
 			public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-				ESPGame.game.changeMenu(new HighscoreScreen());
+				ESPGame.game.changeScreen(new HighscoreScreen());
 			}
 		});
 		Button btnAnleitung = getImageButton(AssetContainer.ANLEITUNG, AssetContainer.ANLEITUNG_A);
 		btnAnleitung.addListener(new ClickListener() {
 			@Override
 			public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-				ESPGame.game.changeMenu(new AnleitungScreen());
+				ESPGame.game.changeScreen(new AnleitungScreen());
 			}
 		});
 		Button btnExit = getImageButton(AssetContainer.BEENDEN, AssetContainer.BEENDEN_A);
