@@ -69,7 +69,7 @@ public class LevelUI extends Table {
 		eddyStorage.update();
 		kanoneDisplayer.update();
 		objectiveDisplayer.updateCheck();
-		endBT.setVisible(level.isGameover());
+		//endBT.setVisible(level.isGameover());
 		
 		fpsLB.setText("FPS: "+Gdx.graphics.getFramesPerSecond());
 	}

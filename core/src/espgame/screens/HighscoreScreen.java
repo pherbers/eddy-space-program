@@ -72,7 +72,7 @@ public class HighscoreScreen extends ESPMenu {
 
 	@Override
 	public void init() {
-		stage.setDebugAll(true);
+		stage.setDebugAll(false);
 
 		pageLB = new Label("Seite: 1", skin);
 		prevBT = getImageButton(AssetContainer.LEFT, AssetContainer.LEFT_A);

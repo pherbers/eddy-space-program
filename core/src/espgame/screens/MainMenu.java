@@ -189,13 +189,13 @@ public class MainMenu extends ESPMenu {
 
 	private void browseRocketBeans() {
 		ESPGame.setFullScreen(false);
-		try {
-			Desktop d = Desktop.getDesktop();
-			d.browse(new URI(BROWSE_URI));
-		} catch (Exception e) {
-			e.printStackTrace();
-			// TODO what do?
-		}
+//		try {
+//			Desktop d = Desktop.getDesktop();
+//			d.browse(new URI(BROWSE_URI));
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//			// TODO what do?
+//		}
 	}
 
 }

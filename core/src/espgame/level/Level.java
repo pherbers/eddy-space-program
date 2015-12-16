@@ -33,6 +33,7 @@ import espgame.resources.AssetContainer;
 import espgame.resources.AssetLoader;
 import espgame.resources.Fontsize;
 import espgame.resources.ParticleContainer;
+import espgame.screens.GameOverScreen;
 import espgame.screens.HighscoreScreen;
 import espgame.screens.LevelOverlay;
 import espgame.screens.PauseScreen;
@@ -261,7 +262,10 @@ public class Level implements Screen {
 		// gehen nie wieder darauf ein
 
 		if (gameover && running) {
-			// ui.setGameOver(true);
+			final GameOverScreen menu = new GameOverScreen();
+			final LevelOverlay screen = new LevelOverlay(this, menu);
+			menu.setOverlay(screen);
+			ESPGame.game.setScreen(screen);
 			// Enable Gameover Overlay
 		} else {
 			// ui.setGameOver(false);

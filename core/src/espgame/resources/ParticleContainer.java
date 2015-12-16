@@ -31,8 +31,8 @@ public class ParticleContainer {
     }
 
     public void loadParticles() {
-        FileHandle eddyParticleSystem = Gdx.files.internal("particles/eddyParticle.p");
-        FileHandle particleSprites = Gdx.files.internal("sprites/particles");
+        FileHandle eddyParticleSystem = Gdx.files.internal("res/particles/eddyParticle.p");
+        FileHandle particleSprites = Gdx.files.internal("res/sprites/particles");
 
         eddyRot.load(eddyParticleSystem, particleSprites);
         setEmitterColor(eddyRot, Color.RED);
@@ -58,11 +58,11 @@ public class ParticleContainer {
         eddySchwarz.load(eddyParticleSystem, particleSprites);
         setEmitterColor(eddySchwarz, Color.GRAY);
 
-        explosion.load(Gdx.files.internal("particles/explosion.p"), particleSprites);
-        heman.load(Gdx.files.internal("particles/heman.p"), particleSprites);
-        hemanGet.load(Gdx.files.internal("particles/hemanGet.p"), particleSprites);
-        sternschnuppe.load(Gdx.files.internal("particles/sternschnuppe.p"), particleSprites);
-        ship.load(Gdx.files.internal("particles/ship.p"), particleSprites);
+        explosion.load(Gdx.files.internal("res/particles/explosion.p"), particleSprites);
+        heman.load(Gdx.files.internal("res/particles/heman.p"), particleSprites);
+        hemanGet.load(Gdx.files.internal("res/particles/hemanGet.p"), particleSprites);
+        sternschnuppe.load(Gdx.files.internal("res/particles/sternschnuppe.p"), particleSprites);
+        ship.load(Gdx.files.internal("res/particles/ship.p"), particleSprites);
     }
 
     private static void setEmitterColor(ParticleEffect effect, Color color) {
