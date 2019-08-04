@@ -51,7 +51,6 @@ public abstract class AssetContainer<T> implements Iterable<T> {
 	public static final String UI_FULLSCREEN_ON = "UI_FULLSCREEN_ON";
 	public static final String UI_FULLSCREEN_ON_A = "UI_FULLSCREEN_ON_A";
 
-
 	public static final String SOUND_POP = "sound_pop";
 	public static final String SOUND_HEMAN_ENTER = "sound_hemanenter";
 	public static final String SOUND_EXPLOSION = "sound_explosion";

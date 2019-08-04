@@ -111,7 +111,6 @@ public class AssetLoader {
 		assetList.add(new TempAsset("res/sprites/gui/Buttons/vollbild_d.png", textureContainer, UI_FULLSCREEN_OFF, Texture.class));
 		assetList.add(new TempAsset("res/sprites/gui/Buttons/vollbild_d_a.png", textureContainer, UI_FULLSCREEN_OFF_A, Texture.class));
 
-
 		assetList.add(new TempAsset("res/sprites/planeten/earth.png", textureContainer, PLANET_MAIN, Texture.class));
 		assetList.add(new TempAsset("res/sprites/planeten/moon.png", textureContainer, PLANET_VARIANT, Texture.class));
 		assetList.add(new TempAsset("res/sprites/planeten/majora.png", textureContainer, PLANET_SECRET_1, Texture.class));

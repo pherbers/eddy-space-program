@@ -10,6 +10,8 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
+import com.badlogic.gdx.scenes.scene2d.actions.RepeatAction;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -25,6 +27,7 @@ public abstract class LoadingScreen implements Screen {
 	public static final boolean PARTY = false;
 	public static final float DELTA_MAXIMUM = 0.42f;
 	public static final float PUNKT_MAXIMUM = 3;
+	public static final float ICON_ROTATION_DURATION = 3f;
 
 	protected Stage stage;
 	protected Table table;
@@ -72,6 +75,8 @@ public abstract class LoadingScreen implements Screen {
 		table.setFillParent(true);
 		stage.addActor(table);
 		Image i = new Image(dr);
+		i.addAction(Actions.repeat(RepeatAction.FOREVER,Actions.rotateBy(-360,ICON_ROTATION_DURATION)));
+		i.setOrigin(icon.getHeight()/2,icon.getWidth()/2);
 		loadingLB = new Label("", skin);
 		table.add(loadingLB).expandY();
 		table.row();
