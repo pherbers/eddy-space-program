@@ -28,7 +28,7 @@ public class HeMan extends Entity {
 	public static final int ADDITIONALREWARDEDDYS = 2;
 	public static final int TEXTDURATION = 180;
 	public static final int PAUSETIMERMAX = 300;
-	public static final int INTRODISTANZ = 950;
+	public static final int INTRODISTANZ = 1200;
 	public static final int BACKUPLIFESPAWN = 250;
 	public static final int ROTATION_INSTANCE = 3;
 	public static final int STERNSCHNUPPE_DAUER = 900;

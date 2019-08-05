@@ -82,7 +82,8 @@ public class Einstellungen {
 		}
 		storeProperties();
 		System.out.println(
-				"Speichern der Einstellungen steht unmittelbar bevor! Einträge: " + properties.keySet().size());
+				"Speichern der Einstellungen steht unmittelbar bevor! Einträge: " + properties.keySet().size()+
+				". Target: "+file.getAbsolutePath());
 		FileOutputStream fos = new FileOutputStream(file);
 		properties.storeToXML(fos, "Eddy Space Program");
 		return true;

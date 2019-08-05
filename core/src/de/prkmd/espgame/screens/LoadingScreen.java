@@ -107,11 +107,13 @@ public abstract class LoadingScreen implements Screen {
 			}
 			deltaCounter = 0;
 		}
-		String s = "Ladevorgang";
+		
+		StringBuilder s = new StringBuilder("Ladevorgang");
 		for (int i = 0; i < punktCounter; i++) {
-			s += ".";
+			s.append(".");
 		}
-		loadingLB.setText(s);
+		loadingLB.setText(s.toString());
+		
 		int p = (int) (l.getProgress() * 100);
 		progressLB.setText(p + "%");
 
